@@ -23,3 +23,9 @@ Sáb 09:15 la estructura y el proyecto de Godot ya están subidos (comprueba que
 ## Antes de pedir un Pull Request
 - El juego abre con F5.
 - Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+
+## Estado actual (puesto 1)
+
+- `game_state.gd` — autoload `GameState`: las 21 variables y las 12 señales del diccionario, más `iniciar_partida(modo)`, `fijar_recurso`, `cambiar_recurso`, `pagar`, `agregar_estrellas` y atajos `solicitar_construir / solicitar_viaje_hielo / solicitar_reparar_escudo`. Si existe `simulation/simulacion.gd` y `data/balance/<modo>.json`, la enchufa sola y reenvía sus señales.
+- `main.gd` — flujo de pantallas: título → modo → juego. Las pantallas de título y modo son provisionales (las reemplaza el puesto 6).
+- `juego.gd` — escena de juego provisional con luz, suelo, cámara a 45°, astronauta y un panel de estado.
