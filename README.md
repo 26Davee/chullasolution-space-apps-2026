@@ -36,7 +36,7 @@ Repositorio del equipo **ChullaSolution**. Aquí vive todo el trabajo del hackat
 chullasolution-space-apps-2026/
 ├── README.md             estás aquí
 ├── CONTRIBUTING.md       las reglas de trabajo, en una página
-├── project.godot         [P1]  (se crea el sábado a las 09:15)
+├── project.godot         [P1]  el proyecto de Godot: este es el archivo que se abre
 │
 ├── core/                 [P1]  arranque del juego y unión de todo
 ├── scenes/               [P1]  escena principal (main.tscn)

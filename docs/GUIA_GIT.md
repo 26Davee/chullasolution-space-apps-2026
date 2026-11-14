@@ -30,8 +30,9 @@ Piensa en un **cuaderno compartido guardado en internet** (GitHub) y en **seis f
 2. Acepta la invitación al repositorio (llega a tu correo o la ves en GitHub).
 3. En GitHub Desktop: `File ▸ Clone repository… ▸ GitHub.com`, elige el repositorio del equipo.
 4. En `Local path` pon `C:\ChullaSolution\` (no dentro de OneDrive ni de Escritorio). Pulsa `Clone`.
-5. Abre Godot ▸ `Import` ▸ elige `project.godot` dentro de esa misma carpeta ▸ `Import & Edit`.
-6. Pulsa `F5`. Si se ve la pantalla del juego, ya estás dentro.
+5. Abre Godot ▸ `Import` (en español, `Importar`) ▸ elige `project.godot` dentro de esa misma carpeta ▸ `Import & Edit`.
+   **Usa siempre `Import`, nunca `Create`:** el proyecto ya existe y crear uno nuevo lo deja en otra carpeta.
+6. Pulsa `F5`. Si ves una Luna gris y el texto «proyecto base OK», ya estás dentro.
 
 ## Cada bloque de trabajo
 
@@ -75,5 +76,5 @@ La carpeta que abres en Godot es la misma que ve GitHub Desktop. Si cambias una 
 | No veo el repositorio al clonar | Falta aceptar la invitación; revisa tu correo. |
 | `Push` pide usuario o contraseña | Cierra sesión y vuelve a entrar en `File ▸ Options ▸ Accounts`. |
 | Mensaje de conflicto | Para. Escribe el nombre del archivo en el grupo. |
-| Godot no abre el proyecto | Revisa que importaste `project.godot` de la carpeta clonada. |
+| Godot no abre el proyecto | Revisa que importaste `project.godot` de la carpeta clonada (con `Import`, no `Create`). En el panel de archivos de Godot deben verse `core`, `docs`, `world`, `ui`… Si solo ves `icon.svg`, abriste otra carpeta. |
 | Hice un commit en `main` por error | No hagas `Reset`. Avisa en el grupo; se arregla en dos minutos. |

@@ -17,7 +17,7 @@ Ajustes de exportación a la web y notas de publicación.
 Puesto 6, para el enlace del envío.
 
 ## Tu primera tarea
-Sáb 09:15 subes la estructura y el proyecto de Godot en blanco; 10:15 diriges la firma de contratos; 11:30 publicas el esqueleto y pruebas el enlace en una ventana privada.
+Sáb 09:15 la estructura y el proyecto de Godot ya están subidos (comprueba que F5 muestra la Luna de prueba); 10:15 diriges la firma de contratos; 11:30 publicas el esqueleto y pruebas el enlace en una ventana privada.
 
 ## Antes de pedir un Pull Request
 - El juego abre con F5.

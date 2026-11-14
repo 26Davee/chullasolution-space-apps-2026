@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[sub_resource type="SphereMesh" id="SphereMesh_luna"]
+radius = 1.0
+height = 2.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luna"]
+albedo_color = Color(0.72, 0.72, 0.76, 1)
+roughness = 1.0
+
+[node name="Main" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.6)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.6, 0.6, 0)
+
+[node name="Luna" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_luna")
+surface_material_override/0 = SubResource("StandardMaterial3D_luna")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 900.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 26
+text = "ChullaSolution · proyecto base OK
+Si ves la Luna, tu Godot y tu clon funcionan."
