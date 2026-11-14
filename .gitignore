@@ -1,0 +1,21 @@
+# Godot 4
+.godot/
+/android/
+
+# Exportaciones y copias
+/builds/
+*.zip
+*.tmp
+*.bak
+
+# Secretos: nunca se suben
+.env
+*.key
+*.pem
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

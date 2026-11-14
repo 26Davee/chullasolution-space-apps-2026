@@ -1,0 +1,3 @@
+# Evita que Windows cambie los saltos de línea de los archivos de Godot
+# y llene los Pull Requests de cambios falsos.
+* text=auto eol=lf
