@@ -19,3 +19,8 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Pruebas locales temporales (no subir al repositorio)
+progression/test_*.gd
+progression/test_*.gd.uid
+progression/test_*.tscn
