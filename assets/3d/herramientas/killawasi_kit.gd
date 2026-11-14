@@ -15,7 +15,7 @@ const PALETA := {
 	"marino": {"c": "#1D3557", "r": 0.55, "rim": 0.3},
 	"marino_osc": {"c": "#14233D", "r": 0.6, "rim": 0.2},
 	"visor": {"c": "#0E2238", "r": 0.12, "m": 0.35, "rim": 0.9},
-	"ambar": {"c": "#FFC24A", "r": 0.4, "e": 2.3, "ec": "#FFB02E"},
+	"ambar": {"c": "#FFB93A", "r": 0.4, "e": 1.7, "ec": "#FFA21F"},
 	"ambar_suave": {"c": "#FFC55A", "r": 0.4, "e": 1.0, "ec": "#FFA92E"},
 	"ambar_mate": {"c": "#F0A52B", "r": 0.42, "m": 0.15, "rim": 0.35},
 	"naranja_marco": {"c": "#D9801A", "r": 0.5, "rim": 0.2},
@@ -28,7 +28,7 @@ const PALETA := {
 	"acero": {"c": "#A9B4C4", "r": 0.42, "m": 0.45, "rim": 0.3},
 	"acero_osc": {"c": "#5D6A80", "r": 0.5, "m": 0.35, "rim": 0.2},
 	"goma": {"c": "#262A38", "r": 0.85, "rim": 0.25},
-	"panel_azul": {"c": "#1C49B3", "r": 0.22, "m": 0.25, "rim": 0.5, "e": 0.18, "ec": "#2C62E0"},
+	"panel_azul": {"c": "#1C49B3", "r": 0.55, "m": 0.05, "rim": 0.4, "e": 0.2, "ec": "#2C62E0"},
 	"panel_linea": {"c": "#BFD6FF", "r": 0.4, "e": 0.35, "ec": "#9EC0FF"},
 	"canela": {"c": "#E0914B", "r": 0.72, "rim": 0.45},
 	"canela_osc": {"c": "#B96A30", "r": 0.75, "rim": 0.3},
@@ -42,12 +42,14 @@ const PALETA := {
 	"coral": {"c": "#FF7B6E", "r": 0.55, "e": 0.75, "ec": "#FF6F61", "rim": 0.5},
 	"cian": {"c": "#27C4D8", "r": 0.45, "rim": 0.5},
 	"llama": {"c": "#FFE3A0", "r": 0.5, "e": 3.0, "ec": "#FFB347", "a": 0.75},
+	"burbuja": {"c": "#D6F7FF", "r": 0.05, "a": 0.16, "rim": 1.0},
+	"estrella": {"c": "#FFFFFF", "r": 1.0, "u": true, "v": true},
 	"regolito": {"c": "#FFFFFF", "r": 0.92, "v": true},
-	"roca": {"c": "#8580A0", "r": 0.9, "v": true},
-	"camino": {"c": "#B9B3C6", "r": 0.75, "rim": 0.2},
-	"camino_borde": {"c": "#8E88A6", "r": 0.8},
-	"crater_fondo": {"c": "#4B4763", "r": 0.95},
-	"crater_borde": {"c": "#A6A1BC", "r": 0.9},
+	"roca": {"c": "#FFFFFF", "r": 0.9, "v": true},
+	"camino": {"c": "#A29CB8", "r": 0.8},
+	"camino_borde": {"c": "#CFCADB", "r": 0.8},
+	"crater_fondo": {"c": "#555070", "r": 0.95},
+	"crater_borde": {"c": "#8C87A6", "r": 0.9},
 }
 
 static var _mats := {}
@@ -567,4 +569,80 @@ static func own(raiz: Node, n: Node = null) -> void:
 		n = raiz
 	for child in n.get_children():
 		child.owner = raiz
-		own(raiz, child)
+		# las escenas instanciadas se guardan como instancia, sin copiar su contenido
+		if child.scene_file_path == "":
+			own(raiz, child)
+
+
+# ---------------------------------------------------------------- optimización
+
+## Grupos de adorno que no se animan: sus mallas se funden con las del nodo padre.
+const ESTATICOS := ["Ventanilla", "Hoja", "Pata", "Protector", "Deposito", "Control", "Camara", "Planta", "Eje",
+	"Sensor", "Taco", "Parche", "Casco", "Antena", "Celda", "Cuchara", "Veta", "Base", "Crater", "Acople",
+	"LuzPlataforma", "LuzFrontal", "LuzLateral", "LuzBandeja", "LuzTolva", "LuzTrasera", "LuzBase", "LuzCostado",
+	"LuzTope", "IndicadorPata", "Marco"]
+## Mallas que el juego mueve, oculta o anima por su nombre: nunca se funden.
+const CONSERVAR := ["Gota", "Agua", "SuperficieHorizontal", "Segmento", "Brace", "Baliza", "LamparaAmbar", "Luz", "Burbuja"]
+
+
+static func _sin_cifras(nombre: String) -> String:
+	return nombre.rstrip("0123456789")
+
+
+## Funde las mallas hermanas que comparten material para reducir las llamadas de dibujado.
+## Respeta pivotes, marcadores, escenas instanciadas y las mallas de `CONSERVAR`.
+static func fusionar(n: Node) -> void:
+	for child in n.get_children():
+		if child.scene_file_path == "":
+			fusionar(child)
+	for child in n.get_children():
+		if child.get_class() != "Node3D" or child.get_script() != null or child.scene_file_path != "":
+			continue
+		if not _sin_cifras(child.name) in ESTATICOS:
+			continue
+		var grupo := child as Node3D
+		if not grupo.scale.is_equal_approx(Vector3.ONE * grupo.scale.x):
+			continue
+		for g in grupo.get_children():
+			if g is MeshInstance3D and g.get_child_count() == 0:
+				var t: Transform3D = grupo.transform * (g as MeshInstance3D).transform
+				grupo.remove_child(g)
+				n.add_child(g, true)
+				(g as MeshInstance3D).transform = t
+		if grupo.get_child_count() == 0:
+			n.remove_child(grupo)
+			grupo.free()
+	var grupos := {}
+	for child in n.get_children():
+		var mi := child as MeshInstance3D
+		if mi == null or mi.get_child_count() > 0 or not mi.visible or mi.mesh == null:
+			continue
+		if _sin_cifras(mi.name) in CONSERVAR or not (mi.material_override is StandardMaterial3D):
+			continue
+		if not mi.scale.is_equal_approx(Vector3.ONE * mi.scale.x) or mi.mesh.get_surface_count() != 1:
+			continue
+		var formato := 1 if mi.mesh is ArrayMesh else 2
+		if mi.mesh is ArrayMesh and ((mi.mesh as ArrayMesh).surface_get_format(0) & Mesh.ARRAY_FORMAT_COLOR) != 0:
+			formato = 3
+		var key := "%s|%d|%d" % [mi.material_override.resource_name, mi.cast_shadow, formato]
+		if not grupos.has(key):
+			grupos[key] = []
+		grupos[key].append(mi)
+	for key in grupos:
+		var lista: Array = grupos[key]
+		if lista.size() < 2:
+			continue
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for mi in lista:
+			st.append_from(mi.mesh, 0, mi.transform)
+		st.index()
+		var fundida := MeshInstance3D.new()
+		fundida.name = "Malla_" + String(key).get_slice("|", 0)
+		fundida.mesh = st.commit()
+		fundida.material_override = lista[0].material_override
+		fundida.cast_shadow = lista[0].cast_shadow
+		n.add_child(fundida, true)
+		for mi in lista:
+			n.remove_child(mi)
+			mi.free()

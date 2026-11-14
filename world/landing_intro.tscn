@@ -60,7 +60,9 @@ far = 590.0
 [node name="Stars" parent="Sky" instance=ExtResource("4_stars")]
 
 [node name="Earth" parent="Sky" instance=ExtResource("6_earth")]
+transform = Transform3D(0.226, 0, 0, 0, 0.226, 0, 0, 0, 0.226, 0, 0, 0)
 
 [node name="DistantSun" parent="Sky" instance=ExtResource("7_sun")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
 [node name="LunarDust" parent="." instance=ExtResource("5_dust")]

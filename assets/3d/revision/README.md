@@ -1,5 +1,27 @@
 # Revisión de modelos de Killawasi
 
+## Versión 2 de las piezas
+
+Las escenas de `assets/3d/` se rehicieron con formas redondeadas y la paleta de la guía visual. Abre `res://world/killawasi_revision.tscn` y pulsa **F6**.
+
+| Tecla | Qué hace |
+|---|---|
+| **C** | Cambia de cámara: conjunto, cámara de juego, personajes, cadena de agua, energía |
+| **N** | Día y noche |
+| **D** | Escudo del domo: 100, 70, 30, 0 |
+| **A** | Nivel del tanque de agua |
+| **P** | Gota del procesador |
+| **L** | Puerta y escalerilla de la cápsula |
+| **T** | Nube de tormenta |
+| **1–5** | Poses del astronauta y la vicuña |
+| **F12** | Guarda una captura |
+
+Capturas de la versión 2: [día](v2_conjunto_dia.jpg), [noche](v2_conjunto_noche.jpg), [cámara de juego](v2_camara_juego.jpg), [personajes](v2_personajes.jpg), [cadena de agua](v2_modulos_agua.jpg), [energía](v2_modulos_energia.jpg), [aterrizaje](v2_aterrizaje.jpg).
+
+Cómo se generan y qué nombres se conservan: `assets/3d/herramientas/README.md`. Las comparativas JPG de abajo y el resto de este documento describen la versión 1.
+
+## Versión 1
+
 Abre `res://world/killawasi_revision.tscn` en Godot y pulsa **F6**. Pulsa **N** para alternar día y noche, **D** para recorrer los cuatro niveles visuales del domo, **A** para cambiar el nivel del tanque, **P** para reproducir la gota del procesador, **L** para abrir o cerrar el acceso y **1–5** para revisar las poses. La escena de prueba tiene seis casillas de referencia.
 
 Para ver la nave, el Sol, la Tierra y el terreno en movimiento, abre `res://world/landing_intro.tscn` y pulsa **F6**. **Esc** o **Espacio** saltan al final. [Captura del aterrizaje](aterrizaje.png).

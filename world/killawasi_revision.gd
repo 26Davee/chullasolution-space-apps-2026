@@ -1,85 +1,71 @@
 extends Node3D
+## Escena de revisión del arte de Killawasi (F6).
+## N día/noche · D escudo del domo (100, 70, 30, 0) · A nivel del tanque · P gota del procesador
+## L puerta y escalerilla · 1–5 poses · C cambia de cámara · T nube de tormenta · F12 guarda una captura.
 
-const ART := "res://assets/3d/"
-const SAMPLES := [
-	"procesador_hielo", "tanque_agua", "reciclador_agua", "panel_solar",
-	"generador_oxigeno", "bateria_lunar", "jardin_lunar",
-	"rover_lunar", "crater_hielo",
+const VISTAS := [
+	{"objetivo": Vector3(4.2, 3.4, 1.5), "giro": 6.0, "altura": 7.0, "distancia": 41.0, "fov": 42.0},
+	{"objetivo": Vector3(3.0, 1.2, 2.5), "giro": 0.0, "altura": 42.0, "distancia": 46.0, "fov": 34.0},
+	{"objetivo": Vector3(-4.6, 1.1, 9.6), "giro": 18.0, "altura": 12.0, "distancia": 9.0, "fov": 36.0},
+	{"objetivo": Vector3(14.5, 1.5, 1.5), "giro": -8.0, "altura": 20.0, "distancia": 17.0, "fov": 36.0},
+	{"objetivo": Vector3(-13.0, 1.2, -3.0), "giro": 12.0, "altura": 20.0, "distancia": 17.0, "fov": 36.0},
 ]
-@onready var key: DirectionalLight3D = $Luz
-@onready var environment: Environment = $Ambiente.environment
-@onready var character: Node3D = $Astronauta
-@onready var guide: Node3D = $Vicuna
-var night := false
-var shield_step := 0
-var water_step := 1
-var access_open := false
-const CELL_COLOR := Color("#7C7890")
+const ESCUDOS := [100.0, 70.0, 30.0, 0.0]
+
+@onready var camara: Camera3D = $Camara
+@onready var mundo: Node3D = $Mundo
+var vista := 0
+var escudo := 0
+var agua := 1
+var acceso_abierto := true
 
 
 func _ready() -> void:
-	environment = environment.duplicate()
-	$Ambiente.environment = environment
-	$Domo/Escudo.material_override = $Domo/Escudo.material_override.duplicate()
-	_layout_cells()
-	var access := $Capsula/Acceso as AnimationPlayer
-	access.play("cerrar")
-	access.seek(access.get_animation("cerrar").length, true)
-	access.stop(true)
-	for index in range(SAMPLES.size()):
-		var module := _object(SAMPLES[index])
-		module.name = SAMPLES[index]
-		module.position = Vector3(-8.0 + (index % 3) * 7.2, 0, -5.0 - floorf(index / 3.0) * 6.8)
-	$Camara.look_at(Vector3(-1.8, 0.7, -5.6))
+	_encuadrar()
+	$Astronauta/Poses.play("reposo")
+	$Vicuna/Poses.play("respirar")
+
+
+func _encuadrar() -> void:
+	var v: Dictionary = VISTAS[vista]
+	var giro := deg_to_rad(float(v["giro"]))
+	var altura := deg_to_rad(float(v["altura"]))
+	var objetivo: Vector3 = v["objetivo"]
+	camara.fov = v["fov"]
+	camara.position = objetivo + Vector3(sin(giro) * cos(altura), sin(altura), cos(giro) * cos(altura)) * float(v["distancia"])
+	camara.look_at(objetivo)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return
-	if event.keycode == KEY_N:
-		night = not night
-		key.light_energy = 0.18 if night else 0.68
-		environment.ambient_light_color = Color("#789CDE") if night else Color("#BFCBE9")
-		environment.ambient_light_energy = 0.32 if night else 0.60
-		$Tormenta.visible = night
-		$panel_solar/Indicador.visible = not night
-	if event.keycode == KEY_L:
-		access_open = not access_open
-		$Capsula/Acceso.play("abrir" if access_open else "cerrar")
-	if event.keycode == KEY_A:
-		water_step = (water_step + 1) % 3
-		$tanque_agua/NivelAgua.visible = water_step > 0
-		$tanque_agua/NivelAgua.scale.y = [1.0, 1.0, 1.85][water_step]
-	if event.keycode == KEY_P:
-		$procesador_hielo/AnimationPlayer.play("procesar")
-	if event.keycode == KEY_D:
-		shield_step = (shield_step + 1) % 4
-		var shield := $Domo/Escudo as MeshInstance3D
-		var shield_material := shield.material_override as StandardMaterial3D
-		var tint := shield_material.albedo_color
-		tint.a = [0.13, 0.09, 0.04, 0.0][shield_step]
-		shield_material.albedo_color = tint
-		$Domo.visible = shield_step < 3
+	match event.keycode:
+		KEY_N:
+			var ambiente := mundo.get_node("Ambiente")
+			ambiente.set_noche(not ambiente.noche)
+			mundo.get_node("PanelSolar/Indicador").visible = not ambiente.noche
+		KEY_D:
+			escudo = (escudo + 1) % ESCUDOS.size()
+			mundo.get_node("Domo").set_escudo(ESCUDOS[escudo])
+		KEY_A:
+			agua = (agua + 1) % 3
+			var nivel := mundo.get_node("TanqueAgua/NivelAgua") as Node3D
+			nivel.visible = agua > 0
+			nivel.scale.y = [1.0, 1.0, 1.85][agua]
+		KEY_P:
+			mundo.get_node("ProcesadorHielo/AnimationPlayer").play("procesar")
+		KEY_L:
+			acceso_abierto = not acceso_abierto
+			mundo.get_node("Capsula/Acceso").play("abrir" if acceso_abierto else "cerrar")
+		KEY_T:
+			$Tormenta.visible = not $Tormenta.visible
+		KEY_C:
+			vista = (vista + 1) % VISTAS.size()
+			_encuadrar()
+		KEY_F12:
+			get_viewport().get_texture().get_image().save_png("user://killawasi_captura.png")
+			print("Captura guardada en ", ProjectSettings.globalize_path("user://killawasi_captura.png"))
 	var index := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5].find(event.keycode)
 	if index >= 0:
-		character.get_node("Poses").play(["reposo", "caminar", "cavar", "cargar_hielo", "tocar_domo"][index])
-		guide.get_node("Poses").play(["respirar", "hablar", "senal", "aviso", "celebrar"][index])
-
-
-func _object(file: String) -> Node3D:
-	var piece := (load(ART + file + ".tscn") as PackedScene).instantiate() as Node3D
-	add_child(piece)
-	return piece
-
-func _layout_cells() -> void:
-	var surface := BoxMesh.new()
-	surface.size = Vector3(5.6, 0.03, 4.2)
-	var material := StandardMaterial3D.new()
-	material.albedo_color = CELL_COLOR.lerp(Color("#B9B4BF"), 0.16)
-	surface.material = material
-	for index in range(6):
-		var slot := MeshInstance3D.new()
-		slot.name = "Casilla%d" % (index + 1)
-		slot.mesh = surface
-		slot.position = Vector3(-8.0 + (index % 3) * 7.2, 0.006, -5.0 - floorf(index / 3.0) * 6.8)
-		add_child(slot)
+		$Astronauta/Poses.play(["reposo", "caminar", "cavar", "cargar_hielo", "tocar_domo"][index])
+		$Vicuna/Poses.play(["respirar", "hablar", "senal", "aviso", "celebrar"][index])

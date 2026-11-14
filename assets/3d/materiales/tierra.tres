@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "tierra"
+albedo_color = Color(0.35686275, 0.22745098, 0.16862746, 1)
+roughness = 0.9

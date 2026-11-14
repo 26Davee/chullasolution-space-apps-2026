@@ -2,8 +2,8 @@
 
 [resource]
 resource_name = "ambar"
-albedo_color = Color(1, 0.7607843, 0.2901961, 1)
+albedo_color = Color(1, 0.7254902, 0.22745098, 1)
 roughness = 0.4
 emission_enabled = true
-emission = Color(1, 0.6901961, 0.18039216, 1)
-emission_energy_multiplier = 2.3
+emission = Color(1, 0.63529414, 0.12156863, 1)
+emission_energy_multiplier = 1.7

@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "hoja"
+albedo_color = Color(0.3882353, 0.78431374, 0.24705882, 1)
+roughness = 0.6
+rim_enabled = true
+rim = 0.16
+rim_tint = 0.6

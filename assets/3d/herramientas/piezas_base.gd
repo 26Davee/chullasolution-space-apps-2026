@@ -309,7 +309,7 @@ static func tanque() -> Node3D:
 
 	# acople lateral
 	var acople := K.node(root, "Acople")
-	K.on_ring(acople, 18.0, 0.97, 0.84)
+	K.on_ring(acople, 162.0, 0.97, 0.84)
 	K.part(acople, "BridaAcople", K.drum(0.2, 0.16, 14, 0.04), "ambar_mate", Vector3(0, 0, 0.06), Vector3(90, 0, 0))
 	K.part(acople, "Boca", K.drum(0.14, 0.2, 14, 0.04), "acero", Vector3(0, 0, 0.2), Vector3(90, 0, 0))
 	var marca := K.marker(root, "MarcadorAcople")

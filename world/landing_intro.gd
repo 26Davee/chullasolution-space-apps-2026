@@ -8,7 +8,7 @@ const DURATION := 7.4
 const GEAR_START := 2.25
 const GEAR_END := 4.65
 const DUST_START := 3.6
-const DEPLOYED_ANGLE := 0.51
+const DEPLOYED_ANGLE := 0.594
 const SKY_DEPTH := 300.0
 const EARTH_DIRECTION := Vector3(-0.73, 0.045, -0.68)
 const SUN_DIRECTION := Vector3(-0.25, 0.042, -0.97)
@@ -27,6 +27,11 @@ var finished := false
 
 func _ready() -> void:
 	camera.make_current()
+	# la cápsula baja con la puerta cerrada y la escalerilla recogida
+	var access := $Lander/Acceso as AnimationPlayer
+	access.play("cerrar")
+	access.seek(access.get_animation("cerrar").length, true)
+	access.pause()
 	_pose(0.0)
 
 
@@ -52,6 +57,7 @@ func _finish() -> void:
 	set_process(false)
 	set_process_input(false)
 	_pose(DURATION)
+	($Lander/Acceso as AnimationPlayer).play("abrir")
 	completed.emit()
 
 
@@ -71,8 +77,8 @@ func _pose(time: float) -> void:
 		var foot: Node3D = arm.get_node("Foot")
 		foot.rotation.z = -swing
 		var brace: MeshInstance3D = leg.get_node("Brace")
-		var brace_end := arm.transform * Vector3(0.0, -1.16, 0.0)
-		_align_link(brace, Vector3(-0.07, 0.51, 0.0), brace_end)
+		var brace_end := arm.transform * Vector3(0.0, -0.8, 0.0)
+		_align_link(brace, Vector3(0.05, 0.42, 0.0), brace_end)
 
 	plume.visible = time < TOUCHDOWN
 	var throttle := 0.83 + 0.31 * sin(descent * PI)
