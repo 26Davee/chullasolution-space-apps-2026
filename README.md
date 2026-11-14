@@ -67,14 +67,14 @@ chullasolution-space-apps-2026/
 
 ### Los seis puestos
 
-| Puesto | Rol | Carpetas |
-|---|---|---|
-| 1 | Integración y coordinación | `core/` · `scenes/` · `export/` · `docs/` · archivos de la raíz |
-| 2 | Ciencia, simulación y datos | `simulation/` · `data/nasa/` |
-| 3 | Mundo 3D y arte | `world/` · `assets/3d/` |
-| 4 | Interacción y jugabilidad | `camera/` · `interaction/` · `assets/audio/` |
-| 5 | Misiones, progresión y árbol | `progression/` · `data/missions/` |
-| 6 | Interfaz, tutorial y textos | `ui/` · `i18n/` · `assets/ui/` · `submission/` |
+| Puesto | Persona | Rol | Carpetas |
+|---|---|---|---|
+| 1 | Ángel David Espinoza Ureta | Integración y coordinación | `core/` · `scenes/` · `export/` · `docs/` · archivos de la raíz |
+| 2 | Anahi | Ciencia, simulación y datos | `simulation/` · `data/nasa/` |
+| 3 | Carlos Valladares | Mundo 3D y arte | `world/` · `assets/3d/` |
+| 4 | Nicolas Ladino | Interacción y jugabilidad | `camera/` · `interaction/` · `assets/audio/` |
+| 5 | Gael | Misiones, progresión y árbol | `progression/` · `data/missions/` |
+| 6 | Andrea | Interfaz, tutorial y textos | `ui/` · `i18n/` · `assets/ui/` · `submission/` |
 
 Cada persona además lleva su propio registro en `docs/registro/puesto-N.md` (uso de IA, material de terceros, datos usados). Así nadie edita el mismo archivo a la vez.
 
