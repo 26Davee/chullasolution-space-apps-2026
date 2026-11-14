@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cxqwwxleen0aq"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_luna"]
 radius = 1.0
@@ -6,23 +6,22 @@ height = 2.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_luna"]
 albedo_color = Color(0.72, 0.72, 0.76, 1)
-roughness = 1.0
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1679501561]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2128540088]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.6)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-rotation = Vector3(-0.6, 0.6, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1757928255]
+transform = Transform3D(0.8253356, -0.31882113, 0.46601957, 0, 0.8253356, 0.5646425, -0.5646425, -0.46601957, 0.68117887, 0, 0, 0)
 
-[node name="Luna" type="MeshInstance3D" parent="."]
+[node name="Luna" type="MeshInstance3D" parent="." unique_id=1533972141]
 mesh = SubResource("SphereMesh_luna")
 surface_material_override/0 = SubResource("StandardMaterial3D_luna")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=69827897]
 
-[node name="Label" type="Label" parent="CanvasLayer"]
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=1299578177]
 offset_left = 24.0
 offset_top = 20.0
 offset_right = 900.0
