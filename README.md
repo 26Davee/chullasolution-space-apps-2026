@@ -6,6 +6,8 @@
 
 **Status:** the game is built during the hackathon (Saturday 14 – Sunday 15 November 2026). Game code, art and data are created by the team inside this repository from the opening of the event, Saturday 14 November at 09:00 (Ecuador time). Everything we use that is not ours (engine, fonts, sounds, NASA data) is listed with its license or source in `docs/`. Everything made with AI help is listed in `docs/AI_USE.md`.
 
+**Game:** *Killawasi* (Kichwa for "Moon House"): a low-poly lunar outpost game guided by an astronaut vicuña.
+
 **Play it:** link added by the integration role when the first web build opens.
 
 ---
@@ -22,6 +24,7 @@ Repositorio del equipo **ChullaSolution**. Aquí vive todo el trabajo del hackat
 
 | Si quieres saber… | Lee |
 |---|---|
+| **Cómo es el juego** (diseño de Killawasi) | [`docs/DISENO_JUEGO.md`](docs/DISENO_JUEGO.md) |
 | **Qué carpeta es tuya y cuáles no debes tocar** | [`docs/QUIEN_TOCA_QUE.md`](docs/QUIEN_TOCA_QUE.md) |
 | **«Quiero hacer X, ¿dónde va?»** | La tabla «Quiero… → va en…» de [`docs/QUIEN_TOCA_QUE.md`](docs/QUIEN_TOCA_QUE.md) |
 | **Cómo subir y bajar cambios** (paso a paso) | [`docs/GUIA_GIT.md`](docs/GUIA_GIT.md) |
