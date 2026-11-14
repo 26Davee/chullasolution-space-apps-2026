@@ -1,0 +1,517 @@
+[gd_scene format=4]
+
+[sub_resource type="StandardMaterial3D" id="Grafito"]
+albedo_color = Color(0.16, 0.22, 0.3, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_0"]
+size = Vector3(0.98, 0.22, 1.31)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4utdd"]
+albedo_color = Color(0.9137255, 0.8862745, 0.85490197, 1)
+roughness = 0.68
+
+[sub_resource type="BoxMesh" id="Mesh_1"]
+size = Vector3(0.205, 1.25, 0.23)
+
+[sub_resource type="StandardMaterial3D" id="Turquesa"]
+albedo_color = Color(0.1, 0.51, 0.56, 1)
+roughness = 0.77
+
+[sub_resource type="CylinderMesh" id="Mesh_2"]
+top_radius = 0.195
+bottom_radius = 0.195
+height = 0.5
+radial_segments = 12
+rings = 0
+
+[sub_resource type="StandardMaterial3D" id="Acero"]
+albedo_color = Color(0.46, 0.51, 0.58, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_3"]
+size = Vector3(0.13, 0.97, 0.12)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3gwcs"]
+_surfaces = [{
+"aabb": AABB(-1.13, -0.0755, -1.21, 2.26, 0.151, 2.42),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHAAeAB8AIAAhACIAIwAkACUAJgAnACgAEwApABQAKgArACwALQAuAC8AMAAxADIAMAAyADMANAA1ADYANwA4ADkAEAA6ADsAEwA8ACkAPQA+AD8AQABBAEIAQwBEAEUARgBHAEgASQBKAEsASQBLAEwAEAA7AE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAEABNAGMAEwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbABuAG8AcABxAHIAcwB0AHUAEABjAHYAdwB4AHkAegB7AHwAfQB+AH8AgACBAIIAgACCAIMAhACFAIYAhwCIAIkAEAB2AIoAEwCLAIwAjQCOAI8AkACRAJIAkwCUAJUAlgCXAJgAmQCaAJsAnACdAJ4AnwCgAKEAEwAVAIsA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 162,
+"vertex_data": PackedByteArray("zzGMP76fmr2Hi5M/Fk6JP76fmr1Ab5Y/zzGMP3H+Jr1I4Zo/zzGMP76fmr2Hi5M/zzGMP3H+Jr1I4Zo/16OQP3H+Jr1Ab5Y/16OQP3H+Jr1Ab5Y/zzGMP3H+Jr1I4Zo/zzGMP3H+Jj1I4Zo/16OQP3H+Jj1Ab5Y/16OQP3H+Jj1Ab5Y/zzGMP3H+Jj1I4Zo/Fk6JP76fmj1Ab5Y/16OQP3H+Jj1Ab5Y/Fk6JP76fmj1Ab5Y/zzGMP76fmj2Hi5M/AAAAAL6fmr0AAAAAFk6JP76fmr1Ab5Y/zzGMP76fmr2Hi5M/AAAAAL6fmj0AAAAAzzGMP76fmj2Hi5M/Fk6JP76fmj1Ab5Y/zzGMP76fmr2Hi5O/zzGMP76fmr2Hi5M/16OQP3H+Jr1Ab5Y/zzGMP76fmr2Hi5O/16OQP3H+Jr1Ab5Y/16OQP3H+Jr1Ab5a/16OQP3H+Jr1Ab5a/16OQP3H+Jr1Ab5Y/16OQP3H+Jj1Ab5Y/16OQP3H+Jj1Ab5a/16OQP3H+Jj1Ab5a/16OQP3H+Jj1Ab5Y/zzGMP76fmj2Hi5M/16OQP3H+Jj1Ab5a/zzGMP76fmj2Hi5M/zzGMP76fmj2Hi5O/AAAAAL6fmr0AAAAAzzGMP76fmr2Hi5M/zzGMP76fmr2Hi5O/zzGMP76fmj2Hi5O/Fk6JP76fmr1Ab5a/zzGMP76fmr2Hi5O/16OQP3H+Jr1Ab5a/Fk6JP76fmr1Ab5a/16OQP3H+Jr1Ab5a/zzGMP3H+Jr1I4Zq/zzGMP3H+Jr1I4Zq/16OQP3H+Jr1Ab5a/16OQP3H+Jj1Ab5a/zzGMP3H+Jj1I4Zq/zzGMP3H+Jj1I4Zq/16OQP3H+Jj1Ab5a/zzGMP76fmj2Hi5O/zzGMP3H+Jj1I4Zq/zzGMP76fmj2Hi5O/Fk6JP76fmj1Ab5a/zzGMP76fmr2Hi5O/Fk6JP76fmr1Ab5a/Fk6JP76fmj1Ab5a/Fk6Jv76fmr1Ab5a/Fk6JP76fmr1Ab5a/zzGMP3H+Jr1I4Zq/Fk6Jv76fmr1Ab5a/zzGMP3H+Jr1I4Zq/zzGMv3H+Jr1I4Zq/zzGMv3H+Jr1I4Zq/zzGMP3H+Jr1I4Zq/zzGMP3H+Jj1I4Zq/zzGMv3H+Jr1I4Zq/zzGMP3H+Jj1I4Zq/zzGMv3H+Jj1I4Zq/zzGMv3H+Jj1I4Zq/zzGMP3H+Jj1I4Zq/Fk6JP76fmj1Ab5a/Fk6Jv76fmj1Ab5a/Fk6Jv76fmr1Ab5a/AAAAAL6fmj0AAAAAFk6Jv76fmj1Ab5a/Fk6JP76fmj1Ab5a/zzGMv76fmr2Hi5O/Fk6Jv76fmr1Ab5a/zzGMv3H+Jr1I4Zq/zzGMv76fmr2Hi5O/zzGMv3H+Jr1I4Zq/16OQv3H+Jr1Ab5a/16OQv3H+Jr1Ab5a/zzGMv3H+Jr1I4Zq/zzGMv3H+Jj1I4Zq/16OQv3H+Jr1Ab5a/zzGMv3H+Jj1I4Zq/16OQv3H+Jj1Ab5a/16OQv3H+Jj1Ab5a/zzGMv3H+Jj1I4Zq/Fk6Jv76fmj1Ab5a/16OQv3H+Jj1Ab5a/Fk6Jv76fmj1Ab5a/zzGMv76fmj2Hi5O/zzGMv76fmr2Hi5O/zzGMv76fmj2Hi5O/Fk6Jv76fmj1Ab5a/zzGMv76fmr2Hi5M/zzGMv76fmr2Hi5O/16OQv3H+Jr1Ab5a/zzGMv76fmr2Hi5M/16OQv3H+Jr1Ab5a/16OQv3H+Jr1Ab5Y/16OQv3H+Jr1Ab5Y/16OQv3H+Jr1Ab5a/16OQv3H+Jj1Ab5a/16OQv3H+Jj1Ab5Y/16OQv3H+Jj1Ab5Y/16OQv3H+Jj1Ab5a/zzGMv76fmj2Hi5O/16OQv3H+Jj1Ab5Y/zzGMv76fmj2Hi5O/zzGMv76fmj2Hi5M/zzGMv76fmr2Hi5M/AAAAAL6fmj0AAAAAzzGMv76fmj2Hi5M/zzGMv76fmj2Hi5O/Fk6Jv76fmr1Ab5Y/zzGMv76fmr2Hi5M/16OQv3H+Jr1Ab5Y/Fk6Jv76fmr1Ab5Y/16OQv3H+Jr1Ab5Y/zzGMv3H+Jr1I4Zo/zzGMv3H+Jr1I4Zo/16OQv3H+Jr1Ab5Y/16OQv3H+Jj1Ab5Y/zzGMv3H+Jj1I4Zo/zzGMv3H+Jj1I4Zo/16OQv3H+Jj1Ab5Y/zzGMv76fmj2Hi5M/zzGMv3H+Jj1I4Zo/zzGMv76fmj2Hi5M/Fk6Jv76fmj1Ab5Y/Fk6Jv76fmr1Ab5Y/Fk6Jv76fmj1Ab5Y/zzGMv76fmj2Hi5M/Fk6JP76fmr1Ab5Y/Fk6Jv76fmr1Ab5Y/zzGMv3H+Jr1I4Zo/Fk6JP76fmr1Ab5Y/zzGMv3H+Jr1I4Zo/zzGMP3H+Jr1I4Zo/zzGMP3H+Jr1I4Zo/zzGMv3H+Jr1I4Zo/zzGMv3H+Jj1I4Zo/zzGMP3H+Jr1I4Zo/zzGMv3H+Jj1I4Zo/zzGMP3H+Jj1I4Zo/zzGMP3H+Jj1I4Zo/zzGMv3H+Jj1I4Zo/Fk6Jv76fmj1Ab5Y/zzGMP3H+Jj1I4Zo/Fk6Jv76fmj1Ab5Y/Fk6JP76fmj1Ab5Y/AAAAAL6fmr0AAAAAFk6Jv76fmr1Ab5Y/Fk6JP76fmr1Ab5Y/EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1RVqar/v/9/VFWpqv+//39UVamq/7//f1RVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VVWpqv+//z9VVamq/7//P1VVqar/v/8/VVWpqv+//z9VVamq/7//P1VVqar///9//3//v////3//f/+/////f/9//7////9//3//v/+//79VVVTV/7//v1VVVNX/v/+/VVVU1f+//79VVVTV/7//v1VVVNX/v/+/VVVU1f9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9///8AAP+/IsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNin////v6qqqar///+/qqqpqv///7+qqqmq////v6qqqaoixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtv/fwAAAAD/v/9/AAAAAP+//3///wAA/7//vwAAVVWpqv+/AABVVamq/78AAFVVqar/vwAAVVWpqv+/AABVVamq/78AAFVVqar//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA//////9/AID/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvFAAD/v1RVqaoAAP+/VFWpqgAA/79UVamqAAD/v1RVqaoAAP+/VFWpqgAA/79UVamq3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh/38AAAAA/7//f///AAD/v/9///8AAP+//z//P1VVVNX/P/8/VVVU1f8//z9VVVTV/z//P1VVVNX/P/8/VVVU1f8//z9VVVTVAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//7//P/+/VVWpqv8//79VVamq/z//v1VVqar/P/+/VVWpqv8//79VVamq/z//v1VVqar/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2/8//3+qqqmq/z//f6qqqar/P/9/qqqpqv8//3+qqqmq7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin/38AAAAA/7//f///AAD/v/9///8AAP+//3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//v1VVqar/f/+/VVWpqv9//79VVamq/3//v1VVqar/f/+/VVWpqv9//79VVamq/38AAAAA/7//fwAAAAD/v/9/AAAAAP+/")
+}]
+
+[sub_resource type="StandardMaterial3D" id="CeldaClara"]
+albedo_color = Color(0.1, 0.24, 0.44, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_5"]
+size = Vector3(0.522, 0.03, 0.516)
+
+[sub_resource type="BoxMesh" id="Mesh_6"]
+size = Vector3(0.018, 0.007, 0.43)
+
+[sub_resource type="StandardMaterial3D" id="Celda"]
+albedo_color = Color(0.075, 0.18, 0.35, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_7"]
+size = Vector3(0.1, 0.09, 2.4)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3r6fl"]
+_surfaces = [{
+"aabb": AABB(-1.13, -0.0755, -1.21, 2.26, 0.151, 2.42),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHAAeAB8AIAAhACIAIwAkACUAJgAnACgAEwApABQAKgArACwALQAuAC8AMAAxADIAMAAyADMANAA1ADYANwA4ADkAEAA6ADsAEwA8ACkAPQA+AD8AQABBAEIAQwBEAEUARgBHAEgASQBKAEsASQBLAEwAEAA7AE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAEABNAGMAEwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbABuAG8AcABxAHIAcwB0AHUAEABjAHYAdwB4AHkAegB7AHwAfQB+AH8AgACBAIIAgACCAIMAhACFAIYAhwCIAIkAEAB2AIoAEwCLAIwAjQCOAI8AkACRAJIAkwCUAJUAlgCXAJgAmQCaAJsAnACdAJ4AnwCgAKEAEwAVAIsA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 162,
+"vertex_data": PackedByteArray("zzGMP76fmr2Hi5M/Fk6JP76fmr1Ab5Y/zzGMP3H+Jr1I4Zo/zzGMP76fmr2Hi5M/zzGMP3H+Jr1I4Zo/16OQP3H+Jr1Ab5Y/16OQP3H+Jr1Ab5Y/zzGMP3H+Jr1I4Zo/zzGMP3H+Jj1I4Zo/16OQP3H+Jj1Ab5Y/16OQP3H+Jj1Ab5Y/zzGMP3H+Jj1I4Zo/Fk6JP76fmj1Ab5Y/16OQP3H+Jj1Ab5Y/Fk6JP76fmj1Ab5Y/zzGMP76fmj2Hi5M/AAAAAL6fmr0AAAAAFk6JP76fmr1Ab5Y/zzGMP76fmr2Hi5M/AAAAAL6fmj0AAAAAzzGMP76fmj2Hi5M/Fk6JP76fmj1Ab5Y/zzGMP76fmr2Hi5O/zzGMP76fmr2Hi5M/16OQP3H+Jr1Ab5Y/zzGMP76fmr2Hi5O/16OQP3H+Jr1Ab5Y/16OQP3H+Jr1Ab5a/16OQP3H+Jr1Ab5a/16OQP3H+Jr1Ab5Y/16OQP3H+Jj1Ab5Y/16OQP3H+Jj1Ab5a/16OQP3H+Jj1Ab5a/16OQP3H+Jj1Ab5Y/zzGMP76fmj2Hi5M/16OQP3H+Jj1Ab5a/zzGMP76fmj2Hi5M/zzGMP76fmj2Hi5O/AAAAAL6fmr0AAAAAzzGMP76fmr2Hi5M/zzGMP76fmr2Hi5O/zzGMP76fmj2Hi5O/Fk6JP76fmr1Ab5a/zzGMP76fmr2Hi5O/16OQP3H+Jr1Ab5a/Fk6JP76fmr1Ab5a/16OQP3H+Jr1Ab5a/zzGMP3H+Jr1I4Zq/zzGMP3H+Jr1I4Zq/16OQP3H+Jr1Ab5a/16OQP3H+Jj1Ab5a/zzGMP3H+Jj1I4Zq/zzGMP3H+Jj1I4Zq/16OQP3H+Jj1Ab5a/zzGMP76fmj2Hi5O/zzGMP3H+Jj1I4Zq/zzGMP76fmj2Hi5O/Fk6JP76fmj1Ab5a/zzGMP76fmr2Hi5O/Fk6JP76fmr1Ab5a/Fk6JP76fmj1Ab5a/Fk6Jv76fmr1Ab5a/Fk6JP76fmr1Ab5a/zzGMP3H+Jr1I4Zq/Fk6Jv76fmr1Ab5a/zzGMP3H+Jr1I4Zq/zzGMv3H+Jr1I4Zq/zzGMv3H+Jr1I4Zq/zzGMP3H+Jr1I4Zq/zzGMP3H+Jj1I4Zq/zzGMv3H+Jr1I4Zq/zzGMP3H+Jj1I4Zq/zzGMv3H+Jj1I4Zq/zzGMv3H+Jj1I4Zq/zzGMP3H+Jj1I4Zq/Fk6JP76fmj1Ab5a/Fk6Jv76fmj1Ab5a/Fk6Jv76fmr1Ab5a/AAAAAL6fmj0AAAAAFk6Jv76fmj1Ab5a/Fk6JP76fmj1Ab5a/zzGMv76fmr2Hi5O/Fk6Jv76fmr1Ab5a/zzGMv3H+Jr1I4Zq/zzGMv76fmr2Hi5O/zzGMv3H+Jr1I4Zq/16OQv3H+Jr1Ab5a/16OQv3H+Jr1Ab5a/zzGMv3H+Jr1I4Zq/zzGMv3H+Jj1I4Zq/16OQv3H+Jr1Ab5a/zzGMv3H+Jj1I4Zq/16OQv3H+Jj1Ab5a/16OQv3H+Jj1Ab5a/zzGMv3H+Jj1I4Zq/Fk6Jv76fmj1Ab5a/16OQv3H+Jj1Ab5a/Fk6Jv76fmj1Ab5a/zzGMv76fmj2Hi5O/zzGMv76fmr2Hi5O/zzGMv76fmj2Hi5O/Fk6Jv76fmj1Ab5a/zzGMv76fmr2Hi5M/zzGMv76fmr2Hi5O/16OQv3H+Jr1Ab5a/zzGMv76fmr2Hi5M/16OQv3H+Jr1Ab5a/16OQv3H+Jr1Ab5Y/16OQv3H+Jr1Ab5Y/16OQv3H+Jr1Ab5a/16OQv3H+Jj1Ab5a/16OQv3H+Jj1Ab5Y/16OQv3H+Jj1Ab5Y/16OQv3H+Jj1Ab5a/zzGMv76fmj2Hi5O/16OQv3H+Jj1Ab5Y/zzGMv76fmj2Hi5O/zzGMv76fmj2Hi5M/zzGMv76fmr2Hi5M/AAAAAL6fmj0AAAAAzzGMv76fmj2Hi5M/zzGMv76fmj2Hi5O/Fk6Jv76fmr1Ab5Y/zzGMv76fmr2Hi5M/16OQv3H+Jr1Ab5Y/Fk6Jv76fmr1Ab5Y/16OQv3H+Jr1Ab5Y/zzGMv3H+Jr1I4Zo/zzGMv3H+Jr1I4Zo/16OQv3H+Jr1Ab5Y/16OQv3H+Jj1Ab5Y/zzGMv3H+Jj1I4Zo/zzGMv3H+Jj1I4Zo/16OQv3H+Jj1Ab5Y/zzGMv76fmj2Hi5M/zzGMv3H+Jj1I4Zo/zzGMv76fmj2Hi5M/Fk6Jv76fmj1Ab5Y/Fk6Jv76fmr1Ab5Y/Fk6Jv76fmj1Ab5Y/zzGMv76fmj2Hi5M/Fk6JP76fmr1Ab5Y/Fk6Jv76fmr1Ab5Y/zzGMv3H+Jr1I4Zo/Fk6JP76fmr1Ab5Y/zzGMv3H+Jr1I4Zo/zzGMP3H+Jr1I4Zo/zzGMP3H+Jr1I4Zo/zzGMv3H+Jr1I4Zo/zzGMv3H+Jj1I4Zo/zzGMP3H+Jr1I4Zo/zzGMv3H+Jj1I4Zo/zzGMP3H+Jj1I4Zo/zzGMP3H+Jj1I4Zo/zzGMv3H+Jj1I4Zo/Fk6Jv76fmj1Ab5Y/zzGMP3H+Jj1I4Zo/Fk6Jv76fmj1Ab5Y/Fk6JP76fmj1Ab5Y/AAAAAL6fmr0AAAAAFk6Jv76fmr1Ab5Y/Fk6JP76fmr1Ab5Y/EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1RVqar/v/9/VFWpqv+//39UVamq/7//f1RVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VVWpqv+//z9VVamq/7//P1VVqar/v/8/VVWpqv+//z9VVamq/7//P1VVqar///9//3//v////3//f/+/////f/9//7////9//3//v/+//79VVVTV/7//v1VVVNX/v/+/VVVU1f+//79VVVTV/7//v1VVVNX/v/+/VVVU1f9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9///8AAP+/IsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNin////v6qqqar///+/qqqpqv///7+qqqmq////v6qqqaoixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtv/fwAAAAD/v/9/AAAAAP+//3///wAA/7//vwAAVVWpqv+/AABVVamq/78AAFVVqar/vwAAVVWpqv+/AABVVamq/78AAFVVqar//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA//////9/AID/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvFAAD/v1RVqaoAAP+/VFWpqgAA/79UVamqAAD/v1RVqaoAAP+/VFWpqgAA/79UVamq3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh/38AAAAA/7//f///AAD/v/9///8AAP+//z//P1VVVNX/P/8/VVVU1f8//z9VVVTV/z//P1VVVNX/P/8/VVVU1f8//z9VVVTVAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//7//P/+/VVWpqv8//79VVamq/z//v1VVqar/P/+/VVWpqv8//79VVamq/z//v1VVqar/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2/8//3+qqqmq/z//f6qqqar/P/9/qqqpqv8//3+qqqmq7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin/38AAAAA/7//f///AAD/v/9///8AAP+//3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//v1VVqar/f/+/VVWpqv9//79VVamq/3//v1VVqar/f/+/VVWpqv9//79VVamq/38AAAAA/7//fwAAAAD/v/9/AAAAAP+/")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fr5jp"]
+albedo_color = Color(0.16470589, 0.6392157, 0.6901961, 1)
+roughness = 0.68
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_j6roo"]
+_surfaces = [{
+"aabb": AABB(-0.095, -0.075, -1.045, 0.19, 0.15, 2.09),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAFgAYABkAGgAbABwAGgAcAB0AHgAfACAAHgAgACEAIgAjACQAEwAlABQAJgAnACgAKQAqACsALAAtAC4ALAAuAC8AMAAxADIAMwA0ADUAEAA2ADcAEwA4ACUAOQA6ADsAPAA9AD4APwBAAEEAQgBDAEQARQBGAEcARQBHAEgAEAA3AEkASgBLAEwATQBOAE8AUABRAFIAUwBUAFUAVgBXAFgAWQBaAFsAXABdAF4AEABJAF8AEwBgAGEAYgBjAGQAYgBkAGUAZgBnAGgAZgBoAGkAagBrAGwAagBsAG0AEABfAG4AbwBwAHEAcgBzAHQAdQB2AHcAeAB5AHoAeAB6AHsAfAB9AH4AfwCAAIEAEABuAIIAEwCDAIQAhQCGAIcAhQCHAIgAiQCKAIsAjACNAI4AjwCQAJEAkgCTAJQAlQCWAJcAEwAVAIMA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 152,
+"vertex_data": PackedByteArray("2M53PZqZmb178nw/h/QbPZqZmb0QWIE/2M53PVTjJb2PwoU/2M53PZqZmb178nw/2M53PVTjJb2PwoU/XI/CPVTjJb0QWIE/XI/CPVTjJb0QWIE/2M53PVTjJb2PwoU/2M53PVTjJT2PwoU/XI/CPVTjJT0QWIE/XI/CPVTjJT0QWIE/2M53PVTjJT2PwoU/h/QbPZqZmT0QWIE/XI/CPVTjJT0QWIE/h/QbPZqZmT0QWIE/2M53PZqZmT178nw/AAAAAJqZmb0AAAAAh/QbPZqZmb0QWIE/2M53PZqZmb178nw/AAAAAJqZmT0AAAAA2M53PZqZmT178nw/h/QbPZqZmT0QWIE/2M53PZqZmb178ny/2M53PZqZmb178nw/XI/CPVTjJb0QWIE/XI/CPVTjJb0QWIG/XI/CPVTjJb0QWIG/XI/CPVTjJb0QWIE/XI/CPVTjJT0QWIE/XI/CPVTjJT0QWIG/XI/CPVTjJT0QWIG/XI/CPVTjJT0QWIE/2M53PZqZmT178nw/2M53PZqZmT178ny/AAAAAJqZmb0AAAAA2M53PZqZmb178nw/2M53PZqZmb178ny/2M53PZqZmT178ny/h/QbPZqZmb0QWIG/2M53PZqZmb178ny/XI/CPVTjJb0QWIG/h/QbPZqZmb0QWIG/XI/CPVTjJb0QWIG/2M53PVTjJb2PwoW/2M53PVTjJb2PwoW/XI/CPVTjJb0QWIG/XI/CPVTjJT0QWIG/2M53PVTjJT2PwoW/2M53PVTjJT2PwoW/XI/CPVTjJT0QWIG/2M53PZqZmT178ny/2M53PVTjJT2PwoW/2M53PZqZmT178ny/h/QbPZqZmT0QWIG/2M53PZqZmb178ny/h/QbPZqZmb0QWIG/h/QbPZqZmT0QWIG/h/QbvZqZmb0QWIG/h/QbPZqZmb0QWIG/2M53PVTjJb2PwoW/h/QbvZqZmb0QWIG/2M53PVTjJb2PwoW/2M53vVTjJb2PwoW/2M53vVTjJb2PwoW/2M53PVTjJb2PwoW/2M53PVTjJT2PwoW/2M53vVTjJb2PwoW/2M53PVTjJT2PwoW/2M53vVTjJT2PwoW/2M53vVTjJT2PwoW/2M53PVTjJT2PwoW/h/QbPZqZmT0QWIG/h/QbvZqZmT0QWIG/h/QbvZqZmb0QWIG/AAAAAJqZmT0AAAAAh/QbvZqZmT0QWIG/h/QbPZqZmT0QWIG/2M53vZqZmb178ny/h/QbvZqZmb0QWIG/2M53vVTjJb2PwoW/2M53vZqZmb178ny/2M53vVTjJb2PwoW/XI/CvVTjJb0QWIG/XI/CvVTjJb0QWIG/2M53vVTjJb2PwoW/2M53vVTjJT2PwoW/XI/CvVTjJb0QWIG/2M53vVTjJT2PwoW/XI/CvVTjJT0QWIG/XI/CvVTjJT0QWIG/2M53vVTjJT2PwoW/h/QbvZqZmT0QWIG/XI/CvVTjJT0QWIG/h/QbvZqZmT0QWIG/2M53vZqZmT178ny/2M53vZqZmb178ny/2M53vZqZmT178ny/h/QbvZqZmT0QWIG/2M53vZqZmb178nw/2M53vZqZmb178ny/XI/CvVTjJb0QWIG/XI/CvVTjJb0QWIE/XI/CvVTjJb0QWIE/XI/CvVTjJb0QWIG/XI/CvVTjJT0QWIG/XI/CvVTjJT0QWIE/XI/CvVTjJT0QWIE/XI/CvVTjJT0QWIG/2M53vZqZmT178ny/2M53vZqZmT178nw/2M53vZqZmb178nw/AAAAAJqZmT0AAAAA2M53vZqZmT178nw/2M53vZqZmT178ny/h/QbvZqZmb0QWIE/2M53vZqZmb178nw/XI/CvVTjJb0QWIE/h/QbvZqZmb0QWIE/XI/CvVTjJb0QWIE/2M53vVTjJb2PwoU/2M53vVTjJb2PwoU/XI/CvVTjJb0QWIE/XI/CvVTjJT0QWIE/2M53vVTjJT2PwoU/2M53vVTjJT2PwoU/XI/CvVTjJT0QWIE/2M53vZqZmT178nw/2M53vVTjJT2PwoU/2M53vZqZmT178nw/h/QbvZqZmT0QWIE/h/QbvZqZmb0QWIE/h/QbvZqZmT0QWIE/2M53vZqZmT178nw/h/QbPZqZmb0QWIE/h/QbvZqZmb0QWIE/2M53vVTjJb2PwoU/2M53PVTjJb2PwoU/2M53PVTjJb2PwoU/2M53vVTjJb2PwoU/2M53vVTjJT2PwoU/2M53PVTjJb2PwoU/2M53vVTjJT2PwoU/2M53PVTjJT2PwoU/2M53PVTjJT2PwoU/2M53vVTjJT2PwoU/h/QbvZqZmT0QWIE/2M53PVTjJT2PwoU/h/QbvZqZmT0QWIE/h/QbPZqZmT0QWIE/AAAAAJqZmb0AAAAAh/QbvZqZmb0QWIE/h/QbPZqZmb0QWIE/EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1RVqar/v/9/VFWpqv+//39UVamq/7//f1RVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VFWpqv+//z9UVamq/7//P1RVqar/v/8/VFWpqv///3//f/+/////f/9//7////9//3//v////3//f/+//7//v1RVVNX/v/+/VFVU1f+//79UVVTV/7//v1RVVNX/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/vyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYp////7+qqqmq////v6qqqar///+/qqqpqv///7+qqqmqIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bb/38AAAAA/7//fwAAAAD/v/9///8AAP+//78AAFRVqar/vwAAVFWpqv+/AABUVamq/78AAFRVqar/vwAAVFWpqv+/AABUVamq//////9/AID//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA/7///6oqVJX/v///qipUlf+///+qKlSV/7///6oqVJX/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v9w5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxQAA/79UVamqAAD/v1RVqaoAAP+/VFWpqgAA/79UVamqAAD/v1RVqaoAAP+/VFWpqtw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsof9/AAAAAP+//3///wAA/7//f///AAD/v/8//z9UVVTV/z//P1RVVNX/P/8/VFVU1f8//z9UVVTVAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//7//P/+/VFWpqv8//79UVamq/z//v1RVqar/P/+/VFWpqv9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb/z//f6qqqar/P/9/qqqpqv8//3+qqqmq/z//f6qqqaruXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2Kf/fwAAAAD/v/9///8AAP+//3///wAA/7//f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//79UVamq/3//v1RVqar/f/+/VFWpqv9//79UVamq/3//v1RVqar/f/+/VFWpqv9/AAAAAP+//38AAAAA/7//fwAAAAD/vw==")
+}]
+
+[sub_resource type="StandardMaterial3D" id="Ceramica"]
+albedo_color = Color(0.86, 0.81, 0.78, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_8"]
+size = Vector3(0.65, 0.51, 0.33)
+
+[sub_resource type="StandardMaterial3D" id="Ambar"]
+albedo_color = Color(0.79, 0.44, 0.13, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_9"]
+size = Vector3(0.23, 0.055, 0.036)
+
+[sub_resource type="BoxShape3D" id="Shape_SuperficiePanel"]
+size = Vector3(4.75, 0.18, 2.42)
+
+[sub_resource type="BoxShape3D" id="Shape_VolumenSoporte"]
+size = Vector3(3.78, 1.36, 1.31)
+
+[node name="PanelSolar" type="StaticBody3D" unique_id=972209630]
+
+[node name="Base0" type="MeshInstance3D" parent="." unique_id=320614903]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.41, 0.11, 0)
+material_override = SubResource("Grafito")
+mesh = SubResource("Mesh_0")
+
+[node name="Pie0" type="MeshInstance3D" parent="." unique_id=1101346851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.41, 0.71, 0)
+material_override = SubResource("StandardMaterial3D_4utdd")
+mesh = SubResource("Mesh_1")
+
+[node name="Bisagra0" type="MeshInstance3D" parent="." unique_id=1180940783]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -1.41, 1.42, 0)
+material_override = SubResource("Turquesa")
+mesh = SubResource("Mesh_2")
+
+[node name="Refuerzo0" type="MeshInstance3D" parent="." unique_id=1357108919]
+transform = Transform3D(1, 0, 0, 0, 0.8290376, -0.5591929, 0, 0.5591929, 0.8290376, -1.41, 0.59, 0.27)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_3")
+
+[node name="Base1" type="MeshInstance3D" parent="." unique_id=24796933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.41, 0.11, 0)
+material_override = SubResource("Grafito")
+mesh = SubResource("Mesh_0")
+
+[node name="Pie1" type="MeshInstance3D" parent="." unique_id=1204205965]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.41, 0.71, 0)
+material_override = SubResource("StandardMaterial3D_4utdd")
+mesh = SubResource("Mesh_1")
+
+[node name="Bisagra1" type="MeshInstance3D" parent="." unique_id=1717197565]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 1.41, 1.42, 0)
+material_override = SubResource("Turquesa")
+mesh = SubResource("Mesh_2")
+
+[node name="Refuerzo1" type="MeshInstance3D" parent="." unique_id=1667137260]
+transform = Transform3D(1, 0, 0, 0, 0.8290376, -0.5591929, 0, 0.5591929, 0.8290376, 1.41, 0.59, 0.27)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_3")
+
+[node name="Ala" type="Node3D" parent="." unique_id=1301995284]
+transform = Transform3D(1, 0, 0, 0, 0.9135454, -0.40673664, 0, 0.40673664, 0.9135454, 0, 1.66, 0)
+
+[node name="Bandeja" type="MeshInstance3D" parent="Ala" unique_id=2108039932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.24, 0, 0)
+material_override = SubResource("StandardMaterial3D_4utdd")
+mesh = SubResource("ArrayMesh_3gwcs")
+
+[node name="Celda0_0" type="MeshInstance3D" parent="Ala" unique_id=1326185564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.054, 0.082, -0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor0_0" type="MeshInstance3D" parent="Ala" unique_id=688282532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2189999, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda0_1" type="MeshInstance3D" parent="Ala" unique_id=1685974515]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.054, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor0_1" type="MeshInstance3D" parent="Ala" unique_id=326965264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2189999, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda0_2" type="MeshInstance3D" parent="Ala" unique_id=2036131062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.054, 0.082, 0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor0_2" type="MeshInstance3D" parent="Ala" unique_id=1759769304]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2189999, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda0_3" type="MeshInstance3D" parent="Ala" unique_id=1820917463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.054, 0.082, 0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor0_3" type="MeshInstance3D" parent="Ala" unique_id=721667049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2189999, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda1_0" type="MeshInstance3D" parent="Ala" unique_id=365449621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.506, 0.082, -0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor1_0" type="MeshInstance3D" parent="Ala" unique_id=1445356325]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.671, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda1_1" type="MeshInstance3D" parent="Ala" unique_id=552346438]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.506, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor1_1" type="MeshInstance3D" parent="Ala" unique_id=1518795453]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.671, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda1_2" type="MeshInstance3D" parent="Ala" unique_id=1342822684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.506, 0.082, 0.2735)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor1_2" type="MeshInstance3D" parent="Ala" unique_id=1407804671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.671, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda1_3" type="MeshInstance3D" parent="Ala" unique_id=817859951]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.506, 0.082, 0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor1_3" type="MeshInstance3D" parent="Ala" unique_id=1232014724]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.671, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda2_0" type="MeshInstance3D" parent="Ala" unique_id=784430511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.958, 0.082, -0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor2_0" type="MeshInstance3D" parent="Ala" unique_id=1425753850]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.123, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda2_1" type="MeshInstance3D" parent="Ala" unique_id=30062933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.958, 0.082, -0.2735)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor2_1" type="MeshInstance3D" parent="Ala" unique_id=1634135471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.123, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda2_2" type="MeshInstance3D" parent="Ala" unique_id=340943103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.958, 0.082, 0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor2_2" type="MeshInstance3D" parent="Ala" unique_id=1546259080]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.123, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda2_3" type="MeshInstance3D" parent="Ala" unique_id=930984723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.958, 0.082, 0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor2_3" type="MeshInstance3D" parent="Ala" unique_id=1186058549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.123, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda3_0" type="MeshInstance3D" parent="Ala" unique_id=294580730]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.41, 0.082, -0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor3_0" type="MeshInstance3D" parent="Ala" unique_id=1949934235]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.575, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda3_1" type="MeshInstance3D" parent="Ala" unique_id=967459772]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.41, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor3_1" type="MeshInstance3D" parent="Ala" unique_id=869926714]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.575, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda3_2" type="MeshInstance3D" parent="Ala" unique_id=1977741041]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.41, 0.082, 0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor3_2" type="MeshInstance3D" parent="Ala" unique_id=1376862614]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.575, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda3_3" type="MeshInstance3D" parent="Ala" unique_id=1713461326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.41, 0.082, 0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor3_3" type="MeshInstance3D" parent="Ala" unique_id=1452289570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.575, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda4_0" type="MeshInstance3D" parent="Ala" unique_id=1534839465]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41, 0.082, -0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor4_0" type="MeshInstance3D" parent="Ala" unique_id=1145603235]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda4_1" type="MeshInstance3D" parent="Ala" unique_id=688115640]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor4_1" type="MeshInstance3D" parent="Ala" unique_id=481560539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda4_2" type="MeshInstance3D" parent="Ala" unique_id=1660724282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41, 0.082, 0.2735)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor4_2" type="MeshInstance3D" parent="Ala" unique_id=1988278607]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda4_3" type="MeshInstance3D" parent="Ala" unique_id=1107799063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.41, 0.082, 0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor4_3" type="MeshInstance3D" parent="Ala" unique_id=136090182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda5_0" type="MeshInstance3D" parent="Ala" unique_id=1569301627]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.958, 0.082, -0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor5_0" type="MeshInstance3D" parent="Ala" unique_id=1651079293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.793, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda5_1" type="MeshInstance3D" parent="Ala" unique_id=131870333]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.958, 0.082, -0.2735)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor5_1" type="MeshInstance3D" parent="Ala" unique_id=1468845716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.793, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda5_2" type="MeshInstance3D" parent="Ala" unique_id=2064818239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.958, 0.082, 0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor5_2" type="MeshInstance3D" parent="Ala" unique_id=1812114107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.793, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda5_3" type="MeshInstance3D" parent="Ala" unique_id=165878107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.958, 0.082, 0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor5_3" type="MeshInstance3D" parent="Ala" unique_id=1615922414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.793, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda6_0" type="MeshInstance3D" parent="Ala" unique_id=223017710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.506, 0.082, -0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor6_0" type="MeshInstance3D" parent="Ala" unique_id=1448758039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3410001, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda6_1" type="MeshInstance3D" parent="Ala" unique_id=111526943]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.506, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor6_1" type="MeshInstance3D" parent="Ala" unique_id=1151960695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3410001, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda6_2" type="MeshInstance3D" parent="Ala" unique_id=231298512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.506, 0.082, 0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor6_2" type="MeshInstance3D" parent="Ala" unique_id=1051710908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3410001, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda6_3" type="MeshInstance3D" parent="Ala" unique_id=1946348184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.506, 0.082, 0.8205)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor6_3" type="MeshInstance3D" parent="Ala" unique_id=392723645]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3410001, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda7_0" type="MeshInstance3D" parent="Ala" unique_id=1782442827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.054, 0.082, -0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor7_0" type="MeshInstance3D" parent="Ala" unique_id=1848943510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.889, 0.101, -0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda7_1" type="MeshInstance3D" parent="Ala" unique_id=2087058510]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.054, 0.082, -0.2735)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor7_1" type="MeshInstance3D" parent="Ala" unique_id=1325904179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.889, 0.101, -0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda7_2" type="MeshInstance3D" parent="Ala" unique_id=71769920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.054, 0.082, 0.2735)
+material_override = SubResource("CeldaClara")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor7_2" type="MeshInstance3D" parent="Ala" unique_id=1903188802]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.889, 0.101, 0.2735)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Celda7_3" type="MeshInstance3D" parent="Ala" unique_id=2005381078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.054, 0.082, 0.8205)
+material_override = SubResource("Celda")
+mesh = SubResource("Mesh_5")
+
+[node name="Conductor7_3" type="MeshInstance3D" parent="Ala" unique_id=759159590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.889, 0.101, 0.8205)
+material_override = SubResource("Acero")
+mesh = SubResource("Mesh_6")
+
+[node name="Canto0" type="MeshInstance3D" parent="Ala" unique_id=935161056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31, 0.095, 0)
+material_override = SubResource("Turquesa")
+mesh = SubResource("Mesh_7")
+
+[node name="Canto1" type="MeshInstance3D" parent="Ala" unique_id=444654296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.31, 0.095, 0)
+material_override = SubResource("Turquesa")
+mesh = SubResource("Mesh_7")
+
+[node name="PlacaDerecha" type="MeshInstance3D" parent="Ala" unique_id=1011666446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.24, 0, 0)
+material_override = SubResource("StandardMaterial3D_4utdd")
+mesh = SubResource("ArrayMesh_3r6fl")
+
+[node name="EjeEntrePlacas" type="MeshInstance3D" parent="Ala" unique_id=339898577]
+material_override = SubResource("StandardMaterial3D_fr5jp")
+mesh = SubResource("ArrayMesh_j6roo")
+
+[node name="CajaControl" type="MeshInstance3D" parent="." unique_id=1298306141]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41, 0.21)
+material_override = SubResource("Ceramica")
+mesh = SubResource("Mesh_8")
+
+[node name="Indicador" type="MeshInstance3D" parent="." unique_id=812986085]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0.39)
+material_override = SubResource("Ambar")
+mesh = SubResource("Mesh_9")
+
+[node name="SuperficiePanel" type="CollisionShape3D" parent="." unique_id=1556059611]
+transform = Transform3D(1, 0, 0, 0, 0.9135454, -0.40673664, 0, 0.40673664, 0.9135454, 0, 1.66, 0)
+shape = SubResource("Shape_SuperficiePanel")
+
+[node name="VolumenSoporte" type="CollisionShape3D" parent="." unique_id=1957196158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+shape = SubResource("Shape_VolumenSoporte")

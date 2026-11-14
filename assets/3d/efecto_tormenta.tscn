@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yn1iy"]
+transparency = 1
+albedo_color = Color(1, 0.435, 0.38, 0.24)
+roughness = 0.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_cm7o0"]
+radial_segments = 8
+rings = 4
+
+[node name="EfectoTormenta" type="Node3D" unique_id=2052649223]
+
+[node name="Nube" type="MeshInstance3D" parent="." unique_id=1216106303]
+transform = Transform3D(1.38, 0, 0, 0, 0.71, 0, 0, 0, 0.89, -0.74, 0.53, 0.06)
+material_override = SubResource("StandardMaterial3D_yn1iy")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_cm7o0")
+
+[node name="@MeshInstance3D@196" type="MeshInstance3D" parent="." unique_id=1466752086]
+transform = Transform3D(1.38, 0, 0, 0, 0.71, 0, 0, 0, 0.89, 0.02, 0.76, 0)
+material_override = SubResource("StandardMaterial3D_yn1iy")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_cm7o0")
+
+[node name="@MeshInstance3D@197" type="MeshInstance3D" parent="." unique_id=924009150]
+transform = Transform3D(1.38, 0, 0, 0, 0.71, 0, 0, 0, 0.89, 0.7, 0.52, 0.11)
+material_override = SubResource("StandardMaterial3D_yn1iy")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_cm7o0")
+
+[node name="@MeshInstance3D@198" type="MeshInstance3D" parent="." unique_id=900190877]
+transform = Transform3D(1.38, 0, 0, 0, 0.71, 0, 0, 0, 0.89, -0.27, 0.38, 0.34)
+material_override = SubResource("StandardMaterial3D_yn1iy")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_cm7o0")
+
+[node name="@MeshInstance3D@199" type="MeshInstance3D" parent="." unique_id=1176988164]
+transform = Transform3D(1.38, 0, 0, 0, 0.71, 0, 0, 0, 0.89, 0.28, 0.45, 0.3)
+material_override = SubResource("StandardMaterial3D_yn1iy")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_cm7o0")

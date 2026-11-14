@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/3d/moon_world.tscn" id="1_terrain"]
+[ext_resource type="PackedScene" path="res://assets/3d/habitat_lunar.tscn" id="2_habitat"]
+[ext_resource type="PackedScene" path="res://assets/3d/panel_solar.tscn" id="3_solar"]
+[ext_resource type="PackedScene" path="res://assets/3d/generador_oxigeno.tscn" id="4_oxygen"]
+
+[ext_resource type="PackedScene" path="res://assets/3d/procesador_hielo.tscn" id="5_ice"]
+[ext_resource type="PackedScene" path="res://assets/3d/tanque_agua.tscn" id="6_water"]
+
+[node name="MoonWorld" instance=ExtResource("1_terrain")]
+
+[node name="HabitatLunar" parent="." instance=ExtResource("2_habitat")]
+position = Vector3(-6.6, 0, -1.2)
+rotation_degrees = Vector3(0, 15, 0)
+
+[node name="PanelSolar" parent="." instance=ExtResource("3_solar")]
+position = Vector3(2.2, 0, -5.6)
+rotation_degrees = Vector3(0, -22, 0)
+
+[node name="GeneradorOxigeno" parent="." instance=ExtResource("4_oxygen")]
+position = Vector3(6.2, 0, 2.1)
+rotation_degrees = Vector3(0, -10, 0)
+
+
+[node name="ProcesadorHielo" parent="." instance=ExtResource("5_ice")]
+position = Vector3(-2.4, 0, -7.5)
+rotation_degrees = Vector3(0, -13, 0)
+
+[node name="TanqueAgua" parent="." instance=ExtResource("6_water")]
+position = Vector3(-6.1, 0, -7.6)
+rotation_degrees = Vector3(0, 16, 0)

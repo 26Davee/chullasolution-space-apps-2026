@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://world/killawasi_revision.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/3d/moon_world.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://assets/3d/astronauta.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://assets/3d/vicuna.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_lander.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://assets/3d/domo_lunar.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://assets/3d/efecto_tormenta.tscn" id="7"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.016, 0.071, 0.18, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.749, 0.796, 0.914, 1)
+ambient_light_energy = 0.60
+
+[node name="KillawasiRevision" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Ambiente" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Luz" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-43, -35, 0)
+light_color = Color(1, 0.90, 0.77, 1)
+light_energy = 0.68
+shadow_enabled = true
+shadow_opacity = 0.67
+
+[node name="Camara" type="Camera3D" parent="."]
+position = Vector3(24, 28, 24)
+projection = 1
+size = 32.0
+current = true
+
+[node name="Terreno" parent="." instance=ExtResource("2")]
+
+[node name="Capsula" parent="." instance=ExtResource("5")]
+position = Vector3(0.2, 0, 4.8)
+
+[node name="Domo" parent="." instance=ExtResource("6")]
+position = Vector3(0.2, 0, 4.8)
+
+[node name="Astronauta" parent="." instance=ExtResource("3")]
+position = Vector3(-4.8, 0, 0.15)
+rotation_degrees = Vector3(0, 150, 0)
+
+[node name="Vicuna" parent="." instance=ExtResource("4")]
+position = Vector3(-2.8, 0, -0.8)
+rotation_degrees = Vector3(0, 153, 0)
+
+[node name="Tormenta" parent="." instance=ExtResource("7")]
+position = Vector3(0.2, 6.4, 4.8)
+scale = Vector3(4, 4, 4)
+visible = false
