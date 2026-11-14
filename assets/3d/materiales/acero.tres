@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "acero"
+albedo_color = Color(0.6627451, 0.7058824, 0.76862746, 1)
+metallic = 0.45
+roughness = 0.42
+rim_enabled = true
+rim = 0.12
+rim_tint = 0.6

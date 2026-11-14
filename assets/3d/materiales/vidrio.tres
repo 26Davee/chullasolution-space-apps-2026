@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "vidrio"
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.56078434, 0.90588236, 0.9607843, 0.3)
+roughness = 0.08
+rim_enabled = true
+rim = 0.36
+rim_tint = 0.6
