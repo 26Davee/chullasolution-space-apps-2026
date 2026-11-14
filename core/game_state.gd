@@ -34,6 +34,7 @@ signal vicuna_mensaje_mostrado(paso_tutorial: int, texto_clave: String)
 # Señales propias del puesto 1 (ciclo de vida de la partida; no están en el diccionario)
 signal partida_iniciada(modo: String)
 signal partida_terminada()
+signal viaje_hielo_terminado(hielo_traido: int)
 
 # ─────────────────────────── Constantes ───────────────────────────
 const MODO_CADETE := "cadete"
@@ -187,6 +188,8 @@ func fijar_recurso(tipo: String, valor: float) -> float:
 		hielo = int(round(v))
 	else:
 		set(tipo, v)
+	if _sim != null:  # la simulación manda: se escribe también allí para que no lo pise
+		_sim.estado[tipo] = hielo if tipo == "hielo" else v
 	_emitir_recurso(tipo)
 	return v
 
@@ -211,6 +214,9 @@ func pagar(tipo: String, costo: float) -> bool:
 
 func agregar_estrellas(cantidad: int) -> void:
 	estrellas = maxi(0, estrellas + cantidad)
+	if _sim != null:
+		_sim.estado["estrellas_ganadas"] = _sim.estado.get("estrellas_ganadas", 0) + maxi(cantidad, 0)
+		_sim._actualizar_nivel_base()
 	estrellas_actualizadas.emit(estrellas)
 
 
@@ -245,6 +251,47 @@ func solicitar_reparar_escudo() -> String:
 	return r
 
 
+func solicitar_procesar_hielo() -> String:
+	if _sim == null:
+		return "sin_simulacion"
+	var r: String = _sim.procesar_hielo()
+	_copiar_desde_simulacion()
+	return r
+
+
+## Avisa a la simulación si el astronauta está cerca de la base (la Vida solo se recupera ahí).
+func fijar_cerca_de_base(valor: bool) -> void:
+	if _sim != null:
+		_sim.estado["cerca_de_base"] = valor
+
+
+## Segundos que lleva y que dura el viaje por hielo actual (0 si no hay viaje).
+func progreso_viaje() -> Vector2:
+	if _sim == null or not en_viaje_hielo:
+		return Vector2.ZERO
+	return Vector2(_sim.estado.get("viaje_t", 0.0), _sim.estado.get("viaje_duracion", 0.0))
+
+
+## Foto de las variables del diccionario (la usa el puesto 5 para evaluar misiones).
+func instantanea() -> Dictionary:
+	return {
+		"energia": energia, "hielo": hielo, "agua": agua, "oxigeno": oxigeno, "vida": vida,
+		"escudo": escudo, "estrellas": estrellas, "modo_juego": modo_juego, "tiempo_juego": tiempo_juego,
+		"es_dia": es_dia, "tiempo_ciclo_solar": tiempo_ciclo_solar, "alerta_nube": alerta_nube,
+		"tiempo_para_nube": tiempo_para_nube, "nube_activa": nube_activa, "en_viaje_hielo": en_viaje_hielo,
+		"herramienta_nivel": herramienta_nivel, "paneles_instalados": paneles_instalados,
+		"procesador_instalado": procesador_instalado, "generador_instalado": generador_instalado,
+		"jardin_instalado": jardin_instalado, "bateria_instalada": bateria_instalada,
+	}
+
+
+## Costo en energía de una estructura (0 si no hay simulación o no existe).
+func costo_de(id_estructura: String) -> float:
+	if _sim == null:
+		return 0.0
+	return float(_sim.cfg.get("costos", {}).get(id_estructura, 0.0))
+
+
 ## ¿Hay una simulación enchufada? (útil para pruebas y para el HUD de depuración)
 func hay_simulacion() -> bool:
 	return _sim != null
@@ -269,6 +316,7 @@ func _crear_simulacion(modo: String):
 	sim.advertencia_nube_iniciada.connect(func(t: float): advertencia_nube_iniciada.emit(t))
 	sim.nube_impacto.connect(func(f: float, p: float): nube_impacto.emit(f, p))
 	sim.nube_finalizada.connect(func(): nube_finalizada.emit())
+	sim.viaje_hielo_terminado.connect(func(n: int): viaje_hielo_terminado.emit(n))
 	return sim
 
 

@@ -143,6 +143,20 @@ func _physics_process(delta: float) -> void:
 		_mover(delta)
 
 
+## Manda al astronauta a un punto desde código (lo usa el puesto 1 para el viaje por hielo).
+func ir_a(posicion: Vector3) -> void:
+	if astronauta == null or not is_instance_valid(astronauta):
+		_buscar_astronauta()
+		if astronauta == null:
+			return
+	_destino = posicion
+	_moviendo = true
+	_tiempo_atascado = 0.0
+	_mostrar_indicador(posicion, Vector3.UP)
+	_reproducir(_anim_caminar)
+	destino_fijado.emit(_destino)
+
+
 func _procesar_clic() -> void:
 	if camara == null:
 		camara = get_viewport().get_camera_3d()
