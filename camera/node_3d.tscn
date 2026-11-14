@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://viis8sdhuyyg"]
+
+[ext_resource type="Script" uid="uid://b5keq8j064awk" path="res://interaction/visor_astronauta.gd" id="1_5j5e2"]
+[ext_resource type="Script" uid="uid://bymmfnhrf2b2y" path="res://camera/camara_orbital.gd" id="1_afk4b"]
+[ext_resource type="Script" uid="uid://c10m428lw23ko" path="res://interaction/placement_system.gd" id="3_8wkso"]
+[ext_resource type="Script" uid="uid://cxmaljq5hf77i" path="res://interaction/click_to_move.gd" id="4_ljjse"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5h11f"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bx8n8"]
+
+[node name="Node3D" type="Node3D" unique_id=992422982]
+script = ExtResource("1_5j5e2")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1946511548]
+script = ExtResource("1_afk4b")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=549883650]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=363084414]
+transform = Transform3D(20, 0, 0, 0, 0.2, 0, 0, 0, 20, 0, 0, 0)
+shape = SubResource("BoxShape3D_5h11f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1834914409]
+transform = Transform3D(20, 0, 0, 0, 0.2, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("BoxMesh_bx8n8")
+
+[node name="Node3D" type="Node3D" parent="." unique_id=94794253 node_paths=PackedStringArray("camera", "placed_parent")]
+script = ExtResource("3_8wkso")
+camera = NodePath("../Camera3D")
+placed_parent = NodePath("..")
+
+[node name="ClickMove" type="Node3D" parent="." unique_id=1236884715 node_paths=PackedStringArray("camara")]
+script = ExtResource("4_ljjse")
+camara = NodePath("../Camera3D")
+modelo_mira_hacia_z_positivo = false
