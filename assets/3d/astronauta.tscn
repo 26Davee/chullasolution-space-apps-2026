@@ -1,0 +1,465 @@
+[gd_scene load_steps=31 format=3]
+
+[sub_resource type="StandardMaterial3D" id="bone"]
+albedo_color = Color(0.859, 0.812, 0.78, 1)
+roughness = 0.86
+
+[sub_resource type="StandardMaterial3D" id="seam"]
+albedo_color = Color(0.22, 0.3, 0.38, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="turquoise"]
+albedo_color = Color(0.169, 0.639, 0.69, 1)
+roughness = 0.79
+
+[sub_resource type="StandardMaterial3D" id="visor"]
+albedo_color = Color(0.07, 0.17, 0.24, 1)
+roughness = 0.33
+
+[sub_resource type="StandardMaterial3D" id="amber"]
+albedo_color = Color(0.784, 0.51, 0.188, 1)
+roughness = 0.77
+
+[sub_resource type="CylinderMesh" id="mesh_0"]
+top_radius = 0.337
+bottom_radius = 0.271
+height = 0.53
+radial_segments = 10
+rings = 0
+
+[sub_resource type="CylinderMesh" id="mesh_1"]
+top_radius = 0.3
+bottom_radius = 0.29
+height = 0.12
+radial_segments = 8
+rings = 0
+
+[sub_resource type="BoxMesh" id="mesh_2"]
+size = Vector3(0.25, 0.19, 0.07)
+
+[sub_resource type="BoxMesh" id="mesh_3"]
+size = Vector3(0.055, 0.045, 0.018)
+
+[sub_resource type="SphereMesh" id="mesh_4"]
+radius = 0.29
+height = 0.55
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="mesh_5"]
+radius = 0.235
+height = 0.44
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="mesh_6"]
+radius = 0.078
+height = 0.396
+radial_segments = 12
+rings = 6
+
+[sub_resource type="CylinderMesh" id="mesh_7"]
+top_radius = 0.204
+bottom_radius = 0.225
+height = 0.11
+radial_segments = 8
+rings = 0
+
+[sub_resource type="SphereMesh" id="mesh_8"]
+radius = 0.34
+height = 0.6
+radial_segments = 32
+rings = 16
+
+[sub_resource type="SphereMesh" id="mesh_9"]
+radius = 0.289
+height = 0.415
+radial_segments = 32
+rings = 16
+
+[sub_resource type="SphereMesh" id="mesh_10"]
+radius = 0.275
+height = 0.386
+radial_segments = 32
+rings = 16
+
+[sub_resource type="CylinderMesh" id="mesh_11"]
+top_radius = 0.091
+bottom_radius = 0.11
+height = 0.081
+radial_segments = 10
+rings = 0
+
+[sub_resource type="CylinderMesh" id="mesh_12"]
+top_radius = 0.136
+bottom_radius = 0.134
+height = 0.049
+radial_segments = 12
+rings = 0
+
+[sub_resource type="CapsuleMesh" id="mesh_13"]
+radius = 0.111
+height = 0.45
+radial_segments = 16
+rings = 6
+
+[sub_resource type="CylinderMesh" id="mesh_14"]
+top_radius = 0.092
+bottom_radius = 0.092
+height = 0.078
+radial_segments = 8
+rings = 0
+
+[sub_resource type="CapsuleMesh" id="mesh_15"]
+radius = 0.103
+height = 0.335
+radial_segments = 16
+rings = 6
+
+[sub_resource type="CapsuleMesh" id="mesh_16"]
+radius = 0.074
+height = 0.174
+radial_segments = 16
+rings = 6
+
+[sub_resource type="CapsuleMesh" id="mesh_17"]
+radius = 0.129
+height = 0.45
+radial_segments = 16
+rings = 6
+
+[sub_resource type="SphereMesh" id="mesh_18"]
+radius = 0.104
+height = 0.157
+radial_segments = 8
+rings = 4
+
+[sub_resource type="CapsuleMesh" id="mesh_19"]
+radius = 0.112
+height = 0.425
+radial_segments = 16
+rings = 6
+
+[sub_resource type="SphereMesh" id="mesh_20"]
+radius = 0.144
+height = 0.184
+radial_segments = 16
+rings = 8
+
+[sub_resource type="CylinderMesh" id="mesh_22"]
+top_radius = 0.141
+bottom_radius = 0.131
+height = 0.044
+radial_segments = 12
+rings = 0
+
+[sub_resource type="BoxMesh" id="VentilaMochila"]
+size = Vector3(0.178, 0.026, 0.014)
+
+[sub_resource type="SphereMesh" id="CaderaTraje"]
+radius = 0.276
+height = 0.24
+radial_segments = 16
+rings = 8
+
+[sub_resource type="BoxMesh" id="Parche"]
+size = Vector3(0.092, 0.078, 0.013)
+
+[node name="Astronauta" type="Node3D"]
+
+[node name="Cadera" type="Node3D" parent="."]
+position = Vector3(0, 0.82, 0)
+
+[node name="Torso" type="Node3D" parent="Cadera"]
+position = Vector3(0, 0.08, 0)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.24, 0)
+mesh = SubResource("mesh_0")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.76)
+
+[node name="Cinturon" type="MeshInstance3D" parent="Cadera"]
+position = Vector3(0, 0.02, 0)
+mesh = SubResource("mesh_1")
+material_override = SubResource("seam")
+scale = Vector3(1, 0.43, 0.88)
+
+[node name="PanelPecho" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0.023, 0.264, -0.245)
+mesh = SubResource("mesh_2")
+material_override = SubResource("seam")
+rotation_degrees = Vector3(7, 0, 0)
+scale = Vector3(0.86, 0.80, 0.55)
+
+[node name="Indicador" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0.075, 0.276, -0.271)
+mesh = SubResource("mesh_3")
+material_override = SubResource("amber")
+
+[node name="Mochila" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.259, 0.327)
+mesh = SubResource("mesh_4")
+material_override = SubResource("seam")
+scale = Vector3(0.94, 1.09, 0.61)
+
+[node name="CubiertaMochila" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.266, 0.452)
+mesh = SubResource("mesh_5")
+material_override = SubResource("bone")
+scale = Vector3(0.84, 1.09, 0.37)
+
+[node name="TanqueIzquierdo" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(-0.23, 0.257, 0.382)
+mesh = SubResource("mesh_6")
+material_override = SubResource("bone")
+
+[node name="TanqueDerecho" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0.23, 0.257, 0.382)
+mesh = SubResource("mesh_6")
+material_override = SubResource("bone")
+
+[node name="Cabeza" type="Node3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.51, 0)
+
+[node name="Cuello" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("mesh_7")
+material_override = SubResource("turquoise")
+
+[node name="Casco" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(0, 0.26, 0)
+mesh = SubResource("mesh_8")
+material_override = SubResource("bone")
+scale = Vector3(0.91, 0.94, 0.91)
+
+[node name="MarcoVisor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(0, 0.284, -0.248)
+mesh = SubResource("mesh_9")
+material_override = SubResource("seam")
+scale = Vector3(0.92, 0.9, 0.49)
+
+[node name="Visor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(0, 0.284, -0.273)
+mesh = SubResource("mesh_10")
+material_override = SubResource("visor")
+scale = Vector3(0.92, 0.9, 0.49)
+
+[node name="HombroIzq" type="Node3D" parent="Cadera/Torso"]
+position = Vector3(-0.34, 0.43, 0)
+
+[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq"]
+position = Vector3(-0.055, -0.06, 0)
+rotation_degrees = Vector3(0, 0, -21)
+mesh = SubResource("mesh_12")
+material_override = SubResource("turquoise")
+scale = Vector3(1.01, 1, 0.95)
+
+[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq"]
+position = Vector3(-0.075, -0.18, 0)
+rotation_degrees = Vector3(0, 0, -12)
+mesh = SubResource("mesh_13")
+material_override = SubResource("bone")
+
+[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroIzq"]
+position = Vector3(-0.095, -0.3, 0)
+
+[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo"]
+position = Vector3(0, 0.005, 0)
+mesh = SubResource("mesh_14")
+material_override = SubResource("bone")
+scale = Vector3(0.99, 1, 0.97)
+
+[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo"]
+position = Vector3(-0.013, -0.112, 0)
+mesh = SubResource("mesh_15")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.94)
+
+[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroIzq/Codo"]
+position = Vector3(-0.02, -0.23, 0)
+
+[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano"]
+position = Vector3(0, -0.037, -0.012)
+mesh = SubResource("mesh_16")
+material_override = SubResource("turquoise")
+scale = Vector3(1, 1, 0.84)
+
+[node name="MusloIzq" type="Node3D" parent="Cadera"]
+position = Vector3(-0.149, -0.04, 0)
+
+[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloIzq"]
+position = Vector3(0, -0.126, 0)
+mesh = SubResource("mesh_17")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.97)
+
+[node name="Rodilla" type="Node3D" parent="Cadera/MusloIzq"]
+position = Vector3(0, -0.3, 0)
+
+[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla"]
+position = Vector3(0, -0.045, -0.087)
+mesh = SubResource("mesh_18")
+material_override = SubResource("turquoise")
+scale = Vector3(0.86, 0.78, 0.4)
+
+[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla"]
+position = Vector3(0, -0.134, 0)
+mesh = SubResource("mesh_19")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.95)
+
+[node name="Tobillo" type="Node3D" parent="Cadera/MusloIzq/Rodilla"]
+position = Vector3(0, -0.28, 0)
+
+[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo"]
+position = Vector3(0, -0.109, -0.065)
+mesh = SubResource("mesh_20")
+material_override = SubResource("seam")
+scale = Vector3(0.86, 1, 1.23)
+
+[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo"]
+position = Vector3(0, -0.178, -0.065)
+mesh = SubResource("mesh_22")
+material_override = SubResource("seam")
+scale = Vector3(0.91, 1, 1.29)
+
+[node name="HombroDer" type="Node3D" parent="Cadera/Torso"]
+position = Vector3(0.34, 0.43, 0)
+
+[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroDer"]
+position = Vector3(0.055, -0.06, 0)
+rotation_degrees = Vector3(0, 0, 21)
+mesh = SubResource("mesh_12")
+material_override = SubResource("turquoise")
+scale = Vector3(1.01, 1, 0.95)
+
+[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer"]
+position = Vector3(0.075, -0.18, 0)
+rotation_degrees = Vector3(0, 0, 12)
+mesh = SubResource("mesh_13")
+material_override = SubResource("bone")
+
+[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroDer"]
+position = Vector3(0.095, -0.3, 0)
+
+[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo"]
+position = Vector3(0, 0.005, 0)
+mesh = SubResource("mesh_14")
+material_override = SubResource("bone")
+scale = Vector3(0.99, 1, 0.97)
+
+[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo"]
+position = Vector3(0.013, -0.112, 0)
+mesh = SubResource("mesh_15")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.94)
+
+[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroDer/Codo"]
+position = Vector3(0.02, -0.23, 0)
+
+[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano"]
+position = Vector3(0, -0.037, -0.012)
+mesh = SubResource("mesh_16")
+material_override = SubResource("turquoise")
+scale = Vector3(1, 1, 0.84)
+
+[node name="MusloDer" type="Node3D" parent="Cadera"]
+position = Vector3(0.149, -0.04, 0)
+
+[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloDer"]
+position = Vector3(0, -0.126, 0)
+mesh = SubResource("mesh_17")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.97)
+
+[node name="Rodilla" type="Node3D" parent="Cadera/MusloDer"]
+position = Vector3(0, -0.3, 0)
+
+[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla"]
+position = Vector3(0, -0.045, -0.087)
+mesh = SubResource("mesh_18")
+material_override = SubResource("turquoise")
+scale = Vector3(0.86, 0.78, 0.4)
+
+[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla"]
+position = Vector3(0, -0.134, 0)
+mesh = SubResource("mesh_19")
+material_override = SubResource("bone")
+scale = Vector3(1, 1, 0.95)
+
+[node name="Tobillo" type="Node3D" parent="Cadera/MusloDer/Rodilla"]
+position = Vector3(0, -0.28, 0)
+
+[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo"]
+position = Vector3(0, -0.109, -0.065)
+mesh = SubResource("mesh_20")
+material_override = SubResource("seam")
+scale = Vector3(0.86, 1, 1.23)
+
+[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo"]
+position = Vector3(0, -0.178, -0.065)
+mesh = SubResource("mesh_22")
+material_override = SubResource("seam")
+scale = Vector3(0.91, 1, 1.29)
+
+[node name="ComunicadorIzq" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(-0.298, 0.244, 0.016)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("mesh_11")
+material_override = SubResource("turquoise")
+
+[node name="ComunicadorDer" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
+position = Vector3(0.298, 0.244, 0.016)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("mesh_11")
+material_override = SubResource("turquoise")
+
+[node name="IndicadorTurquesa" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(-0.017, 0.273, -0.271)
+scale = Vector3(1.4, 0.59, 1)
+mesh = SubResource("mesh_3")
+material_override = SubResource("turquoise")
+
+[node name="Ventila1" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.205, 0.535)
+mesh = SubResource("VentilaMochila")
+material_override = SubResource("seam")
+
+[node name="Ventila2" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.251, 0.535)
+mesh = SubResource("VentilaMochila")
+material_override = SubResource("seam")
+
+[node name="Ventila3" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(0, 0.297, 0.535)
+mesh = SubResource("VentilaMochila")
+material_override = SubResource("seam")
+
+[node name="PelvisTraje" type="MeshInstance3D" parent="Cadera"]
+position = Vector3(0, -0.028, 0)
+rotation_degrees = Vector3(0, 0, 0)
+scale = Vector3(1, 1, 0.77)
+mesh = SubResource("CaderaTraje")
+material_override = SubResource("bone")
+
+[node name="ParcheMision" type="MeshInstance3D" parent="Cadera/Torso"]
+position = Vector3(-0.179, 0.335, -0.208)
+rotation_degrees = Vector3(4, 20, 0)
+scale = Vector3(1, 1, 1)
+mesh = SubResource("Parche")
+material_override = SubResource("turquoise")
+
+[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano"]
+position = Vector3(0.061, -0.029, -0.039)
+rotation_degrees = Vector3(0, 0, 26)
+scale = Vector3(0.49, 0.47, 0.54)
+mesh = SubResource("mesh_16")
+material_override = SubResource("turquoise")
+
+[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano"]
+position = Vector3(-0.061, -0.029, -0.039)
+rotation_degrees = Vector3(0, 0, -26)
+scale = Vector3(0.49, 0.47, 0.54)
+mesh = SubResource("mesh_16")
+material_override = SubResource("turquoise")
