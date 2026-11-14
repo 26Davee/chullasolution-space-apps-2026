@@ -5,8 +5,6 @@
 ; Format:
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
-;
-; DUEÑO: puesto 1. Los demás no editan este archivo (si necesitas un cambio, pídelo en el grupo).
 
 config_version=5
 
