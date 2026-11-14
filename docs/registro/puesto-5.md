@@ -1,6 +1,6 @@
 # Registro del puesto 5 · Misiones, progresión y árbol
 
-Persona: <!-- nombre -->  ·  Usuario de GitHub: <!-- usuario -->
+Persona: Gael  ·  Usuario de GitHub: <!-- usuario -->
 
 Este archivo es **solo tuyo**: nadie más lo edita, así que no hay choques. Anota al momento, no al final. El puesto 1 junta los seis registros antes del envío.
 
