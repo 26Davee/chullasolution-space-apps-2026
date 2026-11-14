@@ -1,6 +1,6 @@
 # Registro del puesto 3 · Mundo 3D y arte
 
-Persona: <!-- nombre -->  ·  Usuario de GitHub: <!-- usuario -->
+Persona: Carlos Valladares  ·  Usuario de GitHub: <!-- usuario -->
 
 Este archivo es **solo tuyo**: nadie más lo edita, así que no hay choques. Anota al momento, no al final. El puesto 1 junta los seis registros antes del envío.
 

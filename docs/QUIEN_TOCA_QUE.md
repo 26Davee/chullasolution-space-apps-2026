@@ -66,16 +66,16 @@ Si dudas dónde poner algo, busca aquí primero.
 
 ## Quién es quién
 
-Se llena el sábado cuando cada uno confirme su puesto.
+Puestos confirmados el sábado 14 de noviembre. Falta el usuario de GitHub de cada persona: el puesto 1 lo anota y activa el `CODEOWNERS`.
 
 | Puesto | Persona | Usuario de GitHub |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
-| 6 | | |
+| 1 | Ángel David Espinoza Ureta | `26Davee` |
+| 2 | Anahi | (pendiente) |
+| 3 | Carlos Valladares | (pendiente) |
+| 4 | Nicolas Ladino | (pendiente) |
+| 5 | Gael | (pendiente) |
+| 6 | Andrea | (pendiente) |
 
 ## Lo que nunca va en el repositorio
 

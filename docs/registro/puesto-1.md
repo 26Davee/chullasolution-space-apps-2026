@@ -1,6 +1,6 @@
 # Registro del puesto 1 · Integración y coordinación
 
-Persona: <!-- nombre -->  ·  Usuario de GitHub: <!-- usuario -->
+Persona: Ángel David Espinoza Ureta  ·  Usuario de GitHub: 26Davee
 
 Este archivo es **solo tuyo**: nadie más lo edita, así que no hay choques. Anota al momento, no al final. El puesto 1 junta los seis registros antes del envío.
 
