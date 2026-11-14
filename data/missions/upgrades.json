@@ -1,243 +1,312 @@
 {
   "arbol_habilidades": {
-    "nombre": "Árbol de Tecnologías y Mejoras de Killawasi",
+    "nombre": "Killawasi Tech & Upgrade Tree",
+    "nombre_es": "Árbol de Tecnologías y Mejoras de Killawasi",
     "puntos_totales_disponibles": 24,
     "ramas": [
       {
         "id": "energia",
-        "nombre": "Rama Energía ⚡",
-        "descripcion": "Ayuda a atrapar más luz del Sol, guardar electricidad para la noche y hacer que los paneles rindan mejor.",
+        "nombre": "Energy Branch ⚡",
+        "nombre_es": "Rama Energía ⚡",
+        "descripcion": "Capture more sunlight, store power for the night, and boost panel output.",
+        "descripcion_es": "Ayuda a atrapar más luz del Sol, guardar electricidad para la noche y hacer que los paneles rindan mejor.",
         "mejoras": [
           {
             "id": "panel_extra",
             "nivel": 1,
-            "nombre": "Panel Solar Extra",
+            "nombre": "Extra Solar Panel",
+            "nombre_es": "Panel Solar Extra",
             "costo": 1,
             "requisito": null,
             "efecto": {
               "tipo": "limite_estructura",
-              "descripcion": "Te permite construir hasta 3 paneles solares alrededor del domo (en lugar de solo 2).",
+              "descripcion": "Allows building up to 3 solar panels around the dome (instead of 2).",
+              "descripcion_es": "Te permite construir hasta 3 paneles solares alrededor del domo (en lugar de solo 2).",
               "valor": 3
             },
             "carta_nasa": {
-              "titulo": "Cómo brilla el Sol en los polos lunares",
-              "dato": "En los polos de la Luna el Sol nunca sube alto en el cielo, siempre alumbra «de ladito» cerca del horizonte. Poner más paneles en fila con distintos ángulos ayuda a atrapar mejor esa luz antes de que anochezca.",
-              "fuente": "NASA Glenn Research Center / Energía en Superficie Lunar"
+              "titulo": "How Sunlight Shines at the Lunar Poles",
+              "titulo_es": "Cómo brilla el Sol en los polos lunares",
+              "dato": "At the Moon's poles, the Sun never climbs high—it shines sideways near the horizon. Placing more panels in a row at different angles catches more light before nightfall.",
+              "dato_es": "En los polos de la Luna el Sol nunca sube alto en el cielo, siempre alumbra «de ladito» cerca del horizonte. Poner más paneles en fila con distintos ángulos ayuda a atrapar mejor esa luz antes de que anochezca.",
+              "fuente": "NASA Glenn Research Center / Lunar Surface Power",
+              "fuente_es": "NASA Glenn Research Center / Energía en Superficie Lunar"
             }
           },
           {
             "id": "bateria_modular",
             "nivel": 2,
-            "nombre": "Gran Batería Lunar",
+            "nombre": "Large Lunar Battery",
+            "nombre_es": "Gran Batería Lunar",
             "costo": 2,
             "requisito": "panel_extra",
             "efecto": {
               "tipo": "energia_maxima",
-              "descripcion": "Instala un gran banco de baterías junto al domo y sube tu energía máxima de 100 a 150 puntos.",
+              "descripcion": "Installs a large battery bank next to the dome and raises max energy from 100 to 150.",
+              "descripcion_es": "Instala un gran banco de baterías junto al domo y sube tu energía máxima de 100 a 150 puntos.",
               "valor": 150
             },
             "carta_nasa": {
-              "titulo": "Un abrigo para guardar electricidad",
-              "dato": "Igual que la batería de un teléfono se descarga rápido si hace mucho frío, las baterías espaciales de NASA llevan un abrigo térmico especial para guardar electricidad toda la noche lunar sin congelarse.",
-              "fuente": "NASA Tecnología de Almacenamiento de Energía / Glenn Research"
+              "titulo": "A Thermal Coat for Storing Electricity",
+              "titulo_es": "Un abrigo para guardar electricidad",
+              "dato": "Just like a phone battery drains fast in freezing cold, NASA space batteries wear special thermal blankets to store power safely through the whole lunar night.",
+              "dato_es": "Igual que la batería de un teléfono se descarga rápido si hace mucho frío, las baterías espaciales de NASA llevan un abrigo térmico especial para guardar electricidad toda la noche lunar sin congelarse.",
+              "fuente": "NASA Energy Storage Technology / Glenn Research",
+              "fuente_es": "NASA Tecnología de Almacenamiento de Energía / Glenn Research"
             }
           },
           {
             "id": "celulas_optimizadas",
             "nivel": 3,
-            "nombre": "Superpaneles de Tres Capas",
+            "nombre": "Triple-Layer Superpanels",
+            "nombre_es": "Superpaneles de Tres Capas",
             "costo": 3,
             "requisito": "bateria_modular",
             "efecto": {
               "tipo": "produccion_solar",
-              "descripcion": "Mejora cada panel solar para que genere un 25% más de electricidad durante todo el día.",
+              "descripcion": "Upgrades every solar panel to generate 25% more electricity all day long.",
+              "descripcion_es": "Mejora cada panel solar para que genere un 25% más de electricidad durante todo el día.",
               "valor": 0.75
             },
             "carta_nasa": {
-              "titulo": "Paneles sándwich de tres capas",
-              "dato": "Los paneles normales de las casas en la Tierra solo atrapan una parte de la luz. Los paneles espaciales de NASA tienen tres capas apiladas como un sándwich para capturar distintos colores de la luz solar y dar mucha más energía.",
-              "fuente": "NASA División de Energía Solar y Fotovoltaica Espacial"
+              "titulo": "Triple-Junction Sandwich Panels",
+              "titulo_es": "Paneles sándwich de tres capas",
+              "dato": "Home solar panels only catch part of sunlight. NASA space panels stack three layers like a sandwich to capture different wavelengths of light and generate far more electricity.",
+              "dato_es": "Los paneles normales de las casas en la Tierra solo atrapan una parte de la luz. Los paneles espaciales de NASA tienen tres capas apiladas como un sándwich para capturar distintos colores de la luz solar y dar mucha más energía.",
+              "fuente": "NASA Space Solar & Photovoltaics Division",
+              "fuente_es": "NASA División de Energía Solar y Fotovoltaica Espacial"
             }
           }
         ]
       },
       {
-        "id": "vida",
-        "nombre": "Rama Vida y Soporte Vital 🌱",
-        "descripcion": "Derrite el hielo más rápido, cuida el agua para hacer oxígeno y crea un rincón verde para tu tripulación.",
+        "id": "soporte_vital",
+        "nombre": "Human Life Support Branch 🌱",
+        "nombre_es": "Rama Soporte Vital Humano 🌱",
+        "descripcion": "Melt ice faster, conserve water while making oxygen, and grow a green haven for your human crew.",
+        "descripcion_es": "Derrite el hielo más rápido, cuida el agua para hacer oxígeno y crea un rincón verde para tu tripulación humana.",
         "mejoras": [
           {
             "id": "procesar_rapido",
             "nivel": 1,
-            "nombre": "Derretidor Rápido de Hielo",
+            "nombre": "Rapid Ice Melter",
+            "nombre_es": "Derretidor Rápido de Hielo",
             "costo": 1,
             "requisito": null,
             "efecto": {
               "tipo": "velocidad_procesador",
-              "descripcion": "El procesador derrite y limpia cada bloque de hielo en solo 3 segundos (en lugar de 5).",
+              "descripcion": "The processor melts and purifies each ice block in just 3 seconds (instead of 5).",
+              "descripcion_es": "El procesador derrite y limpia cada bloque de hielo en solo 3 segundos (en lugar de 5).",
               "valor": 3.0
             },
             "carta_nasa": {
-              "titulo": "Un «microondas» espacial para el hielo",
-              "dato": "En la Luna no hay aire caliente que derrita el hielo al sol. Por eso NASA prueba calentadores parecidos a un horno microondas que calientan el hielo por dentro en pocos segundos sin que se escape en vapor.",
-              "fuente": "NASA Marshall Space Flight Center / Procesamiento Térmico ISRU"
+              "titulo": "A Space \"Microwave\" for Ice",
+              "titulo_es": "Un «microondas» espacial para el hielo",
+              "dato": "There is no warm air on the Moon to melt ice in the sun. NASA tests microwave-style heaters that warm lunar ice from the inside in seconds without losing vapor.",
+              "dato_es": "En la Luna no hay aire caliente que derrita el hielo al sol. Por eso NASA prueba calentadores parecidos a un horno microondas que calientan el hielo por dentro en pocos segundos sin que se escape en vapor.",
+              "fuente": "NASA Marshall Space Flight Center / ISRU Thermal Processing",
+              "fuente_es": "NASA Marshall Space Flight Center / Procesamiento Térmico ISRU"
             }
           },
           {
             "id": "generador_eficiente",
             "nivel": 2,
-            "nombre": "Reciclador Inteligente de Aire",
+            "nombre": "Smart Air Recycler",
+            "nombre_es": "Reciclador Inteligente de Aire",
             "costo": 2,
             "requisito": "procesar_rapido",
             "efecto": {
               "tipo": "consumo_oxigeno",
-              "descripcion": "El Generador de Oxígeno ahorra una cuarta parte (25%) de agua y electricidad cada vez que fabrica aire.",
+              "descripcion": "The Oxygen Generator saves 25% of water and electricity whenever producing air.",
+              "descripcion_es": "El Generador de Oxígeno ahorra una cuarta parte (25%) de agua y electricidad cada vez que fabrica aire.",
               "valor": 0.75
             },
             "carta_nasa": {
-              "titulo": "Filtros finos que no desperdician agua",
-              "dato": "En el espacio cada gota de agua vale oro. Las máquinas modernas de NASA usan filtros ultrafinos especiales que separan el oxígeno del agua gastando menos electricidad y sin desperdiciar ni una sola gota.",
-              "fuente": "NASA División de Sistemas de Soporte Vital / OGA"
+              "titulo": "Ultra-Fine Filters That Waste Zero Water",
+              "titulo_es": "Filtros finos que no desperdician agua",
+              "dato": "In space every drop of water is gold. Modern NASA units use ultra-fine membranes that split oxygen from water using less power and wasting not a single drop.",
+              "dato_es": "En el espacio cada gota de agua vale oro. Las máquinas modernas de NASA usan filtros ultrafinos especiales que separan el oxígeno del agua gastando menos electricidad y sin desperdiciar ni una sola gota.",
+              "fuente": "NASA Life Support Systems Division / OGA",
+              "fuente_es": "NASA División de Sistemas de Soporte Vital / OGA"
             }
           },
           {
             "id": "jardin_lunar",
             "nivel": 3,
-            "nombre": "El Jardín Lunar",
+            "nombre": "The Lunar Garden",
+            "nombre_es": "El Jardín Lunar",
             "costo": 3,
             "requisito": "generador_eficiente",
             "efecto": {
               "tipo": "desbloqueo_jardin",
-              "descripcion": "Desbloquea el edificio del Jardín y duplica la velocidad a la que tus astronautas recuperan Vida dentro del domo.",
-              "valor": 0.4
+              "descripcion": "Unlocks the Garden module: plants add +0.10/s oxygen by photosynthesis while watered to support your human crew.",
+              "descripcion_es": "Desbloquea el módulo del Jardín: las plantas aportan +0.10/s de oxígeno por fotosíntesis mientras tengan agua para ayudar a la tripulación humana.",
+              "valor": 0.1
             },
             "carta_nasa": {
-              "titulo": "Plantas bajo la Gravedad Lunar",
-              "dato": "En la Luna pesas seis veces menos que en la Tierra, pero sí hay gravedad. Las raíces de las plantas todavía saben crecer hacia abajo buscando agua, y cuidar hojas verdes quita la tristeza y el cansancio de estar lejos de casa.",
-              "fuente": "NASA Programa de Investigación Humana y Agricultura Espacial"
+              "titulo": "Plants Under Lunar Gravity",
+              "titulo_es": "Plantas bajo la Gravedad Lunar",
+              "dato": "You weigh six times less on the Moon, yet gravity still pulls roots downward toward water—and caring for green leaves relieves fatigue and homesickness.",
+              "dato_es": "En la Luna pesas seis veces menos que en la Tierra, pero sí hay gravedad. Las raíces de las plantas todavía saben crecer hacia abajo buscando agua, y cuidar hojas verdes quita la tristeza y el cansancio de estar lejos de casa.",
+              "fuente": "NASA Human Research & Space Agriculture",
+              "fuente_es": "NASA Programa de Investigación Humana y Agricultura Espacial"
             }
           }
         ]
       },
       {
         "id": "escudo",
-        "nombre": "Rama Escudo y Protección 🛡️",
-        "descripcion": "Fortalece el escudo del domo contra las tormentas del Sol, abarata las reparaciones y avisa antes del peligro.",
+        "nombre": "Shield & Defense Branch 🛡️",
+        "nombre_es": "Rama Escudo y Protección 🛡️",
+        "descripcion": "Harden the dome shield against solar storms, lower repair costs, and get earlier warnings.",
+        "descripcion_es": "Fortalece el escudo del domo contra las tormentas del Sol, abarata las reparaciones y avisa antes del peligro.",
         "mejoras": [
           {
             "id": "reparar_barato",
             "nivel": 1,
-            "nombre": "Parches Mágicos Autorreparables",
+            "nombre": "Self-Healing Smart Patches",
+            "nombre_es": "Parches Mágicos Autorreparables",
             "costo": 1,
             "requisito": null,
             "efecto": {
               "tipo": "costo_reparacion",
-              "descripcion": "Reparar el escudo del domo cuesta menos energía: baja de 20 a 15 puntos (y de 30 a 22 en modo Ingeniero).",
+              "descripcion": "Lowers dome shield repair cost from 20 to 15 energy (and 30 to 22 in Engineer mode).",
+              "descripcion_es": "Reparar el escudo del domo cuesta menos energía: baja de 20 a 15 puntos (y de 30 a 22 en modo Ingeniero).",
               "valor": 15
             },
             "carta_nasa": {
-              "titulo": "Materiales que se curan solos como tu piel",
-              "dato": "NASA investiga paredes con bolitas diminutas de pegamento adentro: cuando una piedrita espacial hace un rasguño, las bolitas se rompen solas y tapan el hueco al instante, igual que tu piel cicatriza una herida.",
-              "fuente": "NASA Langley Research Center / Materiales Avanzados"
+              "titulo": "Materials That Heal Like Skin",
+              "titulo_es": "Materiales que se curan solos como tu piel",
+              "dato": "NASA researches walls packed with tiny resin capsules: when a micrometeoroid scratches a panel, capsules burst and seal the crack automatically—just like skin healing a cut.",
+              "dato_es": "NASA investiga paredes con bolitas diminutas de pegamento adentro: cuando una piedrita espacial hace un rasguño, las bolitas se rompen solas y tapan el hueco al instante, igual que tu piel cicatriza una herida.",
+              "fuente": "NASA Langley Research Center / Advanced Materials",
+              "fuente_es": "NASA Langley Research Center / Materiales Avanzados"
             }
           },
           {
             "id": "mas_resistencia",
             "nivel": 2,
-            "nombre": "Techo de Ladrillos Lunares",
+            "nombre": "Lunar Regolith Brick Roof",
+            "nombre_es": "Techo de Ladrillos Lunares",
             "costo": 2,
             "requisito": "reparar_barato",
             "efecto": {
               "tipo": "resistencia_nube",
-              "descripcion": "Las tormentas solares hacen menos daño al escudo: el golpe baja de 30 a 22 puntos (y de 40 a 30 en modo Ingeniero).",
+              "descripcion": "Reduces solar storm shield damage from 30 to 22 points (and 40 to 30 in Engineer mode).",
+              "descripcion_es": "Las tormentas solares hacen menos daño al escudo: el golpe baja de 30 a 22 puntos (y de 40 a 30 en modo Ingeniero).",
               "valor": 22
             },
             "carta_nasa": {
-              "titulo": "Usar la arena lunar como escudo gratis",
-              "dato": "Subir escudos pesados en un cohete desde la Tierra es carísimo. El gran truco de NASA es usar la misma arena de la Luna (regolito) apretada como ladrillos sobre el techo del domo para frenar la radiación del Sol.",
-              "fuente": "NASA RadLab / Blindaje con Suelo Lunar"
+              "titulo": "Using Moon Dust as Free Armor",
+              "titulo_es": "Usar la arena lunar como escudo gratis",
+              "dato": "Launching heavy armor from Earth is hugely expensive. NASA's smart trick is pressing local Moon sand (regolith) into bricks on top of the dome to block solar radiation.",
+              "dato_es": "Subir escudos pesados en un cohete desde la Tierra es carísimo. El gran truco de NASA es usar la misma arena de la Luna (regolito) apretada como ladrillos sobre el techo del domo para frenar la radiación del Sol.",
+              "fuente": "NASA RadLab / Regolith Radiation Shielding",
+              "fuente_es": "NASA RadLab / Blindaje con Suelo Lunar"
             }
           },
           {
             "id": "alerta_temprana",
             "nivel": 3,
-            "nombre": "Radar de Alerta Solar Temprana",
+            "nombre": "Early Solar Warning Radar",
+            "nombre_es": "Radar de Alerta Solar Temprana",
             "costo": 3,
             "requisito": "mas_resistencia",
             "efecto": {
               "tipo": "tiempo_alerta",
-              "descripcion": "Duplica el tiempo de aviso de la sirena solar de 20 a 40 segundos y prepara el domo para que repararlo tarde solo 2 segundos.",
+              "descripcion": "Doubles storm warning time from 20 to 40 seconds and cuts shield repair time to 2 seconds.",
+              "descripcion_es": "Duplica el tiempo de aviso de la sirena solar de 20 a 40 segundos y prepara el domo para que repararlo tarde solo 2 segundos.",
               "valor": 40,
               "tiempo_reparacion_s": 2
             },
             "carta_nasa": {
-              "titulo": "Satélites Vigías del Sol (DONKI)",
-              "dato": "NASA tiene satélites vigilando el Sol las 24 horas (como SOHO y SDO). Cuando ven una explosión solar, envían un mensaje por radio a la velocidad de la luz que llega mucho antes que la tormenta para avisar a los astronautas.",
-              "fuente": "NASA CCMC / Red de Clima Espacial DONKI"
+              "titulo": "Sun-Watching Satellites (DONKI)",
+              "titulo_es": "Satélites Vigías del Sol (DONKI)",
+              "dato": "NASA keeps satellites watching the Sun 24/7 (like SOHO and SDO). When they spot a solar flare, radio warnings travel at light speed and arrive long before the particle storm.",
+              "dato_es": "NASA tiene satélites vigilando el Sol las 24 horas (como SOHO y SDO). Cuando ven una explosión solar, envían un mensaje por radio a la velocidad de la luz que llega mucho antes que la tormenta para avisar a los astronautas.",
+              "fuente": "NASA CCMC / DONKI Space Weather Network",
+              "fuente_es": "NASA CCMC / Red de Clima Espacial DONKI"
             }
           }
         ]
       },
       {
         "id": "herramientas",
-        "nombre": "Rama Herramientas de Extracción ⛏️",
-        "descripcion": "Equipa a tu astronauta con mejores herramientas para traer mucho más hielo del cráter sin cansarse tanto.",
+        "nombre": "Extraction Tools Branch ⛏️",
+        "nombre_es": "Rama Herramientas de Extracción ⛏️",
+        "descripcion": "Equip your robot with better tools to haul far more crater ice while draining less battery per second.",
+        "descripcion_es": "Equipa a tu robot con mejores herramientas para traer mucho más hielo del cráter gastando menos batería por segundo.",
         "mejoras": [
           {
             "id": "pico_geologico",
             "nivel": 1,
-            "nombre": "Pico Lunar de Titanio",
+            "nombre": "Titanium Lunar Pickaxe",
+            "nombre_es": "Pico Lunar de Titanio",
             "costo": 1,
             "requisito": null,
             "efecto": {
               "tipo": "herramienta_hielo",
-              "descripcion": "Cambia la pala por un pico ligero: trae 4 bloques de hielo por viaje (el doble) y gasta menos Vida (8 en Cadete / 12 en Ingeniero).",
+              "descripcion": "Replaces the shovel with a light pickaxe: brings 4 ice blocks per trip and reduces robot battery drain to 0.45/s (0.68/s in Engineer mode).",
+              "descripcion_es": "Cambia la pala por un pico ligero: trae 4 bloques de hielo por viaje y reduce el consumo del robot afuera a 0.45 de Energía/s (0.68/s en Ingeniero).",
               "hielo_por_viaje": 4,
-              "vida_perdida_cadete": 8,
-              "vida_perdida_ingeniero": 12
+              "energia_por_s_cadete": 0.45,
+              "energia_por_s_ingeniero": 0.68
             },
             "carta_nasa": {
-              "titulo": "Herramientas ligeras para guantes gigantes",
-              "dato": "Los astronautas de las misiones Apollo usaron picos y martillos hechos de metales superligeros pero durísimos, con mangos gruesos pensados para poder agarrarlos bien con los guantes inflados del traje espacial.",
-              "fuente": "NASA Diario de la Superficie Lunar Apollo"
+              "titulo": "Light Tools Built for Lunar Rovers",
+              "titulo_es": "Herramientas ligeras para brazos robóticos",
+              "dato": "Moon-mining robots carry lightweight alloy picks and scoops so their motors work smoothly and save battery power in harsh lunar cold.",
+              "dato_es": "Los robots exploradores usan picos y palas de aleaciones ultraligeras para que sus brazos trabajen con menos esfuerzo y ahorren batería en el frío lunar.",
+              "fuente": "NASA Apollo & Artemis Robotics Surface Tools",
+              "fuente_es": "NASA Herramientas de Superficie Lunar Apollo y Artemis"
             }
           },
           {
             "id": "taladro_manual",
             "nivel": 2,
-            "nombre": "Taladro Rompehielo (ALSD)",
+            "nombre": "Ice-Breaker Drill (ALSD)",
+            "nombre_es": "Taladro Rompehielo (ALSD)",
             "costo": 2,
             "requisito": "pico_geologico",
             "efecto": {
               "tipo": "herramienta_hielo",
-              "descripcion": "Trae 7 bloques de hielo en cada expedición al cráter y reduce el cansancio del viaje a solo 6 puntos de Vida (9 en Ingeniero).",
+              "descripcion": "Brings 7 ice blocks per crater expedition and cuts robot outdoor drain to 0.30/s (0.45/s in Engineer mode).",
+              "descripcion_es": "Trae 7 bloques de hielo en cada expedición y reduce el gasto continuo del robot a 0.30 de Energía/s (0.45/s en Ingeniero).",
               "hielo_por_viaje": 7,
-              "vida_perdida_cadete": 6,
-              "vida_perdida_ingeniero": 9
+              "energia_por_s_cadete": 0.3,
+              "energia_por_s_ingeniero": 0.45
             },
             "carta_nasa": {
-              "titulo": "Excavar bajo el suelo congelado",
-              "dato": "El suelo de la Luna es tan duro que una pala solo rasca por encima. En las misiones Apollo 15 y 16 llevaron el taladro especial ALSD para perforar hasta 3 metros hacia abajo, donde el hielo está mejor escondido.",
-              "fuente": "NASA Equipo Científico Apollo (ALSD)"
+              "titulo": "Drilling Beneath Frozen Soil",
+              "titulo_es": "Excavar bajo el suelo congelado",
+              "dato": "Moon soil is so packed that a shovel only scratches the surface. Apollo 15 and 16 tested the ALSD drill, and NASA's TRIDENT robotic drill cores down to reach hidden ice.",
+              "dato_es": "El suelo de la Luna es tan duro que una pala solo rasca por encima. Apollo 15 y 16 probaron el taladro ALSD, y hoy robots como VIPER usan taladros especiales para llegar al hielo escondido.",
+              "fuente": "NASA Apollo Science Team (ALSD) / TRIDENT",
+              "fuente_es": "NASA Equipo Científico Apollo (ALSD) / TRIDENT"
             }
           },
           {
             "id": "taladro_mochila",
             "nivel": 3,
-            "nombre": "Taladro con Mochila Robot",
+            "nombre": "Autonomous Rotary Drill",
+            "nombre_es": "Taladro Rotatorio Autónomo",
             "costo": 3,
             "requisito": "taladro_manual",
             "efecto": {
               "tipo": "herramienta_hielo",
-              "descripcion": "Saca 10 bloques de hielo de una sola vez y apenas gasta 3 puntos de Vida por viaje (5 en Ingeniero).",
+              "descripcion": "Extracts 10 ice blocks per run and reduces robot outdoor drain to just 0.15/s (0.23/s in Engineer mode).",
+              "descripcion_es": "Saca 10 bloques de hielo de una sola vez y reduce el consumo del robot afuera a solo 0.15 de Energía/s (0.23/s en Ingeniero).",
               "hielo_por_viaje": 10,
-              "vida_perdida_cadete": 3,
-              "vida_perdida_ingeniero": 5
+              "energia_por_s_cadete": 0.15,
+              "energia_por_s_ingeniero": 0.23
             },
             "carta_nasa": {
-              "titulo": "Mochilas robot para astronautas (Exoesqueletos)",
-              "dato": "Para el programa Artemis, NASA desarrolla «exoesqueletos»: mochilas robot con pequeños motores que ayudan a la fuerza de los brazos y permiten perforar hielo duro casi sin cansarse.",
-              "fuente": "NASA Dirección de Tecnología Espacial / Perforación Lunar"
+              "titulo": "High-Efficiency Planetary Drills",
+              "titulo_es": "Taladros robóticos de alta eficiencia",
+              "dato": "For Artemis, NASA develops autonomous percussive drills with smart torque control that extract frozen lunar water using minimal battery power.",
+              "dato_es": "Para el programa Artemis, NASA desarrolla taladros robóticos con control inteligente que perforan suelo congelado gastando el mínimo posible de batería.",
+              "fuente": "NASA Space Technology Mission Directorate / Lunar Drilling",
+              "fuente_es": "NASA Dirección de Tecnología Espacial / Perforación Lunar"
             }
           }
         ]

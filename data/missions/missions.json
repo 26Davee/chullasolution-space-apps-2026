@@ -2,7 +2,8 @@
   "misiones": [
     {
       "id": "mision_01",
-      "mision": "Energía Vital",
+      "mision": "Vital Energy",
+      "mision_es": "Energía Vital",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -17,6 +18,10 @@
         "energia_mayor_70"
       ],
       "objetivo": [
+        "Pick an open pad near the dome and build 1 solar panel",
+        "Use daylight to raise base energy above 70 points"
+      ],
+      "objetivo_es": [
         "Elegir una casilla libre cerca del domo y construir 1 panel solar",
         "Aprovechar la luz del día para subir la energía por encima de 70 puntos"
       ],
@@ -24,19 +29,24 @@
         "energia_cero",
         "inaccion_prolongada_amanecer"
       ],
-      "reporte_fallo": "Las luces, la calefacción y las computadoras de Killawasi gastan electricidad todo el tiempo, incluso cuando no haces nada. Si no colocas un panel solar durante el día, la batería se vacía sola. ¡Construye un panel apenas aterrices!",
+      "reporte_fallo": "Killawasi's lights, heating, and computers consume electricity all the time, even when idle. If you don't build a solar panel during the day, the battery drains on its own. Place a panel as soon as you land!",
+      "reporte_fallo_es": "Las luces, la calefacción y las computadoras de Killawasi gastan electricidad todo el tiempo, incluso cuando no haces nada. Si no colocas un panel solar durante el día, la batería se vacía sola. ¡Construye un panel apenas aterrices!",
       "desbloquea": {
         "mision_siguiente": "mision_02"
       },
       "carta_nasa": {
-        "titulo": "Energía Solar en la Luna",
-        "dato": "«Fotovoltaico» significa convertir la luz del Sol en electricidad. Como en la Luna no hay aire, nubes ni lluvia, el Sol brilla con mucha más fuerza que en la Tierra y alimenta los paneles de la base sin parar durante el día.",
-        "fuente": "NASA Glenn Research Center / Sistemas de Energía Espacial"
+        "titulo": "Solar Power on the Moon",
+        "titulo_es": "Energía Solar en la Luna",
+        "dato": "\"Photovoltaic\" means turning sunlight into electricity. Because the Moon has no air, clouds, or rain, the Sun shines much stronger than on Earth and powers base panels nonstop all day.",
+        "dato_es": "«Fotovoltaico» significa convertir la luz del Sol en electricidad. Como en la Luna no hay aire, nubes ni lluvia, el Sol brilla con mucha más fuerza que en la Tierra y alimenta los paneles de la base sin parar durante el día.",
+        "fuente": "NASA Glenn Research Center / Space Power Systems",
+        "fuente_es": "NASA Glenn Research Center / Sistemas de Energía Espacial"
       }
     },
     {
       "id": "mision_02",
-      "mision": "Salida al Cráter Helado",
+      "mision": "Journey to the Frozen Crater",
+      "mision_es": "Salida al Cráter Helado",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -51,27 +61,37 @@
         "retorno_domo_completado"
       ],
       "objetivo": [
-        "Salir del domo y caminar hasta el cráter helado usando tu pala",
+        "Step outside the dome and drive your robot to the frozen crater with its shovel",
+        "Collect at least 2 ice blocks from the glowing crystals",
+        "Return safely to the dome before your robot's battery runs out"
+      ],
+      "objetivo_es": [
+        "Salir del domo y llevar tu robot hasta el cráter helado usando su pala",
         "Recoger al menos 2 bloques de hielo de los cristales brillantes",
-        "Volver a salvo al domo antes de que la salud de tu astronauta baje demasiado"
+        "Volver a salvo al domo antes de que la batería de tu robot se quede sin energía"
       ],
       "condicion_fallo": [
-        "vida_menor_15_en_exterior",
+        "energia_cero_en_exterior",
         "perdida_orientacion_terreno"
       ],
-      "reporte_fallo": "Caminar afuera con un traje espacial pesado cansa mucho al astronauta y gasta bastante Vida. Haz viajes cortos hacia el cráter y regresa pronto al domo para descansar.",
+      "reporte_fallo": "Working outside drains your robot's battery continuously! Keep crater expeditions short and return to the dome soon to recharge.",
+      "reporte_fallo_es": "¡Trabajar afuera gasta la batería de tu robot de forma constante! Haz expediciones cortas hacia el cráter y regresa pronto al domo para recargar energía.",
       "desbloquea": {
         "mision_siguiente": "mision_03"
       },
       "carta_nasa": {
-        "titulo": "El Secreto del Hielo Lunar",
-        "dato": "En 2009, NASA lanzó un cohete a propósito contra un cráter oscuro de la Luna (misión LCROSS). Al levantarse una gran nube de polvo, los científicos descubrieron que hay muchísimo hielo escondido en las zonas donde nunca llega el Sol.",
-        "fuente": "Misión NASA LCROSS / Ciencia Lunar"
+        "titulo": "The Secret of Lunar Ice",
+        "titulo_es": "El Secreto del Hielo Lunar",
+        "dato": "In 2009, NASA intentionally crashed a rocket into a dark lunar crater (LCROSS mission). From the dust plume kicked up, scientists discovered abundant ice hidden in areas sunlight never reaches.",
+        "dato_es": "En 2009, NASA lanzó un cohete a propósito contra un cráter oscuro de la Luna (misión LCROSS). Al levantarse una gran nube de polvo, los científicos descubrieron que hay muchísimo hielo escondido en las zonas donde nunca llega el Sol.",
+        "fuente": "NASA LCROSS Mission / Lunar Science",
+        "fuente_es": "Misión NASA LCROSS / Ciencia Lunar"
       }
     },
     {
       "id": "mision_03",
-      "mision": "El Agua de la Luna",
+      "mision": "Water from the Moon",
+      "mision_es": "El Agua de la Luna",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -86,6 +106,11 @@
         "agua_obtenida_20"
       ],
       "objetivo": [
+        "Build the Ice Processor on a free pad beside the base",
+        "Feed 2 ice blocks into the machine to melt and purify them",
+        "Reach at least 20 points of clean usable water"
+      ],
+      "objetivo_es": [
         "Construir el Procesador de Hielo en una casilla libre junto a la base",
         "Colocar 2 bloques de hielo dentro de la máquina para derretirlos y limpiarlos",
         "Conseguir al menos 20 puntos de agua lista para usar"
@@ -94,19 +119,24 @@
         "energia_insuficiente_procesador",
         "reserva_agua_cero"
       ],
-      "reporte_fallo": "El hielo de la Luna no se puede chupar ni beber directo porque viene sucio con polvo espacial. El procesador tarda 5 segundos y usa bastante electricidad mientras derrite y limpia cada bloque. ¡Asegúrate de tener buena energía antes de encenderlo!",
+      "reporte_fallo": "Lunar ice cannot be drunk directly because it is mixed with sharp space dust. The processor takes 5 seconds and uses significant power to melt and filter each block. Check your energy before running it!",
+      "reporte_fallo_es": "El hielo de la Luna no se puede chupar ni beber directo porque viene sucio con polvo espacial. El procesador tarda 5 segundos y usa bastante electricidad mientras derrite y limpia cada bloque. ¡Asegúrate de tener buena energía antes de encenderlo!",
       "desbloquea": {
         "mision_siguiente": "mision_04"
       },
       "carta_nasa": {
-        "titulo": "¿Por qué hay que limpiar el hielo?",
-        "dato": "El suelo de la Luna se llama «regolito» y no es tierra suave como la de un jardín: son rocas rotas por meteoritos que forman un polvo afilado como vidrio molido. Por eso el agua lunar debe derretirse y filtrarse muy bien antes de poder usarla.",
-        "fuente": "Programa de Recursos Espaciales (ISRU) de NASA"
+        "titulo": "Why Lunar Ice Must Be Filtered",
+        "titulo_es": "¿Por qué hay que limpiar el hielo?",
+        "dato": "Moon soil is called \"regolith\" and isn't soft dirt like a garden: it is rock shattered by meteorites into dust as sharp as ground glass. Lunar water must be melted and filtered thoroughly before use.",
+        "dato_es": "El suelo de la Luna se llama «regolito» y no es tierra suave como la de un jardín: son rocas rotas por meteoritos que forman un polvo afilado como vidrio molido. Por eso el agua lunar debe derretirse y filtrarse muy bien antes de poder usarla.",
+        "fuente": "NASA In-Situ Resource Utilization (ISRU)",
+        "fuente_es": "Programa de Recursos Espaciales (ISRU) de NASA"
       }
     },
     {
       "id": "mision_04",
-      "mision": "Aire para Respirar",
+      "mision": "Air to Breathe",
+      "mision_es": "Aire para Respirar",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -121,6 +151,11 @@
         "oxigeno_mayor_85"
       ],
       "objetivo": [
+        "Build the Oxygen Generator near the dome",
+        "Make sure the base has enough water and electricity to run it",
+        "Fill the dome's air above 85 oxygen points"
+      ],
+      "objetivo_es": [
         "Construir el Generador de Oxígeno cerca del domo",
         "Comprobar que la base tenga agua y electricidad suficientes para hacerlo funcionar",
         "Llenar el aire del domo por encima de 85 puntos de oxígeno"
@@ -129,19 +164,24 @@
         "oxigeno_menor_20",
         "falta_agua_generador"
       ],
-      "reporte_fallo": "Tu equipo respira aire todo el tiempo y lo va gastando poco a poco. El generador necesita dos ingredientes obligatorios para fabricar aire nuevo: electricidad y agua. ¡Si te quedas sin agua en los tanques, el domo se queda sin oxígeno!",
+      "reporte_fallo": "Your crew breathes constantly and slowly uses up air. The generator needs two essential ingredients to make fresh oxygen: electricity and water. If your water tanks run dry, the dome runs out of oxygen!",
+      "reporte_fallo_es": "Tu equipo respira aire todo el tiempo y lo va gastando poco a poco. El generador necesita dos ingredientes obligatorios para fabricar aire nuevo: electricidad y agua. ¡Si te quedas sin agua en los tanques, el domo se queda sin oxígeno!",
       "desbloquea": {
         "mision_siguiente": "mision_05"
       },
       "carta_nasa": {
-        "titulo": "¡Sacar aire del agua! (Electrólisis)",
-        "dato": "El agua tiene oxígeno atrapado adentro. Con electricidad de los paneles solares le hacemos «cosquillas eléctricas» al agua (electrólisis) para separar burbujas de oxígeno puro, exactamente como hace el sistema OGA en la Estación Espacial Internacional.",
-        "fuente": "NASA Marshall Space Flight Center / Sistema OGA"
+        "titulo": "Making Breathable Air from Water! (Electrolysis)",
+        "titulo_es": "¡Sacar aire del agua! (Electrólisis)",
+        "dato": "Water holds oxygen locked inside. Using electricity from solar panels, we give water a gentle electric jolt (electrolysis) to split out pure oxygen bubbles—just like the OGA system aboard the International Space Station.",
+        "dato_es": "El agua tiene oxígeno atrapado adentro. Con electricidad de los paneles solares le hacemos «cosquillas eléctricas» al agua (electrólisis) para separar burbujas de oxígeno puro, exactamente como hace el sistema OGA en la Estación Espacial Internacional.",
+        "fuente": "NASA Marshall Space Flight Center / OGA System",
+        "fuente_es": "NASA Marshall Space Flight Center / Sistema OGA"
       }
     },
     {
       "id": "mision_05",
-      "mision": "Recuperación en el Domo",
+      "mision": "Robot Recharge at the Dome",
+      "mision_es": "Recarga del Robot en el Domo",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -151,32 +191,42 @@
         "ingeniero": 1
       },
       "trigger": [
-        "astronauta_dentro_domo",
-        "regeneracion_vida_activa",
-        "vida_alcanzada_100"
+        "robot_dentro_domo",
+        "recarga_bateria_activa",
+        "energia_alcanzada_90"
       ],
       "objetivo": [
-        "Quedarte dentro de la zona segura del domo después de volver del cráter",
-        "Dejar que tu astronauta descanse y recupere fuerzas con el aire limpio",
-        "Llenar la barra de Vida de tu tripulación otra vez hasta el 100%"
+        "Return your robot inside the dome's charging bay after a crater run",
+        "Keep solar panels feeding clean electricity into the base batteries",
+        "Recharge base and robot energy back up to 90%"
+      ],
+      "objetivo_es": [
+        "Volver con tu robot a la zona de carga del domo después de una expedición",
+        "Mantener los paneles solares enviando electricidad limpia hacia las baterías",
+        "Recargar la energía de la base y del robot hasta alcanzar el 90%"
       ],
       "condicion_fallo": [
-        "salida_prematura_baja_vida",
-        "vida_bloqueada_por_oxigeno_cero"
+        "salida_prematura_baja_energia",
+        "energia_cero_en_recarga"
       ],
-      "reporte_fallo": "Tu equipo solo recupera fuerzas descansando dentro del domo y siempre que haya buen aire para respirar. Si intentas salir al cráter muy cansado, la Vicuña te detendrá por seguridad diciendo: «¡Descansa primero!».",
+      "reporte_fallo": "Your robot spends battery continuously while driving outside and only recharges properly back at the dome while solar panels work. Wait until energy is high before launching another trip!",
+      "reporte_fallo_es": "Tu robot gasta batería de forma continua cuando sale afuera y solo recarga bien al volver al domo mientras trabajan los paneles solares. ¡Espera a tener buena carga antes de salir otra vez!",
       "desbloquea": {
         "mision_siguiente": "mision_06"
       },
       "carta_nasa": {
-        "titulo": "Dormir también es parte de la misión",
-        "dato": "Trabajar en el espacio cansa mucho los músculos porque los trajes espaciales son rígidos y pesados. Por regla de NASA, los astronautas tienen que descansar 8 horas diarias para pensar con claridad y no cometer errores.",
-        "fuente": "NASA Salud y Rendimiento en el Espacio (BHP)"
+        "titulo": "Solar Charging Docks for Lunar Robots",
+        "titulo_es": "Estaciones de recarga para robots lunares",
+        "dato": "Lunar rovers like NASA's CADRE and VIPER burn power driving over dusty slopes. Between crater runs, they park at solar charging stations so their batteries stay healthy for the next mission.",
+        "dato_es": "Los robots lunares como CADRE y VIPER de NASA gastan mucha batería rodando por cráteres empinados. Entre viajes, regresan a estaciones solares para recargar pilas antes de su siguiente tarea.",
+        "fuente": "NASA JPL / Lunar Robotics Power Systems",
+        "fuente_es": "NASA JPL / Sistemas de Energía en Robótica Lunar"
       }
     },
     {
       "id": "mision_06",
-      "mision": "El Ocaso Inminente",
+      "mision": "Sunset Approaching",
+      "mision_es": "El Ocaso Inminente",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -191,6 +241,11 @@
         "aviso_ocaso_recibido"
       ],
       "objetivo": [
+        "Build a second solar panel before daylight ends",
+        "Store at least 90 energy points in the base batteries",
+        "Be ready before the Sun sets and the lunar night begins"
+      ],
+      "objetivo_es": [
         "Construir un segundo panel solar antes de que termine el día",
         "Guardar al menos 90 puntos de energía en las baterías de la base",
         "Tener todo listo antes de que el Sol se oculte y empiece la noche lunar"
@@ -199,19 +254,24 @@
         "energia_menor_40_al_anochecer",
         "falta_panel_adicional"
       ],
-      "reporte_fallo": "¡Se ocultó el Sol y te atrapó la noche con poca batería! Cuando está oscuro los paneles solares dejan de producir electricidad. Tener un segundo panel durante el día te ayuda a llenar las baterías el doble de rápido.",
+      "reporte_fallo": "The Sun went down and night caught you with low battery! In darkness, solar panels stop generating power. Adding a second panel during daylight charges your batteries twice as fast.",
+      "reporte_fallo_es": "¡Se ocultó el Sol y te atrapó la noche con poca batería! Cuando está oscuro los paneles solares dejan de producir electricidad. Tener un segundo panel durante el día te ayuda a llenar las baterías el doble de rápido.",
       "desbloquea": {
         "mision_siguiente": "mision_07"
       },
       "carta_nasa": {
-        "titulo": "Un día lunar dura casi un mes",
-        "dato": "La Luna gira muy lento. Por eso un día completo allí dura cerca de 28 días de la Tierra: ¡14 días seguidos de Sol muy caluroso y después 14 días completos de oscuridad helada!",
-        "fuente": "Guía de Ciencia Lunar de NASA"
+        "titulo": "One Lunar Day Lasts Almost a Month",
+        "titulo_es": "Un día lunar dura casi un mes",
+        "dato": "The Moon spins very slowly. A single full day-night cycle there lasts about 28 Earth days: 14 straight days of blazing sunlight followed by 14 full days of freezing darkness!",
+        "dato_es": "La Luna gira muy lento. Por eso un día completo allí dura cerca de 28 días de la Tierra: ¡14 días seguidos de Sol muy caluroso y después 14 días completos de oscuridad helada!",
+        "fuente": "NASA Lunar Science Guide",
+        "fuente_es": "Guía de Ciencia Lunar de NASA"
       }
     },
     {
       "id": "mision_07",
-      "mision": "Sobrevivir a la Oscuridad",
+      "mision": "Surviving the Lunar Night",
+      "mision_es": "Sobrevivir a la Oscuridad",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -226,6 +286,11 @@
         "amanecer_alcanzado"
       ],
       "objetivo": [
+        "Endure the full 3 minutes of lunar night without sunlight",
+        "Keep energy above 15 points until sunrise returns",
+        "Keep dome air above 50 oxygen points"
+      ],
+      "objetivo_es": [
         "Aguantar los 3 minutos completos de la noche lunar sin luz del Sol",
         "Mantener la energía por encima de 15 puntos hasta que vuelva a amanecer",
         "Cuidar que el aire dentro del domo no baje de 50 puntos de oxígeno"
@@ -234,19 +299,24 @@
         "energia_cero_de_noche",
         "alerta_oxigeno_cero_noche"
       ],
-      "reporte_fallo": "Tus baterías se vaciaron antes del amanecer. De noche no entra electricidad nueva, así que evita derretir mucho hielo o gastar luz extra si no es urgente. ¡Guarda energía para mantener vivo el domo!",
+      "reporte_fallo": "Your batteries ran dry before sunrise. At night no new power comes in, so avoid heavy ice melting unless urgent. Save energy to keep the dome alive!",
+      "reporte_fallo_es": "Tus baterías se vaciaron antes del amanecer. De noche no entra electricidad nueva, así que evita derretir mucho hielo o gastar luz extra si no es urgente. ¡Guarda energía para mantener vivo el domo!",
       "desbloquea": {
         "mision_siguiente": "mision_08"
       },
       "carta_nasa": {
-        "titulo": "Más frío que el congelador más grande",
-        "dato": "Como en la Luna no hay aire que guarde el calor del día, de noche la temperatura cae por debajo de los -240 °C en los polos. ¡Es mucho más frío que cualquier rincón de la Antártida! Las baterías sirven para no congelarse.",
-        "fuente": "Experimento Diviner del Orbitador Lunar LRO / NASA"
+        "titulo": "Colder Than Any Freezer on Earth",
+        "titulo_es": "Más frío que el congelador más grande",
+        "dato": "Without air to trap daytime heat, lunar night temperatures near the poles plunge below -240 °C—far colder than anywhere in Antarctica! Batteries keep astronauts from freezing.",
+        "dato_es": "Como en la Luna no hay aire que guarde el calor del día, de noche la temperatura cae por debajo de los -240 °C en los polos. ¡Es mucho más frío que cualquier rincón de la Antártida! Las baterías sirven para no congelarse.",
+        "fuente": "NASA LRO Diviner Lunar Radiometer",
+        "fuente_es": "Experimento Diviner del Orbitador Lunar LRO / NASA"
       }
     },
     {
       "id": "mision_08",
-      "mision": "La Primera Nube de Radiación",
+      "mision": "The First Radiation Cloud",
+      "mision_es": "La Primera Nube de Radiación",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -261,27 +331,37 @@
         "golpe_escudo_absorbido"
       ],
       "objetivo": [
+        "Watch for the warning siren and 20-second countdown at minute 3:00",
+        "Keep your robot and human crew safely inside the dome as the coral radiation cloud passes",
+        "Let the base Shield absorb the solar storm impact"
+      ],
+      "objetivo_es": [
         "Prestar atención a la sirena de alerta y la cuenta atrás cuando llegue el minuto 3:00",
-        "Mantener a todo tu equipo bien guardado dentro del domo al pasar la nube coral",
+        "Mantener a tu robot y a la tripulación humana dentro del domo al pasar la nube coral",
         "Dejar que el Escudo de la base absorba el impacto de la tormenta solar"
       ],
       "condicion_fallo": [
-        "astronauta_afuera_durante_nube",
-        "vida_reducida_por_radiacion"
+        "robot_afuera_durante_nube",
+        "sobrecarga_circuitos_radiacion"
       ],
-      "reporte_fallo": "La tormenta de radiación golpeó la base. El escudo del domo te protege adentro, pero si sales al cráter durante la nube, la radiación golpea directo al traje y hace mucho más daño a tu Vida. ¡Quédate bajo techo cuando suene la sirena!",
+      "reporte_fallo": "The radiation storm hit the base. The dome shield protects your crew and electronics indoors, but staying outside during the cloud surges radiation into your robot and drains extra battery. Take cover when the siren sounds!",
+      "reporte_fallo_es": "La tormenta de radiación golpeó la base. El escudo del domo protege adentro al equipo y tus circuitos, pero si sigues afuera durante la nube la radiación sobrecarga al robot y gasta mucha batería extra. ¡Resguárdate cuando suene la sirena!",
       "desbloquea": {
         "mision_siguiente": "mision_09"
       },
       "carta_nasa": {
-        "titulo": "Cuando el Sol «estornuda» (Tormentas Solares)",
-        "dato": "Una tormenta solar real no es una nube de color que se vea en el cielo: son partículas invisibles que el Sol lanza muy rápido. En la Tierra nos protege un escudo magnético gigante, pero la Luna no tiene ese escudo, ¡por eso construimos el nuestro!",
-        "fuente": "Grupo de Análisis de Radiación Espacial (SRAG) / NASA"
+        "titulo": "When the Sun \"Sneezes\" (Solar Storms)",
+        "titulo_es": "Cuando el Sol «estornuda» (Tormentas Solares)",
+        "dato": "A real solar storm isn't a colored cloud in the sky—it's invisible high-speed particles blasted from the Sun. Earth's magnetic field shields us, but the Moon has none, so bases must build their own protection!",
+        "dato_es": "Una tormenta solar real no es una nube de color que se vea en el cielo: son partículas invisibles que el Sol lanza muy rápido. En la Tierra nos protege un escudo magnético gigante, pero la Luna no tiene ese escudo, ¡por eso construimos el nuestro!",
+        "fuente": "NASA Space Radiation Analysis Group (SRAG)",
+        "fuente_es": "Grupo de Análisis de Radiación Espacial (SRAG) / NASA"
       }
     },
     {
       "id": "mision_09",
-      "mision": "Reparación del Domo",
+      "mision": "Repairing the Dome",
+      "mision_es": "Reparación del Domo",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -296,6 +376,11 @@
         "escudo_restaurado_100"
       ],
       "objetivo": [
+        "Click or tap on the Dome after the storm passes",
+        "Spend battery energy to reinforce the damaged shield",
+        "Wait a few seconds for repairs to finish and restore Shield to 100%"
+      ],
+      "objetivo_es": [
         "Tocar o hacer clic sobre el Domo después de que pase la tormenta",
         "Usar energía de las baterías para reforzar el escudo dañado",
         "Esperar unos segundos mientras se repara y dejar el Escudo al 100%"
@@ -304,19 +389,24 @@
         "energia_insuficiente_reparar",
         "segundo_golpe_sin_reparar"
       ],
-      "reporte_fallo": "El escudo quedó herido después de la tormenta. Si llega otra nube sin haberlo reparado antes, el golpe puede atravesar la pared del domo y lastimar a los astronautas. ¡Repara tu escudo apenas tengas electricidad!",
+      "reporte_fallo": "Your shield stayed weakened after the storm. If another cloud arrives before you repair it, radiation can pierce the dome wall and hurt the crew. Repair your shield as soon as you have power!",
+      "reporte_fallo_es": "El escudo quedó herido después de la tormenta. Si llega otra nube sin haberlo reparado antes, el golpe puede atravesar la pared del domo y lastimar a los astronautas. ¡Repara tu escudo apenas tengas electricidad!",
       "desbloquea": {
         "mision_siguiente": "mision_10"
       },
       "carta_nasa": {
-        "titulo": "Cuidando el techo contra micrometeoritos",
-        "dato": "En el espacio vuelan millones de piedritas del tamaño de un grano de arena llamadas «micrometeoritos», que viajan más rápido que un avión. En las bases del programa Artemis, los astronautas revisan y parchan el escudo con suelo lunar para tapar cualquier daño.",
-        "fuente": "Arquitectura de Base Lunar Artemis / NASA"
+        "titulo": "Guarding the Roof Against Micrometeoroids",
+        "titulo_es": "Cuidando el techo contra micrometeoritos",
+        "dato": "Space is full of sand-sized pebbles called \"micrometeoroids\" flying faster than jets. In NASA's Artemis lunar habitats, astronauts inspect and patch shielding with lunar soil to seal any damage.",
+        "dato_es": "En el espacio vuelan millones de piedritas del tamaño de un grano de arena llamadas «micrometeoritos», que viajan más rápido que un avión. En las bases del programa Artemis, los astronautas revisan y parchan el escudo con suelo lunar para tapar cualquier daño.",
+        "fuente": "NASA Artemis Lunar Surface Architecture",
+        "fuente_es": "Arquitectura de Base Lunar Artemis / NASA"
       }
     },
     {
       "id": "mision_10",
-      "mision": "Tormenta en Plena Expedición",
+      "mision": "Storm Mid-Expedition",
+      "mision_es": "Tormenta en Plena Expedición",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -328,30 +418,40 @@
       "trigger": [
         "alerta_nube_mientras_viaje",
         "retorno_de_emergencia_exitoso",
-        "escudo_resistio_sin_dano_vida"
+        "escudo_resistio_sin_dano_robot"
       ],
       "objetivo": [
-        "Salir en una expedición hacia el cráter para buscar hielo",
+        "Send your robot out on an ice-gathering expedition to the crater",
+        "React fast if the storm siren suddenly sounds halfway there",
+        "Drive back into the dome before the 20-second countdown hits zero"
+      ],
+      "objetivo_es": [
+        "Enviar a tu robot en una expedición hacia el cráter para buscar hielo",
         "Reaccionar rápido si de repente suena la sirena de tormenta a mitad del camino",
-        "Correr de regreso al domo antes de que la cuenta atrás de 20 segundos llegue a cero"
+        "Regresar al domo antes de que la cuenta atrás de 20 segundos llegue a cero"
       ],
       "condicion_fallo": [
         "impacto_nube_en_intemperie",
-        "vida_menor_50_por_exposicion"
+        "bateria_critica_por_exposicion"
       ],
-      "reporte_fallo": "¡La tormenta te sorprendió afuera cuando todo parecía tranquilo! En la Luna el peligro aparece sin avisar con mucho tiempo. Apenas escuches la sirena, deja el hielo atrás y vuelve corriendo al refugio para no lastimarte.",
+      "reporte_fallo": "The storm caught your robot outdoors when everything seemed calm! On the Moon, danger arrives with little warning. The instant you hear the siren, dash back to shelter so radiation doesn't drain your circuits!",
+      "reporte_fallo_es": "¡La tormenta sorprendió a tu robot afuera cuando todo parecía tranquilo! En la Luna el peligro aparece con poco aviso. Apenas escuches la sirena, vuelve al refugio para proteger tus circuitos y batería.",
       "desbloquea": {
         "mision_siguiente": "mision_11"
       },
       "carta_nasa": {
-        "titulo": "Paseos espaciales (EVA) y esclusas de emergencia",
-        "dato": "Los astronautas llaman EVA a caminar fuera de la nave. Si las antenas de NASA (sistema DONKI) detectan una tormenta solar repentina, deben correr a la «esclusa», una puerta doble especial que los mete adentro sin dejar escapar el aire de la base.",
-        "fuente": "Reglas de Vuelo EVA / Centro Espacial Johnson de NASA"
+        "titulo": "Spacewalks (EVA) and Emergency Airlocks",
+        "titulo_es": "Paseos espaciales (EVA) y esclusas de emergencia",
+        "dato": "Astronauts call walking outside an EVA. If NASA's DONKI space-weather network spots a sudden solar flare, crews rush into the airlock—a double door that brings them inside without losing base air.",
+        "dato_es": "Los astronautas llaman EVA a caminar fuera de la nave. Si las antenas de NASA (sistema DONKI) detectan una tormenta solar repentina, deben correr a la «esclusa», una puerta doble especial que los mete adentro sin dejar escapar el aire de la base.",
+        "fuente": "NASA Johnson Space Center / EVA Flight Rules",
+        "fuente_es": "Reglas de Vuelo EVA / Centro Espacial Johnson de NASA"
       }
     },
     {
       "id": "mision_11",
-      "mision": "Efecto Dominó: ¡Sin Hielo no hay Aire!",
+      "mision": "Domino Effect: No Ice, No Air!",
+      "mision_es": "Efecto Dominó: ¡Sin Hielo no hay Aire!",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -366,27 +466,37 @@
         "oxigeno_recuperado_estable"
       ],
       "objetivo": [
+        "Handle a sudden emergency when your water tank drops sharply",
+        "Complete two trips to the crater to bring back at least 4 ice blocks",
+        "Melt the ice and restart oxygen production before oxygen drops below 20"
+      ],
+      "objetivo_es": [
         "Enfrentar una emergencia inesperada cuando el tanque de agua baja de golpe",
         "Hacer dos viajes al cráter para traer al menos 4 bloques de hielo",
         "Derretir el hielo y volver a encender el generador antes de que el oxígeno caiga de 20"
       ],
       "condicion_fallo": [
         "alerta_oxigeno_agotado",
-        "vida_menor_20_agotamiento"
+        "sin_hielo_para_soporte_vital"
       ],
-      "reporte_fallo": "Todo parecía ir bien, pero al acabarse el agua también se apagó la máquina del oxígeno. En la base todo está conectado: cada bloque de hielo da bastante agua, y esa agua sostiene el aire por más de un minuto. ¡No te confíes cuando los tanques parezcan llenos!",
+      "reporte_fallo": "Everything looked fine, but running out of water shut off the oxygen generator too. Every system on the base is linked: each ice block supplies water, and that water keeps air flowing. Don't get complacent when tanks look full!",
+      "reporte_fallo_es": "Todo parecía ir bien, pero al acabarse el agua también se apagó la máquina del oxígeno. En la base todo está conectado: cada bloque de hielo da bastante agua, y esa agua sostiene el aire por más de un minuto. ¡No te confíes cuando los tanques parezcan llenos!",
       "desbloquea": {
         "mision_siguiente": "mision_12"
       },
       "carta_nasa": {
-        "titulo": "El efecto dominó del Soporte Vital (ECLSS)",
-        "dato": "En una base espacial nada funciona por separado; todo está unido como fichas de dominó: sin Sol no hay electricidad, sin electricidad no se derrite el hielo, y sin agua no se fabrica oxígeno. Cuidar esa cadena es el trabajo del sistema ECLSS.",
-        "fuente": "Manual de Soporte Vital ECLSS / NASA"
+        "titulo": "Life Support Domino Chain (ECLSS)",
+        "titulo_es": "El efecto dominó del Soporte Vital (ECLSS)",
+        "dato": "In a space habitat, nothing works alone; everything connects like dominoes: no Sun means no power, no power means no melted ice, and no water means no oxygen. Managing that chain is the job of ECLSS.",
+        "dato_es": "En una base espacial nada funciona por separado; todo está unido como fichas de dominó: sin Sol no hay electricidad, sin electricidad no se derrite el hielo, y sin agua no se fabrica oxígeno. Cuidar esa cadena es el trabajo del sistema ECLSS.",
+        "fuente": "NASA ECLSS Life Support Manual",
+        "fuente_es": "Manual de Soporte Vital ECLSS / NASA"
       }
     },
     {
       "id": "mision_12",
-      "mision": "Doble Tormenta Sorpresa",
+      "mision": "Double Surprise Storm",
+      "mision_es": "Doble Tormenta Sorpresa",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -401,27 +511,37 @@
         "segunda_nube_superada"
       ],
       "objetivo": [
+        "Withstand the first solar storm at minute 3:00 without panicking",
+        "Stay sharp: quickly repair the shield between storms",
+        "Survive the second surprise impact at minute 7:00 with Shield above 40"
+      ],
+      "objetivo_es": [
         "Aguantar la primera tormenta solar al minuto 3:00 sin entrar en pánico",
         "No bajar la guardia: reparar rápido el escudo entre tormenta y tormenta",
-        "Resistir el segundo golpe sorpresa al minuto 7:00 manteniendo la Vida arriba de 80"
+        "Resistir el segundo golpe sorpresa al minuto 7:00 manteniendo el Escudo arriba de 40"
       ],
       "condicion_fallo": [
         "escudo_destruido_segunda_nube",
-        "vida_menor_60_por_perforacion"
+        "colapso_energia_nocturna"
       ],
-      "reporte_fallo": "Cuando creías que ya estabas a salvo, llegó otra nube justo detrás. Dos golpes seguidos sin reparar debilitan demasiado el escudo y dejan pasar la radiación hasta los astronautas. ¡Repara la base apenas pase el primer susto!",
+      "reporte_fallo": "Just when you thought you were safe, a second cloud struck right behind the first! Two hits without repairing drain the shield and let radiation reach your crew. Always patch up right after a storm!",
+      "reporte_fallo_es": "Cuando creías que ya estabas a salvo, llegó otra nube justo detrás. Dos golpes seguidos sin reparar debilitan demasiado el escudo y dejan pasar la radiación hasta los astronautas. ¡Repara la base apenas pase el primer susto!",
       "desbloquea": {
         "mision_siguiente": "mision_13"
       },
       "carta_nasa": {
-        "titulo": "Cuando el Sol ataca dos veces seguidas",
-        "dato": "El Sol puede lanzar varias tormentas juntas en muy pocas horas. En marzo de 2012, los instrumentos de NASA registraron dos grandes explosiones solares casi seguidas que golpearon la Luna una detrás de otra.",
-        "fuente": "Archivo de Clima Espacial NASA DONKI (Marzo 2012)"
+        "titulo": "When the Sun Fires Twice in a Row",
+        "titulo_es": "Cuando el Sol ataca dos veces seguidas",
+        "dato": "The Sun can launch multiple solar storms just hours apart. In March 2012, NASA instruments recorded two massive solar eruptions hitting the Moon back-to-back.",
+        "dato_es": "El Sol puede lanzar varias tormentas juntas en muy pocas horas. En marzo de 2012, los instrumentos de NASA registraron dos grandes explosiones solares casi seguidas que golpearon la Luna una detrás de otra.",
+        "fuente": "NASA DONKI Space Weather Archive (March 2012)",
+        "fuente_es": "Archivo de Clima Espacial NASA DONKI (Marzo 2012)"
       }
     },
     {
       "id": "mision_13",
-      "mision": "Emergencia en Plena Noche",
+      "mision": "Midnight Emergency",
+      "mision_es": "Emergencia en Plena Noche",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -436,6 +556,11 @@
         "energia_sostenida_sobre_10"
       ],
       "objetivo": [
+        "Enter the lunar night with reserve ice stored safely inside",
+        "Solve an unexpected midnight water shortage by running the processor carefully",
+        "Manage battery power so you reach sunrise with more than 10 energy points"
+      ],
+      "objetivo_es": [
         "Entrar a la oscuridad de la noche lunar con hielo guardado de reserva",
         "Resolver una falta de agua de madrugada usando el procesador con cuidado",
         "Cuidar tus baterías para llegar al amanecer con más de 10 puntos de energía"
@@ -444,19 +569,24 @@
         "apagon_total_nocturno",
         "falla_procesamiento_sin_energia"
       ],
-      "reporte_fallo": "Usar el procesador en plena noche es muy arriesgado porque gasta mucha electricidad y los paneles están dormidos sin Sol. Si alguna vez te quedas sin agua de noche, úsalo solo cuando tengas las baterías bien cargadas.",
+      "reporte_fallo": "Running the ice processor at night is risky because it drains heavy power while solar panels sleep. If you ever run low on water at night, only melt ice when your batteries have plenty to spare.",
+      "reporte_fallo_es": "Usar el procesador en plena noche es muy arriesgado porque gasta mucha electricidad y los paneles están dormidos sin Sol. Si alguna vez te quedas sin agua de noche, úsalo solo cuando tengas las baterías bien cargadas.",
       "desbloquea": {
         "mision_siguiente": "mision_14"
       },
       "carta_nasa": {
-        "titulo": "El Modo Ahorro en la Luna",
-        "dato": "Igual que cuando pones un teléfono en «modo ahorro» porque le queda poca batería, durante la noche lunar los astronautas apagan las máquinas pesadas y dejan encendido solo lo indispensable hasta que vuelve a salir el Sol.",
-        "fuente": "Plan de Operaciones en Superficie Lunar / NASA"
+        "titulo": "Low-Power Mode on the Moon",
+        "titulo_es": "El Modo Ahorro en la Luna",
+        "dato": "Just like turning on battery-saver mode on a phone, astronauts shut down heavy equipment during the lunar night and keep only life-essential systems running until sunrise.",
+        "dato_es": "Igual que cuando pones un teléfono en «modo ahorro» porque le queda poca batería, durante la noche lunar los astronautas apagan las máquinas pesadas y dejan encendido solo lo indispensable hasta que vuelve a salir el Sol.",
+        "fuente": "NASA Lunar Surface Operations Plan",
+        "fuente_es": "Plan de Operaciones en Superficie Lunar / NASA"
       }
     },
     {
       "id": "mision_14",
-      "mision": "¡Alerta Roja: Escudo al Límite y Plan B!",
+      "mision": "Red Alert: Shield Down & Plan B!",
+      "mision_es": "¡Alerta Roja: Escudo al Límite y Plan B!",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -471,27 +601,37 @@
         "base_estabilizada_reparada"
       ],
       "objetivo": [
+        "Stay calm if a fierce storm pushes your Shield all the way to zero",
+        "Ride out the 10-second emergency overload pause on the oxygen generator",
+        "Execute your rescue plan: repair the shield above 40 and bring Oxygen back above 50"
+      ],
+      "objetivo_es": [
         "Mantener la calma si una tormenta muy fuerte logra romper el Escudo hasta cero",
         "Resistir la pausa de emergencia de 10 segundos en el generador de oxígeno",
-        "Activar tu plan de rescate: reparar el escudo y subir la Vida por encima de 70"
+        "Activar tu plan de rescate: reparar el escudo sobre 40 y devolver el Oxígeno sobre 50"
       ],
       "condicion_fallo": [
-        "vida_alcanzo_minimo_10",
+        "energia_agotada_en_emergencia",
         "colapso_total_soporte_vital"
       ],
-      "reporte_fallo": "¡Incluso cuando todo parece ir bien, una tormenta extrema puede romper el escudo y apagar el oxígeno 10 segundos por sobrecarga! Pero no te rindas: la Vicuña protege a tu equipo del límite crítico para que repares el domo y levantes la base.",
+      "reporte_fallo": "Even when things look under control, an extreme storm can break the shield and trip the oxygen system for 10 seconds! Don't give up: use your robot's backup energy to patch the dome shield and keep oxygen flowing for your crew.",
+      "reporte_fallo_es": "¡Incluso cuando todo parece ir bien, una tormenta extrema puede romper el escudo y apagar el oxígeno 10 segundos por sobrecarga! No te rindas: usa la energía de reserva de tu robot para parchar el escudo y mantener el aire de la tripulación.",
       "desbloquea": {
         "mision_siguiente": "mision_15"
       },
       "carta_nasa": {
-        "titulo": "Tener siempre un Plan B (Redundancia)",
-        "dato": "En el espacio nada es perfecto y las cosas pueden fallar de golpe. Por eso NASA diseña sus naves con «redundancia»: sistemas de respaldo dobles y triples (un Plan B y un Plan C) que mantienen el aire seguro mientras se arregla la avería.",
-        "fuente": "Estándares de Seguridad en Hábitats / NASA"
+        "titulo": "Always Have a Plan B (Redundancy)",
+        "titulo_es": "Tener siempre un Plan B (Redundancia)",
+        "dato": "Nothing in space is guaranteed never to break. That's why NASA designs spacecraft with \"redundancy\"—double and triple backup systems (Plan B and Plan C) that keep the air safe while repairs happen.",
+        "dato_es": "En el espacio nada es perfecto y las cosas pueden fallar de golpe. Por eso NASA diseña sus naves con «redundancia»: sistemas de respaldo dobles y triples (un Plan B y un Plan C) que mantienen el aire seguro mientras se arregla la avería.",
+        "fuente": "NASA Habitat Safety Standards",
+        "fuente_es": "Estándares de Seguridad en Hábitats / NASA"
       }
     },
     {
       "id": "mision_15",
-      "mision": "El Oasis Lunar: El Jardín",
+      "mision": "The Lunar Oasis: The Garden",
+      "mision_es": "El Oasis Lunar: El Jardín",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -503,30 +643,40 @@
       "trigger": [
         "jardin_construido",
         "riego_continuo_2_minutos",
-        "regeneracion_acelerada_activa"
+        "soporte_oxigeno_jardin_activo"
       ],
       "objetivo": [
+        "Build the Lunar Garden module on a free pad beside the dome",
+        "Keep enough water flowing to irrigate the plants nonstop for 2 minutes",
+        "See how irrigated plants support oxygen levels and crew morale inside the dome"
+      ],
+      "objetivo_es": [
         "Construir el módulo del Jardín lunar en una casilla libre junto al domo",
         "Mantener suficiente agua para regar las plantas sin parar durante 2 minutos",
-        "Ver cómo tu tripulación recupera la Vida mucho más rápido al descansar cerca"
+        "Ver cómo las plantas regadas ayudan al oxígeno y al ánimo de la tripulación dentro del domo"
       ],
       "condicion_fallo": [
         "agua_cero_marchitamiento",
         "falta_energia_jardin"
       ],
-      "reporte_fallo": "Las plantas del jardín necesitan agua todo el tiempo para crecer sanas. Si dejas que el tanque de agua se quede vacío, el jardín deja de cuidar a tu equipo. ¡Asegura viajes de hielo seguidos antes de plantar!",
+      "reporte_fallo": "Garden plants need steady water to thrive. If your water tank runs dry, the garden stops boosting recovery. Secure regular ice runs before planting!",
+      "reporte_fallo_es": "Las plantas del jardín necesitan agua todo el tiempo para crecer sanas. Si dejas que el tanque de agua se quede vacío, el jardín deja de cuidar a tu equipo. ¡Asegura viajes de hielo seguidos antes de plantar!",
       "desbloquea": {
         "mision_siguiente": "mision_16"
       },
       "carta_nasa": {
-        "titulo": "Lechugas y flores en el espacio",
-        "dato": "Los astronautas ya cultivan vegetales y flores en el espacio. Cuidar plantas verdes no solo da comida fresca y rica: ¡también pone felices a los astronautas y ayuda a que se sientan como en casa lejos de la Tierra!",
-        "fuente": "Programa de Investigación Humana y Agricultura Espacial / NASA"
+        "titulo": "Growing Lettuce and Flowers in Space",
+        "titulo_es": "Lechugas y flores en el espacio",
+        "dato": "Astronauts already grow vegetables and flowers in orbit. Tending green plants doesn't just provide fresh food—it boosts mood and makes crews feel closer to home far from Earth!",
+        "dato_es": "Los astronautas ya cultivan vegetales y flores en el espacio. Cuidar plantas verdes no solo da comida fresca y rica: ¡también pone felices a los astronautas y ayuda a que se sientan como en casa lejos de la Tierra!",
+        "fuente": "NASA Human Research & Space Crop Production",
+        "fuente_es": "Programa de Investigación Humana y Agricultura Espacial / NASA"
       }
     },
     {
       "id": "mision_16",
-      "mision": "Comandante de Killawasi: Día Lunar Completo",
+      "mision": "Commander of Killawasi: Full Lunar Day",
+      "mision_es": "Comandante de Killawasi: Día Lunar Completo",
       "dificultad": [
         "cadete",
         "ingeniero"
@@ -541,22 +691,31 @@
         "todos_recursos_estables"
       ],
       "objetivo": [
+        "Complete a full 8-minute lunar cycle (5 minutes of sun and 3 minutes of night)",
+        "Survive at least 2 unexpected solar storms with a strong shield",
+        "Reach sunrise with over 30 energy, 30 water, 60 oxygen, and 40 shield"
+      ],
+      "objetivo_es": [
         "Completar un día lunar entero de 8 minutos (5 minutos de sol y 3 minutos de oscuridad)",
         "Superar al menos 2 tormentas solares imprevistas manteniendo el escudo fuerte",
-        "Llegar al nuevo amanecer con más de 30 de energía, más de 30 de agua, más de 60 de aire y más de 80 de Vida"
+        "Llegar al nuevo amanecer con más de 30 de energía, más de 30 de agua, más de 60 de aire y más de 40 de escudo"
       ],
       "condicion_fallo": [
         "cualquier_recurso_cero",
-        "vida_menor_20_al_finalizar"
+        "escudo_destruido_al_finalizar"
       ],
-      "reporte_fallo": "No lograste cerrar el ciclo completo de 8 minutos con la base estable. Ser Comandante significa estar listo cuando cambia el Sol, cuando llega el frío o cuando cae una tormenta de sorpresa. ¡Ya sabes qué falló, vuelve a intentarlo más fuerte!",
+      "reporte_fallo": "You didn't finish the full 8-minute cycle with a stable base. Being Commander means staying ready when sunlight shifts, cold hits, or storms strike. Now you know what slipped—try again stronger!",
+      "reporte_fallo_es": "No lograste cerrar el ciclo completo de 8 minutos con la base estable. Ser Comandante significa estar listo cuando cambia el Sol, cuando llega el frío o cuando cae una tormenta de sorpresa. ¡Ya sabes qué falló, vuelve a intentarlo más fuerte!",
       "desbloquea": {
         "mision_siguiente": null
       },
       "carta_nasa": {
-        "titulo": "¡De la Luna hacia Marte! (Programa Artemis)",
-        "dato": "Superar el día, la noche y las tormentas de la Luna es el entrenamiento real de NASA en el programa Artemis. ¡Lo que aprendiste hoy protegiendo Killawasi es justo lo que usarán los exploradores de tu generación cuando viajen a vivir en Marte!",
-        "fuente": "Dirección de Operaciones de Misión Artemis / NASA"
+        "titulo": "From the Moon to Mars! (Artemis Program)",
+        "titulo_es": "¡De la Luna hacia Marte! (Programa Artemis)",
+        "dato": "Mastering lunar day, night, and solar storms mirrors real Artemis training at NASA. Everything you practiced today keeping Killawasi safe is what explorers of your generation will use living on Mars!",
+        "dato_es": "Superar el día, la noche y las tormentas de la Luna es el entrenamiento real de NASA en el programa Artemis. ¡Lo que aprendiste hoy protegiendo Killawasi es justo lo que usarán los exploradores de tu generación cuando viajen a vivir en Marte!",
+        "fuente": "NASA Artemis Mission Operations Directorate",
+        "fuente_es": "Dirección de Operaciones de Misión Artemis / NASA"
       }
     }
   ]

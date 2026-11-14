@@ -44,11 +44,55 @@ func _ready() -> void:
 
 func set_save_manager(manager: Node) -> void:
 	save_manager = manager
+	if is_instance_valid(save_manager) and save_manager.has_signal("progreso_cargado"):
+		if not save_manager.progreso_cargado.is_connected(_on_progreso_cargado):
+			save_manager.progreso_cargado.connect(_on_progreso_cargado)
+
+
+func _on_progreso_cargado(_datos: Dictionary) -> void:
+	if not _misiones.is_empty():
+		_seleccionar_primera_mision_pendiente()
 
 
 func establecer_modo_juego(modo: String) -> void:
-	if modo == "cadete" or modo == "ingeniero":
-		_modo_juego = modo
+	match modo:
+		"cadet", "cadete":
+			_modo_juego = "cadete"
+		"engineer", "ingeniero":
+			_modo_juego = "ingeniero"
+
+
+static func _es_espanol(idioma: String = "") -> bool:
+	var loc := idioma if not idioma.is_empty() else TranslationServer.get_locale()
+	return loc.to_lower().begins_with("es")
+
+
+static func _localizar_carta(carta: Dictionary, es_lang: bool) -> Dictionary:
+	if carta.is_empty():
+		return {}
+	var res := carta.duplicate(true)
+	if es_lang:
+		res["titulo"] = str(carta.get("titulo_es", carta.get("titulo", "")))
+		res["dato"] = str(carta.get("dato_es", carta.get("dato", "")))
+		res["fuente"] = str(carta.get("fuente_es", carta.get("fuente", "")))
+	return res
+
+
+func obtener_mision_localizada(mision: Dictionary, idioma: String = "") -> Dictionary:
+	if mision.is_empty():
+		return {}
+	var es_lang := _es_espanol(idioma)
+	var out := mision.duplicate(true)
+	if es_lang:
+		out["mision"] = str(mision.get("mision_es", mision.get("mision", "")))
+		out["objetivo"] = mision.get("objetivo_es", mision.get("objetivo", []))
+		out["reporte_fallo"] = str(mision.get("reporte_fallo_es", mision.get("reporte_fallo", "")))
+	out["carta_nasa"] = _localizar_carta(mision.get("carta_nasa", {}), es_lang)
+	return out
+
+
+func obtener_mision_activa_localizada(idioma: String = "") -> Dictionary:
+	return obtener_mision_localizada(obtener_mision_activa(), idioma)
 
 
 ## Carga todas las misiones desde missions.json.
@@ -214,7 +258,6 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 	var hielo := int(estado.get("hielo", 0))
 	var agua := float(estado.get("agua", 0.0))
 	var oxigeno := float(estado.get("oxigeno", 0.0))
-	var vida := float(estado.get("vida", 100.0))
 	var escudo := float(estado.get("escudo", 100.0))
 	var es_dia := bool(estado.get("es_dia", true))
 	var en_viaje := bool(estado.get("en_viaje_hielo", false))
@@ -250,11 +293,11 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 				_marcar_trigger_si_aplica("oxigeno_mayor_85")
 		"mision_05":
 			if not en_viaje:
-				_marcar_trigger_si_aplica("astronauta_dentro_domo")
-				if oxigeno >= 20.0:
-					_marcar_trigger_si_aplica("regeneracion_vida_activa")
-			if vida >= 100.0:
-				_marcar_trigger_si_aplica("vida_alcanzada_100")
+				_marcar_trigger_si_aplica("robot_dentro_domo")
+				if (es_dia and paneles >= 1) or energia >= 90.0:
+					_marcar_trigger_si_aplica("recarga_bateria_activa")
+			if energia >= 90.0:
+				_marcar_trigger_si_aplica("energia_alcanzada_90")
 		"mision_06":
 			if paneles >= 2:
 				_marcar_trigger_si_aplica("segundo_panel_construido")
@@ -283,7 +326,7 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 			if en_viaje and bool(estado.get("alerta_nube", false)):
 				_marcar_trigger_si_aplica("alerta_nube_mientras_viaje")
 			if _triggers_cumplidos_actual.has("retorno_de_emergencia_exitoso") and not bool(estado.get("nube_activa", false)):
-				_marcar_trigger_si_aplica("escudo_resistio_sin_dano_vida")
+				_marcar_trigger_si_aplica("escudo_resistio_sin_dano_robot")
 		"mision_11":
 			if agua <= 10.0:
 				_marcar_trigger_si_aplica("reserva_agua_baja_detectada")
@@ -299,14 +342,14 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 				_marcar_trigger_si_aplica("escudo_llego_cero")
 			if bool(estado.get("generador_pausado", false)):
 				_marcar_trigger_si_aplica("generador_pausado_10s")
-			if _triggers_cumplidos_actual.has("generador_pausado_10s") and escudo >= 40.0 and vida > 70.0:
+			if _triggers_cumplidos_actual.has("generador_pausado_10s") and escudo >= 40.0 and oxigeno >= 50.0 and energia >= 20.0:
 				_marcar_trigger_si_aplica("base_estabilizada_reparada")
 		"mision_15":
 			if bool(estado.get("jardin_instalado", false)):
 				_marcar_trigger_si_aplica("jardin_construido")
 				if agua > 0.0:
 					_tiempo_riego_jardin_s += delta_s
-					_marcar_trigger_si_aplica("regeneracion_acelerada_activa")
+					_marcar_trigger_si_aplica("soporte_oxigeno_jardin_activo")
 					if _tiempo_riego_jardin_s >= 120.0:
 						_marcar_trigger_si_aplica("riego_continuo_2_minutos")
 		"mision_16":
@@ -314,7 +357,7 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 				_marcar_trigger_si_aplica("ocho_minutos_superados")
 			if _nubes_superadas_total >= 2:
 				_marcar_trigger_si_aplica("dos_nubes_sobrevividas")
-			if energia > 30.0 and agua > 30.0 and oxigeno > 60.0 and vida > 80.0:
+			if energia > 30.0 and agua > 30.0 and oxigeno > 60.0 and escudo > 40.0:
 				_marcar_trigger_si_aplica("todos_recursos_estables")
 
 
@@ -326,16 +369,16 @@ func _evaluar_condiciones_fallo(id_mision: String, estado: Dictionary) -> void:
 	var energia := float(estado.get("energia", 60.0))
 	var agua := float(estado.get("agua", 20.0))
 	var oxigeno := float(estado.get("oxigeno", 60.0))
-	var vida := float(estado.get("vida", 100.0))
+	var escudo := float(estado.get("escudo", 100.0))
 	var en_viaje := bool(estado.get("en_viaje_hielo", false))
 	var nube_activa := bool(estado.get("nube_activa", false))
 
 	var fallo := false
 	match id_mision:
-		"mision_01", "mision_07", "mision_13":
+		"mision_01", "mision_05", "mision_07", "mision_13":
 			fallo = energia <= 0.0 or oxigeno <= 0.0
 		"mision_02":
-			fallo = en_viaje and vida < 15.0
+			fallo = en_viaje and energia <= 0.0
 		"mision_03", "mision_15":
 			fallo = agua <= 0.0
 		"mision_04", "mision_11":
@@ -343,13 +386,13 @@ func _evaluar_condiciones_fallo(id_mision: String, estado: Dictionary) -> void:
 		"mision_08", "mision_10":
 			fallo = en_viaje and nube_activa
 		"mision_14":
-			fallo = vida <= 10.0
+			fallo = energia <= 0.0 or oxigeno <= 0.0
 		"mision_16":
-			fallo = energia <= 0.0 or agua <= 0.0 or oxigeno <= 0.0
+			fallo = energia <= 0.0 or agua <= 0.0 or oxigeno <= 0.0 or escudo <= 0.0
 
 	if fallo:
 		_ultimo_fallo_timestamp = ahora
-		var mision: Dictionary = _misiones_por_id[id_mision]
+		var mision: Dictionary = obtener_mision_localizada(_misiones_por_id[id_mision])
 		mision_fallida.emit(id_mision, str(mision.get("reporte_fallo", "")))
 
 
@@ -401,7 +444,8 @@ func _completar_mision_activa(mision: Dictionary) -> void:
 	var id_mision := str(mision.get("id", ""))
 	var puntos_dict: Dictionary = mision.get("puntos", {})
 	var estrellas := int(puntos_dict.get(_modo_juego, 1))
-	var carta_nasa: Dictionary = mision.get("carta_nasa", {})
+	var mision_loc := obtener_mision_localizada(mision)
+	var carta_nasa: Dictionary = mision_loc.get("carta_nasa", {})
 	var id_carta := "carta_%s" % id_mision
 
 	_asegurar_save_manager()

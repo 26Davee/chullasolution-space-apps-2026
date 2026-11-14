@@ -93,17 +93,17 @@ La interfaz **no necesita leer JSON manualmente**. Usa estas señales para reacc
 
 * **Mostrar misión actual al abrir el HUD:**
   ```gdscript
-  var mision := mission_manager.obtener_mision_activa()
+  var mision := mission_manager.obtener_mision_activa_localizada(TranslationServer.get_locale())
   # mision["mision"] -> Título | mision["objetivo"] -> Array de pasos
   ```
 * **Dibujar el Árbol de Habilidades:**
   ```gdscript
-  var ramas := tech_tree.obtener_ramas() # Array con las 4 ramas y sus 3 mejoras c/u
+  var ramas := tech_tree.obtener_ramas_localizadas(TranslationServer.get_locale()) # Array con las 4 ramas y sus 3 mejoras c/u
   var estrellas := tech_tree.obtener_estrellas_disponibles()
   for rama in ramas:
-      for mejora in rama["mejoras"]:
-          var comprada := tech_tree.esta_comprada(mejora["id"])
-          var check := tech_tree.puede_comprar(mejora["id"]) # {"ok": bool, "motivo": String}
+	  for mejora in rama["mejoras"]:
+		  var comprada := tech_tree.esta_comprada(mejora["id"])
+		  var check := tech_tree.puede_comprar(mejora["id"]) # {"ok": bool, "motivo": String}
   ```
 * **Al presionar el botón de comprar una mejora:**
   ```gdscript
@@ -146,7 +146,6 @@ Las llaves coinciden con [diccionario/variables_sistema.json](../../diccionario/
 	"hielo": int,
 	"agua": float,
 	"oxigeno": float,
-	"vida": float,
 	"escudo": float,
 	"es_dia": bool,
 	"alerta_nube": bool,
@@ -171,11 +170,11 @@ Las llaves coinciden con [diccionario/variables_sistema.json](../../diccionario/
 | `"produccion_solar"` | `{"id_mejora", "produccion_por_s": 0.75, "multiplicador": 1.25}` | Panel solar pasa de `0.6` a `0.75/s`. |
 | `"velocidad_procesador"` | `{"id_mejora", "tiempo_proceso_s": 3.0}` | Procesador baja de `5s` a `3s` por hielo. |
 | `"consumo_oxigeno"` | `{"id_mejora", "multiplicador_consumo": 0.75, "ahorro_pct": 25}` | Generador gasta `-25%` de energía y agua. |
-| `"desbloqueo_jardin"` | `{"id_mejora", "jardin_desbloqueado": true, "regeneracion_vida_s": 0.4}` | Habilita construir Jardín y cura doble. |
+| `"desbloqueo_jardin"` | `{"id_mejora", "jardin_desbloqueado": true, "oxigeno_extra_s": 0.1}` | Habilita el Jardín Lunar para producción extra de O₂ para la tripulación. |
 | `"costo_reparacion"` | `{"id_mejora", "costo_cadete": 15, "costo_ingeniero": 22, "valor_activo": int}` | Reparar escudo cuesta `15` (`22` Ing.). |
 | `"resistencia_nube"` | `{"id_mejora", "dano_cadete": 22, "dano_ingeniero": 30, "valor_activo": int}` | Golpe nube baja a `22` (`30` Ing.). |
 | `"tiempo_alerta"` | `{"id_mejora", "aviso_segundos": 40, "tiempo_reparacion_s": 2}` | Aviso solar `40s` y reparar tarda `2s`. |
-| `"herramienta_hielo"` | `{"id_mejora", "herramienta_nivel": 2..4, "hielo_por_viaje": 4\|7\|10, "vida_perdida_cadete": 8\|6\|3, "vida_perdida_ingeniero": 12\|9\|5, "vida_perdida_activa": float}` | Cambia herramienta activa y desgaste. |
+| `"herramienta_hielo"` | `{"id_mejora", "herramienta_nivel": 2..4, "hielo_por_viaje": 4\|7\|10, "energia_por_s_cadete": 0.45\|0.30\|0.15, "energia_por_s_ingeniero": 0.68\|0.45\|0.23, "energia_por_s_activa": float}` | Cambia herramienta activa y reduce el consumo continuo de energía en expedición. |
 
 ---
 

@@ -84,6 +84,56 @@ func obtener_ramas() -> Array:
 	return _ramas.duplicate(true)
 
 
+static func _es_espanol(idioma: String = "") -> bool:
+	var loc := idioma if not idioma.is_empty() else TranslationServer.get_locale()
+	return loc.to_lower().begins_with("es")
+
+
+static func _normalizar_modo(modo: String) -> String:
+	match modo:
+		"engineer", "ingeniero":
+			return "ingeniero"
+		_:
+			return "cadete"
+
+
+func obtener_mejora_localizada(mejora: Dictionary, idioma: String = "") -> Dictionary:
+	if mejora.is_empty():
+		return {}
+	var es_lang := _es_espanol(idioma)
+	var out := mejora.duplicate(true)
+	if es_lang:
+		out["nombre"] = str(mejora.get("nombre_es", mejora.get("nombre", "")))
+		var ef: Dictionary = out.get("efecto", {})
+		if not ef.is_empty():
+			ef["descripcion"] = str(ef.get("descripcion_es", ef.get("descripcion", "")))
+		var carta: Dictionary = out.get("carta_nasa", {})
+		if not carta.is_empty():
+			carta["titulo"] = str(carta.get("titulo_es", carta.get("titulo", "")))
+			carta["dato"] = str(carta.get("dato_es", carta.get("dato", "")))
+			carta["fuente"] = str(carta.get("fuente_es", carta.get("fuente", "")))
+	return out
+
+
+func obtener_ramas_localizadas(idioma: String = "") -> Array:
+	var es_lang := _es_espanol(idioma)
+	var resultado: Array = []
+	for rama in _ramas:
+		if typeof(rama) != TYPE_DICTIONARY:
+			continue
+		var r := (rama as Dictionary).duplicate(true)
+		if es_lang:
+			r["nombre"] = str(r.get("nombre_es", r.get("nombre", "")))
+			r["descripcion"] = str(r.get("descripcion_es", r.get("descripcion", "")))
+		var mejoras_loc: Array = []
+		for m in r.get("mejoras", []):
+			if typeof(m) == TYPE_DICTIONARY:
+				mejoras_loc.append(obtener_mejora_localizada(m, idioma))
+		r["mejoras"] = mejoras_loc
+		resultado.append(r)
+	return resultado
+
+
 func obtener_mejora(id_mejora: String) -> Dictionary:
 	if not _mejoras_por_id.has(id_mejora):
 		return {}
@@ -128,6 +178,7 @@ func puede_comprar(id_mejora: String) -> Dictionary:
 
 ## Compra una mejora válida, descuenta estrellas y notifica a la simulación (Puesto 2).
 func comprar_mejora(id_mejora: String, modo_juego: String = "cadete") -> bool:
+	var modo_norm := _normalizar_modo(modo_juego)
 	var validacion := puede_comprar(id_mejora)
 	if not bool(validacion["ok"]):
 		compra_rechazada.emit(id_mejora, str(validacion["motivo"]))
@@ -145,13 +196,14 @@ func comprar_mejora(id_mejora: String, modo_juego: String = "cadete") -> bool:
 	var nivel := int(mejora.get("nivel", 1))
 
 	mejora_desbloqueada.emit(id_mejora, rama, nivel)
-	_emitir_efecto_mejora(mejora, modo_juego)
+	_emitir_efecto_mejora(mejora, modo_norm)
 	estrellas_actualizadas.emit(obtener_estrellas_disponibles())
 	return true
 
 
 ## Reaplica en orden todas las mejoras guardadas al iniciar una nueva sesión o partida.
 func aplicar_todas_las_mejoras_guardadas(modo_juego: String = "cadete") -> void:
+	var modo_norm := _normalizar_modo(modo_juego)
 	_asegurar_save_manager()
 	for rama in _ramas:
 		if typeof(rama) != TYPE_DICTIONARY:
@@ -161,7 +213,7 @@ func aplicar_todas_las_mejoras_guardadas(modo_juego: String = "cadete") -> void:
 				continue
 			var id_mejora := str(mejora.get("id", ""))
 			if esta_comprada(id_mejora):
-				_emitir_efecto_mejora(mejora, modo_juego)
+				_emitir_efecto_mejora(mejora, modo_norm)
 
 
 func _emitir_efecto_mejora(mejora: Dictionary, modo_juego: String) -> void:
@@ -189,7 +241,7 @@ func _construir_datos_efecto(id_mejora: String, tipo: String, efecto: Dictionary
 		"consumo_oxigeno":
 			return {"id_mejora": id_mejora, "multiplicador_consumo": float(efecto.get("valor", 0.75)), "ahorro_pct": 25}
 		"desbloqueo_jardin":
-			return {"id_mejora": id_mejora, "jardin_desbloqueado": true, "regeneracion_vida_s": float(efecto.get("valor", 0.4))}
+			return {"id_mejora": id_mejora, "jardin_desbloqueado": true, "oxigeno_extra_s": float(efecto.get("valor", 0.1))}
 		"costo_reparacion":
 			var costo_cad := int(efecto.get("valor", 15))
 			var costo_ing := 22
@@ -216,15 +268,15 @@ func _construir_datos_efecto(id_mejora: String, tipo: String, efecto: Dictionary
 			}
 		"herramienta_hielo":
 			var nivel_herramienta := _obtener_nivel_herramienta(id_mejora)
-			var vida_cad := float(efecto.get("vida_perdida_cadete", 8))
-			var vida_ing := float(efecto.get("vida_perdida_ingeniero", 12))
+			var ener_cad := float(efecto.get("energia_por_s_cadete", 0.45))
+			var ener_ing := float(efecto.get("energia_por_s_ingeniero", 0.68))
 			return {
 				"id_mejora": id_mejora,
 				"herramienta_nivel": nivel_herramienta,
 				"hielo_por_viaje": int(efecto.get("hielo_por_viaje", 4)),
-				"vida_perdida_cadete": vida_cad,
-				"vida_perdida_ingeniero": vida_ing,
-				"vida_perdida_activa": vida_ing if es_ingeniero else vida_cad,
+				"energia_por_s_cadete": ener_cad,
+				"energia_por_s_ingeniero": ener_ing,
+				"energia_por_s_activa": ener_ing if es_ingeniero else ener_cad,
 			}
 		_:
 			return {"id_mejora": id_mejora, "efecto": efecto.duplicate(true)}
