@@ -11,7 +11,7 @@ Todos los números de este documento son **valores de prueba en unidades de jueg
 | Guía | **Vicuña astronauta**, personaje original nuestro |
 | Estilo | **Low-poly** con luces suaves, como una maqueta (ver [`ESTILO_VISUAL.md`](ESTILO_VISUAL.md)) |
 | Personaje que juega | **El astronauta**: aterriza y se mueve por la Luna. La Vicuña es la guía que lo acompaña |
-| Modos | **Cadete 7 a 10 años** e **Ingeniero 11 a 12 años**, con el mismo núcleo de simulación |
+| Modos | **Cadete 7 a 10 años** e **Ingeniero 11 a 12 años**, con el mismo núcleo de simulación. Todas las piezas existen en los dos modos: en Cadete cuestan menos y en Ingeniero más |
 | Cámara | Como Clash of Clans: inclinada y fija, se arrastra y se acerca, no gira |
 | Voz de la guía | Primero texto para leer. Después, voz sintética si hay tiempo |
 | Se construye primero | **Cadete**. Ingeniero después |
@@ -41,7 +41,16 @@ El niño maneja tres barras: **Energía**, **Vida** y **Escudo**. Todo se mueve 
 3. El niño **repara el escudo** tocando el domo. Cuesta energía y unos segundos.
 4. Si el Escudo llega a cero, la tripulación sufre un daño leve. Nunca hay pantalla de fracaso: el reporte explica qué pasó.
 
-Valores de prueba: primera tormenta a los 3 minutos de juego, luego una cada 4. Cada golpe quita 30 de 100 de Escudo. Reparar cuesta 20 de energía y 5 segundos.
+Valores de prueba:
+
+| | Cadete | Ingeniero |
+|---|---|---|
+| Primera tormenta | a los 3 min de juego | a los 3 min de juego |
+| Frecuencia | cada 4 min | cada 4 min |
+| Golpe al Escudo | −30 de 100 | −40 de 100 |
+| Reparar | 20 de energía y 5 s | 30 de energía y 8 s |
+
+**Datos de las tormentas.** Hasta que Anahi entregue los eventos reales (RadLab, DONKI) con fecha, fuente y unidades, el juego usa **datos ficticios** y lo dice en pantalla. Cuando lleguen, se reemplaza el archivo de datos en `data/nasa/`; el juego no cambia.
 
 **Honestidad científica.** Una tormenta solar real no es lluvia ni nube que se vea: son partículas. La nube es un **símbolo** y el juego lo dice. Las tormentas se basan en eventos reales (RadLab y DONKI), cada una con su ficha de «Datos reales», fecha, fuente y unidades.
 
@@ -49,14 +58,29 @@ Valores de prueba: primera tormenta a los 3 minutos de juego, luego una cada 4. 
 
 El viaje cuesta Vida y tiempo. Mejor herramienta significa más hielo por viaje y menos Vida perdida.
 
-| Nivel | Herramienta | Hielo por viaje | Costo de Vida por viaje |
-|---|---|---|---|
-| 1 | Pala | 2 | alto |
-| 2 | Pico | 4 | alto |
-| 3 | Taladro manual | 7 | medio |
-| 4 | Taladro con mochila | 10 | bajo |
+| Nivel | Herramienta | Hielo por viaje | Vida perdida · Cadete | Vida perdida · Ingeniero |
+|---|---|---|---|---|
+| 1 | Pala | 2 | −10 | −15 |
+| 2 | Pico | 4 | −9 | −14 |
+| 3 | Taladro manual | 7 | −6 | −9 |
+| 4 | Taladro con mochila | 10 | −3 | −5 |
 
-El jugador empieza con la pala. Las herramientas se mejoran con estrellas, en la rama **Herramientas** del árbol.
+El jugador empieza con la pala. Las herramientas se mejoran con estrellas, en la rama **Herramientas** del árbol (pico 2★, taladro manual 4★, taladro con mochila 6★).
+
+Los números de Vida son una **propuesta** para afinar con Anahi. Propuesta también: la Vida sube descansando dentro del domo con oxígeno.
+
+## Piezas y costos
+
+**Todas las piezas se pueden construir en los dos modos.** Lo que cambia es el costo: en Cadete cuestan menos y en Ingeniero cuestan una vez y media más. Valores de prueba en unidades de juego (no son datos de NASA):
+
+| Pieza | Qué hace | Cadete (energía) | Ingeniero (energía) |
+|---|---|---|---|
+| Panel solar | Da energía de día. De noche no produce | 15 | 23 |
+| Procesador de hielo | Convierte el hielo en agua | 25 | 38 |
+| Generador de oxígeno | Usa agua y energía para hacer aire | 30 | 45 |
+| Reparar el escudo (acción) | Gasta energía y tiempo | 20 + 5 s | 30 + 8 s |
+
+Estos números van en una tabla de datos por modo, no escritos dentro del código.
 
 ## Misiones, estrellas y árbol
 
