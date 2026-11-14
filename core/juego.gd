@@ -1,6 +1,6 @@
 extends Node3D
 ## Escena de juego (puesto 1): junta el mundo de Carlos, el astronauta, la cámara y el
-## movimiento de Nicolás, la simulación de Anahi, las misiones de Gael y un HUD provisional.
+## movimiento de Nicolás, la simulación de Anahi, las misiones de Gael y el HUD de Andrea.
 ## Todo se arma por código para que cada puesto pueda cambiar su pieza sin tocar las demás.
 
 signal salir_al_menu

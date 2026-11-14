@@ -10,6 +10,8 @@ const JUEGO := preload("res://scenes/juego.tscn")
 
 var _pantalla: Node = null
 var _perfil: Dictionary = {}
+var _intro: Control = null
+var _juego: Node = null
 
 
 func _ready() -> void:
@@ -19,7 +21,10 @@ func _ready() -> void:
 func mostrar_intro() -> void:
 	GameState.reiniciar()
 	var intro := INTRO.instantiate()
+	_intro = intro
 	intro.mission_requested.connect(_al_pedir_mision)
+	intro.pause_requested.connect(_al_pausar_partida)
+	intro.resume_requested.connect(_reanudar_partida)
 	_cambiar_pantalla(intro)
 
 
@@ -33,6 +38,7 @@ func mostrar_juego() -> void:
 	var modo: String = GameState.MODO_INGENIERO if _perfil.get("mode", "cadet") == "engineer" else GameState.MODO_CADETE
 	GameState.iniciar_partida(modo)
 	var juego := JUEGO.instantiate()
+	_juego = juego
 	juego.salir_al_menu.connect(_volver_a_la_intro, CONNECT_DEFERRED)
 	if juego.has_method("configurar"):
 		juego.configurar(_perfil)
@@ -41,16 +47,46 @@ func mostrar_juego() -> void:
 
 func _al_pedir_mision(perfil: Dictionary) -> void:
 	_perfil = perfil
+	if is_instance_valid(_juego):
+		_reanudar_partida(perfil)
+		return
 	call_deferred("mostrar_aterrizaje")
 
 
 func _volver_a_la_intro() -> void:
-	GameState.terminar_partida()
-	mostrar_intro()
+	if not is_instance_valid(_juego) or not is_instance_valid(_intro):
+		return
+	GameState.en_partida = false
+	_juego.process_mode = Node.PROCESS_MODE_DISABLED
+	_juego.hide()
+	_intro.show()
+	_intro.call("show_pause_menu")
+	_pantalla = _intro
+
+
+func _al_pausar_partida(paused: bool) -> void:
+	GameState.en_partida = not paused
+	if paused and is_instance_valid(_juego):
+		_juego.process_mode = Node.PROCESS_MODE_DISABLED
+		_juego.hide()
+
+
+func _reanudar_partida(_perfil_reanudado: Dictionary) -> void:
+	if not is_instance_valid(_juego) or not is_instance_valid(_intro):
+		return
+	GameState.en_partida = true
+	_juego.process_mode = Node.PROCESS_MODE_INHERIT
+	_juego.show()
+	_intro.hide()
+	_pantalla = _juego
 
 
 func _cambiar_pantalla(nueva: Node) -> void:
-	if _pantalla != null:
+	if _pantalla == _intro and nueva != _intro:
+		_intro.hide()
+	elif _pantalla != null and _pantalla != nueva:
 		_pantalla.queue_free()
 	_pantalla = nueva
-	add_child(nueva)
+	if nueva.get_parent() != self:
+		add_child(nueva)
+	nueva.show()

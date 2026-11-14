@@ -12,6 +12,8 @@ func _initialize() -> void:
 	root.add_child(main)
 	await process_frame
 	ok(main._pantalla != null and main._pantalla.has_signal("mission_requested"), "arranca en la intro de Andrea")
+	main._intro._start_emitted = true
+	main._intro._in_expedition = true
 	main._al_pedir_mision({"mode": "engineer", "nickname": "Prueba"})
 	await process_frame; await process_frame
 	ok(main._pantalla != null and main._pantalla.has_signal("completed"), "después de la intro viene el aterrizaje")
@@ -20,6 +22,13 @@ func _initialize() -> void:
 	var j = main._pantalla
 	ok(j.has_signal("salir_al_menu"), "después del aterrizaje viene el juego")
 	ok(gs.modo_juego == "ingeniero" and gs.en_partida, "perfil 'engineer' → modo ingeniero")
+	var hud_andrea = j.hud._hud_andrea
+	var energia_hud: Dictionary = hud_andrea._state.get("energia", {})
+	ok(hud_andrea != null and energia_hud.get("value", -1.0) == gs.energia and not hud_andrea._practice.visible, "HUD de Andrea muestra el estado real, no el modo práctica")
+	gs.fijar_recurso("energia", 77)
+	j.hud._process(0.0)
+	energia_hud = hud_andrea._state.get("energia", {})
+	ok(energia_hud.get("value", -1.0) == 77.0, "HUD de Andrea se actualiza con GameState")
 	ok(gs.hay_simulacion(), "simulación de Anahi enchufada")
 	ok(j.astronauta != null and j.astronauta.is_in_group("astronauta"), "astronauta en escena y en el grupo")
 	ok(j.mundo.get_node_or_null("PanelSolar") == null, "los módulos de ejemplo se quitaron (se construyen)")
@@ -52,10 +61,15 @@ func _initialize() -> void:
 	var t0: float = gs.tiempo_juego
 	for i in 60: await process_frame
 	ok(gs.tiempo_juego > t0, "el tiempo corre")
-	# salir
+	# Pausar en el menú y reanudar la misma partida.
+	var energia_antes_de_pausar: float = gs.energia
 	j.salir_al_menu.emit()
-	await process_frame; await process_frame
-	ok(main._pantalla != null and main._pantalla.has_signal("mission_requested"), "salir vuelve a la intro")
-	ok(gs.energia == 60.0 and gs.modo_juego == "cadete", "reiniciar deja valores iniciales")
+	await create_timer(1.8).timeout
+	ok(main._pantalla == main._intro and main._intro._in_home, "Menú conserva la sesión y muestra Reanudar")
+	ok(not gs.en_partida and not j.visible and main._juego == j, "la pausa conserva el juego sin consumir recursos")
+	ok(gs.energia == energia_antes_de_pausar and gs.modo_juego == "ingeniero", "la pausa conserva recursos y perfil")
+	main._intro.home_screen.play_requested.emit()
+	await create_timer(1.8).timeout
+	ok(main._pantalla == j and j.visible and gs.en_partida, "Reanudar vuelve al mismo mundo lunar")
 	print("FALLOS: ", fallos)
 	quit(fallos)

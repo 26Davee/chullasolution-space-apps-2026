@@ -769,6 +769,10 @@ func _return_to_home() -> void:
     if not _in_expedition or _transitioning: return
     _transition_to("home")
 
+func show_pause_menu() -> void:
+    if not _in_expedition or _transitioning: return
+    _transition_to("home")
+
 func _transition_to(destination: String) -> void:
     if _transitioning: return
     _transitioning = true
