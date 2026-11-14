@@ -1,0 +1,68 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://world/landing_intro.gd" id="1_intro"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_lander.tscn" id="2_lander"]
+[ext_resource type="PackedScene" path="res://assets/3d/moon_world.tscn" id="3_moon"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_stars.tscn" id="4_stars"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_earth.tscn" id="6_earth"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_sun.tscn" id="7_sun"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_dust.tscn" id="5_dust"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_space"]
+sky_top_color = Color(0.024, 0.075, 0.165, 1)
+sky_horizon_color = Color(0.043, 0.122, 0.227, 1)
+sky_curve = 0.45
+ground_bottom_color = Color(0.024, 0.075, 0.165, 1)
+ground_horizon_color = Color(0.043, 0.122, 0.227, 1)
+ground_curve = 0.45
+sun_angle_max = 0.0
+
+[sub_resource type="Sky" id="Sky_space"]
+sky_material = SubResource("ProceduralSkyMaterial_space")
+
+[sub_resource type="Environment" id="Environment_moon"]
+background_mode = 2
+sky = SubResource("Sky_space")
+ambient_light_source = 2
+ambient_light_color = Color(0.63, 0.72, 0.90, 1)
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.58
+reflected_light_source = 2
+
+[node name="LandingIntro" type="Node3D"]
+process_mode = 3
+script = ExtResource("1_intro")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_moon")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-37, -55, 0)
+light_color = Color(1, 0.87, 0.73, 1)
+light_energy = 0.95
+shadow_enabled = true
+shadow_blur = 2.3
+shadow_opacity = 0.66
+directional_shadow_max_distance = 65.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(23, 20, 32)
+current = true
+fov = 50.0
+far = 590.0
+
+[node name="MoonWorld" parent="." instance=ExtResource("3_moon")]
+
+[node name="Lander" parent="." instance=ExtResource("2_lander")]
+
+[node name="Sky" type="Node3D" parent="."]
+
+[node name="Stars" parent="Sky" instance=ExtResource("4_stars")]
+
+[node name="Earth" parent="Sky" instance=ExtResource("6_earth")]
+transform = Transform3D(0.226, 0, 0, 0, 0.226, 0, 0, 0, 0.226, 0, 0, 0)
+
+[node name="DistantSun" parent="Sky" instance=ExtResource("7_sun")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="LunarDust" parent="." instance=ExtResource("5_dust")]

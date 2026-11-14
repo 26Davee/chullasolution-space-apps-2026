@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/3d/tierra_killawasi.gdshader" id="1_aj42p"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_66nnk"]
+render_priority = 0
+shader = ExtResource("1_aj42p")
+shader_parameter/sol_dir = null
+
+[sub_resource type="SphereMesh" id="SphereMesh_1a3qb"]
+radius = 22.0
+height = 44.0
+radial_segments = 48
+rings = 24
+
+[node name="Earth" type="MeshInstance3D" unique_id=1027688152]
+transform = Transform3D(0.6819984, 0, 0.7313537, 0, 1, 0, -0.7313537, 0, 0.6819984, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_66nnk")
+cast_shadow = 0
+mesh = SubResource("SphereMesh_1a3qb")

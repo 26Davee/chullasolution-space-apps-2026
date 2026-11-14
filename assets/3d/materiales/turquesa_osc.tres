@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "turquesa_osc"
+albedo_color = Color(0.10980392, 0.4862745, 0.54509807, 1)
+roughness = 0.55
+rim_enabled = true
+rim = 0.1
+rim_tint = 0.6

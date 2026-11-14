@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "ambar_mate"
+albedo_color = Color(0.9411765, 0.64705884, 0.16862746, 1)
+metallic = 0.15
+roughness = 0.42
+rim_enabled = true
+rim = 0.14
+rim_tint = 0.6
