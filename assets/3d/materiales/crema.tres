@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "crema"
+albedo_color = Color(0.972549, 0.90588236, 0.8, 1)
+roughness = 0.75
+rim_enabled = true
+rim = 0.16
+rim_tint = 0.6

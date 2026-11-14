@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://dy1pmdbhklssp"]
+
+[ext_resource type="PackedScene" path="res://assets/3d/vicuna.tscn" id="1_vicuna"]
+
+[sub_resource type="Environment" id="Environment_preview"]
+background_mode = 1
+background_color = Color(0.024, 0.075, 0.165, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.66, 0.78, 1, 1)
+ambient_light_energy = 0.51
+
+[sub_resource type="StandardMaterial3D" id="Material_preview"]
+albedo_color = Color(0.56, 0.54, 0.64, 1)
+roughness = 0.95
+
+[sub_resource type="CylinderMesh" id="Cylinder_preview"]
+top_radius = 0.87
+bottom_radius = 0.92
+height = 0.18
+radial_segments = 16
+rings = 0
+
+[node name="VicunaVista" type="Node3D" unique_id=1875754585]
+
+[node name="Ambiente" type="WorldEnvironment" parent="." unique_id=740182588]
+environment = SubResource("Environment_preview")
+
+[node name="Luz" type="DirectionalLight3D" parent="." unique_id=1091499329]
+transform = Transform3D(-0.8290375, -0.37417316, 0.41556138, 0, 0.7431448, 0.6691306, -0.559193, 0.55473435, -0.6160949, 0, 0, 0)
+light_color = Color(1, 0.89, 0.77, 1)
+light_energy = 0.66
+shadow_enabled = true
+shadow_opacity = 0.58
+
+[node name="Camara" type="Camera3D" parent="." unique_id=1517813310]
+transform = Transform3D(-1, 1.0654157e-08, -8.677114e-08, 0, 0.99254614, 0.12186935, 8.742278e-08, 0.12186935, -0.99254614, 0, 1.84, -6.05)
+current = true
+fov = 34.0
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=539989536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04, -0.09, 0)
+material_override = SubResource("Material_preview")
+mesh = SubResource("Cylinder_preview")
+
+[node name="Vicuna" parent="." unique_id=1537086146 instance=ExtResource("1_vicuna")]
+transform = Transform3D(0.8746197, 0, -0.4848096, 0, 1, 0, 0.4848096, 0, 0.8746197, 1.04, 0, 0)
+
+[node name="VicunaEspalda" parent="." unique_id=1735236410 instance=ExtResource("1_vicuna")]
+transform = Transform3D(-0.7880108, 0, 0.61566144, 0, 1, 0, -0.61566144, 0, -0.7880108, -1.04, 0, 0)
+
+[node name="BaseEspalda" type="MeshInstance3D" parent="." unique_id=1752463815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04, -0.09, 0)
+material_override = SubResource("Material_preview")
+mesh = SubResource("Cylinder_preview")

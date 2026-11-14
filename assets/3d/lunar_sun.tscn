@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://assets/3d/sol_killawasi.gdshader" id="1_8rdjv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pp3n3"]
+render_priority = 0
+shader = ExtResource("1_8rdjv")
+
+[sub_resource type="QuadMesh" id="QuadMesh_xba0i"]
+size = Vector2(150, 150)
+
+[node name="DistantSun" type="MeshInstance3D" unique_id=1662815762]
+material_override = SubResource("ShaderMaterial_pp3n3")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_xba0i")

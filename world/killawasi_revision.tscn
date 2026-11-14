@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://world/killawasi_revision.gd" id="1_tq74g"]
+[ext_resource type="PackedScene" path="res://world/moon_world.tscn" id="2_7fcwp"]
+[ext_resource type="PackedScene" path="res://assets/3d/robot_humanoide.tscn" id="3_504gp"]
+[ext_resource type="PackedScene" path="res://assets/3d/vicuna.tscn" id="4_bfrlf"]
+[ext_resource type="PackedScene" path="res://assets/3d/reciclador_agua.tscn" id="5_uvean"]
+[ext_resource type="PackedScene" path="res://assets/3d/jardin_lunar.tscn" id="6_ji5w1"]
+[ext_resource type="PackedScene" path="res://assets/3d/bateria_lunar.tscn" id="7_mcha5"]
+[ext_resource type="PackedScene" path="res://assets/3d/pala.tscn" id="8_hd8of"]
+[ext_resource type="PackedScene" path="res://assets/3d/pico.tscn" id="9_bouco"]
+[ext_resource type="PackedScene" path="res://assets/3d/taladro_manual.tscn" id="10_dmv3d"]
+[ext_resource type="PackedScene" path="res://assets/3d/taladro_mochila.tscn" id="11_jwa2y"]
+[ext_resource type="PackedScene" path="res://assets/3d/cristales_hielo.tscn" id="12_mtqu0"]
+[ext_resource type="PackedScene" path="res://assets/3d/efecto_tormenta.tscn" id="13_3hyqb"]
+
+[node name="KillawasiRevision" type="Node3D" unique_id=2079752058]
+script = ExtResource("1_tq74g")
+
+[node name="Mundo" type="Node3D" parent="." unique_id=489413000 instance=ExtResource("2_7fcwp")]
+
+[node name="Robot" type="Node3D" parent="." unique_id=1667792553 instance=ExtResource("3_504gp")]
+transform = Transform3D(-0.8660254, 0, 0.50000006, 0, 1, 0, -0.50000006, 0, -0.8660254, -3.6, 0, 9.6)
+
+[node name="Vicuna" type="Node3D" parent="." unique_id=1242789834 instance=ExtResource("4_bfrlf")]
+transform = Transform3D(-0.9396926, 0, 0.3420202, 0, 1, 0, -0.3420202, 0, -0.9396926, -5.6, 0, 10)
+
+[node name="RecicladorAgua" type="Node3D" parent="." unique_id=324054872 instance=ExtResource("5_uvean")]
+transform = Transform3D(-0.9848077, 0, -0.17364822, 0, 1, 0, 0.17364822, 0, -0.9848077, -15.5, 0, -2.6)
+
+[node name="JardinLunar" type="Node3D" parent="." unique_id=1014737135 instance=ExtResource("6_ji5w1")]
+transform = Transform3D(-0.9945219, 0, -0.104528435, 0, 1, 0, 0.104528435, 0, -0.9945219, -11.6, 0, -6.4)
+
+[node name="BateriaLunar" type="Node3D" parent="." unique_id=889996352 instance=ExtResource("7_mcha5")]
+transform = Transform3D(-0.9612617, 0, -0.2756373, 0, 1, 0, 0.2756373, 0, -0.9612617, -16.4, 0, 2.6)
+
+[node name="Pala" type="Node3D" parent="." unique_id=1099425975 instance=ExtResource("8_hd8of")]
+transform = Transform3D(0.76604444, 0, 0.6427876, 0, 1, 0, -0.6427876, 0, 0.76604444, -2.2, 0.08, 11.6)
+
+[node name="Pico" type="Node3D" parent="." unique_id=931739323 instance=ExtResource("9_bouco")]
+transform = Transform3D(-3.7855173e-08, -0.8660254, 0.5, 1, -4.371139e-08, 0, 2.1855694e-08, 0.5, 0.8660254, -1.2, 0.12, 11.9)
+
+[node name="TaladroManual" type="Node3D" parent="." unique_id=1821004974 instance=ExtResource("10_dmv3d")]
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, -0.2, 0.3, 11.6)
+
+[node name="TaladroMochila" type="Node3D" parent="." unique_id=1061393413 instance=ExtResource("11_jwa2y")]
+transform = Transform3D(-0.34202012, 0, 0.9396926, 0, 1, 0, -0.9396926, 0, -0.34202012, 1.2, 0.3, 11.9)
+
+[node name="CristalesHielo" type="Node3D" parent="." unique_id=1260727833 instance=ExtResource("12_mtqu0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8, 0, 11.4)
+
+[node name="Tormenta" type="Node3D" parent="." unique_id=1576191622 instance=ExtResource("13_3hyqb")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, 0, 9.4, 0)
+visible = false
+
+[node name="Camara" type="Camera3D" parent="." unique_id=1907871337]
+current = true
+far = 900.0

@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://world/procesador_hielo_revision.gd" id="1"]
+[ext_resource type="PackedScene" path="res://world/moon_world.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://assets/3d/astronauta.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://assets/3d/lunar_stars.tscn" id="4"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.016, 0.071, 0.18, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.64, 0.65, 0.86, 1)
+ambient_light_energy = 0.44
+
+[node name="ProcesadorHieloRevision" type="Node3D"]
+script = ExtResource("1")
+
+[node name="BaseLunar" parent="." instance=ExtResource("2")]
+
+[node name="Astronauta" parent="." instance=ExtResource("3")]
+
+[node name="Estrellas" parent="." instance=ExtResource("4")]
+
+[node name="Ambiente" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-36, 145, 0)
+light_color = Color(1, 0.85, 0.70, 1)
+light_energy = 0.66
+shadow_enabled = true
+shadow_blur = 2.3
+shadow_opacity = 0.76
+directional_shadow_max_distance = 40.0
+
+[node name="Camara" type="Camera3D" parent="."]
+projection = 1
+size = 6.5
+far = 590.0
+current = true
