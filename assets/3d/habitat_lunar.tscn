@@ -1,0 +1,386 @@
+[gd_scene load_steps=29 format=3]
+
+[sub_resource type="CapsuleMesh" id="Mesh_0"]
+radius = 1.43
+height = 6.1
+radial_segments = 16
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="Ceramica"]
+albedo_color = Color(0.86, 0.81, 0.78, 1)
+roughness = 0.77
+
+[sub_resource type="CylinderMesh" id="Mesh_1"]
+top_radius = 1.46
+bottom_radius = 1.46
+height = 0.16
+radial_segments = 16
+rings = 0
+
+[sub_resource type="StandardMaterial3D" id="Turquesa"]
+albedo_color = Color(0.10, 0.51, 0.56, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_2"]
+size = Vector3(0.27, 0.62, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="Acero"]
+albedo_color = Color(0.46, 0.51, 0.58, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_3"]
+size = Vector3(0.82, 0.17, 0.65)
+
+[sub_resource type="StandardMaterial3D" id="Grafito"]
+albedo_color = Color(0.16, 0.22, 0.30, 1)
+roughness = 0.77
+
+[sub_resource type="CylinderMesh" id="Mesh_4"]
+top_radius = 0.96
+bottom_radius = 0.96
+height = 0.72
+radial_segments = 12
+rings = 0
+
+[sub_resource type="CylinderMesh" id="Mesh_5"]
+top_radius = 0.75
+bottom_radius = 0.75
+height = 0.12
+radial_segments = 12
+rings = 0
+
+[sub_resource type="CylinderMesh" id="Mesh_6"]
+top_radius = 0.59
+bottom_radius = 0.59
+height = 0.09
+radial_segments = 12
+rings = 0
+
+[sub_resource type="CylinderMesh" id="Mesh_7"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.05
+radial_segments = 12
+rings = 0
+
+[sub_resource type="StandardMaterial3D" id="Vidrio"]
+albedo_color = Color(0.09, 0.26, 0.37, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_8"]
+size = Vector3(0.13, 0.075, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Ambar"]
+albedo_color = Color(0.79, 0.44, 0.13, 1)
+roughness = 0.77
+
+[sub_resource type="BoxMesh" id="Mesh_9"]
+size = Vector3(1.33, 0.17, 0.27)
+
+[sub_resource type="BoxMesh" id="Mesh_10"]
+size = Vector3(1.28, 0.036, 0.06)
+
+[sub_resource type="BoxMesh" id="Mesh_11"]
+size = Vector3(1.33, 0.34, 0.27)
+
+[sub_resource type="BoxMesh" id="Mesh_12"]
+size = Vector3(1.33, 0.51, 0.27)
+
+[sub_resource type="BoxMesh" id="Mesh_13"]
+size = Vector3(1.33, 0.68, 0.27)
+
+[sub_resource type="CylinderMesh" id="Mesh_14"]
+top_radius = 0.27
+bottom_radius = 0.27
+height = 0.16
+radial_segments = 12
+rings = 0
+
+[sub_resource type="CylinderMesh" id="Mesh_15"]
+top_radius = 0.203
+bottom_radius = 0.203
+height = 0.046
+radial_segments = 12
+rings = 0
+
+[sub_resource type="BoxMesh" id="Mesh_16"]
+size = Vector3(0.07, 0.21, 0.09)
+
+[sub_resource type="CylinderMesh" id="Mesh_17"]
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.56
+radial_segments = 8
+rings = 0
+
+[sub_resource type="CapsuleMesh" id="Mesh_18"]
+radius = 0.078
+height = 0.16
+radial_segments = 16
+rings = 6
+
+[sub_resource type="BoxShape3D" id="Shape_VolumenHabitat"]
+size = Vector3(2.8, 2.8, 5.5)
+
+[sub_resource type="BoxShape3D" id="Shape_VolumenEsclusa"]
+size = Vector3(1.82, 1.82, 0.45)
+
+[sub_resource type="BoxShape3D" id="Shape_VolumenPeldanos"]
+size = Vector3(1.34, 0.52, 1.13)
+
+[node name="HabitatLunar" type="StaticBody3D"]
+
+[node name="CascoPresurizado" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.89, 0)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_0")
+material_override = SubResource("Ceramica")
+
+[node name="Anillo0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.89, -1.53)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_1")
+material_override = SubResource("Turquesa")
+
+[node name="Soporte00" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 0.33, -1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_2")
+material_override = SubResource("Acero")
+
+[node name="Zapata00" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 0.085, -1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_3")
+material_override = SubResource("Grafito")
+
+[node name="Soporte01" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 0.33, -1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_2")
+material_override = SubResource("Acero")
+
+[node name="Zapata01" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 0.085, -1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_3")
+material_override = SubResource("Grafito")
+
+[node name="Anillo1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.89, 1.53)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_1")
+material_override = SubResource("Turquesa")
+
+[node name="Soporte10" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 0.33, 1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_2")
+material_override = SubResource("Acero")
+
+[node name="Zapata10" type="MeshInstance3D" parent="."]
+position = Vector3(-0.96, 0.085, 1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_3")
+material_override = SubResource("Grafito")
+
+[node name="Soporte11" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 0.33, 1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_2")
+material_override = SubResource("Acero")
+
+[node name="Zapata11" type="MeshInstance3D" parent="."]
+position = Vector3(0.96, 0.085, 1.53)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_3")
+material_override = SubResource("Grafito")
+
+[node name="Esclusa" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.78, 2.57)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_4")
+material_override = SubResource("Grafito")
+
+[node name="MarcoPuerta" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.78, 2.95)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_5")
+material_override = SubResource("Turquesa")
+
+[node name="Puerta" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.78, 3.03)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_6")
+material_override = SubResource("Ceramica")
+
+[node name="Mirilla" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.96, 3.09)
+rotation_degrees = Vector3(90, 0, 0)
+mesh = SubResource("Mesh_7")
+material_override = SubResource("Vidrio")
+
+[node name="Manija" type="MeshInstance3D" parent="."]
+position = Vector3(0.28, 1.63, 3.105)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_8")
+material_override = SubResource("Ambar")
+
+[node name="Peldano0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.085, 4.06)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_9")
+material_override = SubResource("Grafito")
+
+[node name="BordePeldano0" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.17, 4.14)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_10")
+material_override = SubResource("Ambar")
+
+[node name="Peldano1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.17, 3.805)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_11")
+material_override = SubResource("Grafito")
+
+[node name="BordePeldano1" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.34, 3.885)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_10")
+material_override = SubResource("Ambar")
+
+[node name="Peldano2" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.255, 3.55)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_12")
+material_override = SubResource("Grafito")
+
+[node name="BordePeldano2" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.51, 3.63)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_10")
+material_override = SubResource("Ambar")
+
+[node name="Peldano3" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.34, 3.295)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_13")
+material_override = SubResource("Grafito")
+
+[node name="BordePeldano3" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.68, 3.375)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_10")
+material_override = SubResource("Ambar")
+
+[node name="MarcoOeste0" type="MeshInstance3D" parent="."]
+position = Vector3(-1.38, 1.98, -0.79)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaOeste0" type="MeshInstance3D" parent="."]
+position = Vector3(-1.47, 1.98, -0.79)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="MarcoOeste1" type="MeshInstance3D" parent="."]
+position = Vector3(-1.38, 1.98, 0.21)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaOeste1" type="MeshInstance3D" parent="."]
+position = Vector3(-1.47, 1.98, 0.21)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="MarcoOeste2" type="MeshInstance3D" parent="."]
+position = Vector3(-1.38, 1.98, 0.99)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaOeste2" type="MeshInstance3D" parent="."]
+position = Vector3(-1.47, 1.98, 0.99)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="LuzOeste" type="MeshInstance3D" parent="."]
+position = Vector3(-0.92, 2.08, 2.82)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_16")
+material_override = SubResource("Ambar")
+
+[node name="MarcoEste0" type="MeshInstance3D" parent="."]
+position = Vector3(1.38, 1.98, -0.79)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaEste0" type="MeshInstance3D" parent="."]
+position = Vector3(1.47, 1.98, -0.79)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="MarcoEste1" type="MeshInstance3D" parent="."]
+position = Vector3(1.38, 1.98, 0.21)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaEste1" type="MeshInstance3D" parent="."]
+position = Vector3(1.47, 1.98, 0.21)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="MarcoEste2" type="MeshInstance3D" parent="."]
+position = Vector3(1.38, 1.98, 0.99)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_14")
+material_override = SubResource("Grafito")
+
+[node name="VentanaEste2" type="MeshInstance3D" parent="."]
+position = Vector3(1.47, 1.98, 0.99)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_15")
+material_override = SubResource("Vidrio")
+
+[node name="LuzEste" type="MeshInstance3D" parent="."]
+position = Vector3(0.92, 2.08, 2.82)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_16")
+material_override = SubResource("Ambar")
+
+[node name="Antena" type="MeshInstance3D" parent="."]
+position = Vector3(0.54, 3.43, -0.96)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_17")
+material_override = SubResource("Acero")
+
+[node name="Baliza" type="MeshInstance3D" parent="."]
+position = Vector3(0.54, 3.73, -0.96)
+rotation_degrees = Vector3(0, 0, 0)
+mesh = SubResource("Mesh_18")
+material_override = SubResource("Ambar")
+
+[node name="VolumenHabitat" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.85, 0)
+rotation_degrees = Vector3(0, 0, 0)
+shape = SubResource("Shape_VolumenHabitat")
+
+[node name="VolumenEsclusa" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.77, 2.93)
+rotation_degrees = Vector3(0, 0, 0)
+shape = SubResource("Shape_VolumenEsclusa")
+
+[node name="VolumenPeldanos" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.26, 3.7)
+rotation_degrees = Vector3(0, 0, 0)
+shape = SubResource("Shape_VolumenPeldanos")

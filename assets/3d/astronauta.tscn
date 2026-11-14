@@ -1,24 +1,8 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene format=4]
 
 [sub_resource type="StandardMaterial3D" id="bone"]
 albedo_color = Color(0.859, 0.812, 0.78, 1)
 roughness = 0.86
-
-[sub_resource type="StandardMaterial3D" id="seam"]
-albedo_color = Color(0.22, 0.3, 0.38, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="turquoise"]
-albedo_color = Color(0.169, 0.639, 0.69, 1)
-roughness = 0.79
-
-[sub_resource type="StandardMaterial3D" id="visor"]
-albedo_color = Color(0.07, 0.17, 0.24, 1)
-roughness = 0.33
-
-[sub_resource type="StandardMaterial3D" id="amber"]
-albedo_color = Color(0.784, 0.51, 0.188, 1)
-roughness = 0.77
 
 [sub_resource type="CylinderMesh" id="mesh_0"]
 top_radius = 0.337
@@ -27,36 +11,57 @@ height = 0.53
 radial_segments = 10
 rings = 0
 
-[sub_resource type="CylinderMesh" id="mesh_1"]
-top_radius = 0.3
-bottom_radius = 0.29
-height = 0.12
-radial_segments = 8
-rings = 0
+[sub_resource type="StandardMaterial3D" id="seam"]
+albedo_color = Color(0.22, 0.3, 0.38, 1)
+roughness = 0.9
 
 [sub_resource type="BoxMesh" id="mesh_2"]
 size = Vector3(0.25, 0.19, 0.07)
 
+[sub_resource type="StandardMaterial3D" id="amber"]
+albedo_color = Color(0.784, 0.51, 0.188, 1)
+roughness = 0.77
+
 [sub_resource type="BoxMesh" id="mesh_3"]
 size = Vector3(0.055, 0.045, 0.018)
 
-[sub_resource type="SphereMesh" id="mesh_4"]
-radius = 0.29
-height = 0.55
-radial_segments = 8
-rings = 4
+[sub_resource type="ArrayMesh" id="ArrayMesh_eqnoq"]
+_surfaces = [{
+"aabb": AABB(-0.235, -0.25, -0.12, 0.47, 0.5, 0.24),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHAAeAB8AIAAhACIAIwAkACUAJgAnACgAEwApABQAKgArACwALQAuAC8AMAAxADIAMAAyADMANAA1ADYANwA4ADkAEAA6ADsAEwA8ACkAPQA+AD8AQABBAEIAQwBEAEUARgBHAEgASQBKAEsASQBLAEwAEAA7AE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAEABNAGMAEwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbABuAG8AcABxAHIAcwB0AHUAEABjAHYAdwB4AHkAegB7AHwAfQB+AH8AgACBAIIAgACCAIMAhACFAIYAhwCIAIkAEAB2AIoAEwCLAIwAjQCOAI8AjQCPAJAAkQCSAJMAlACVAJYAlwCYAJkAmgCbAJwAnQCeAJ8AEwAVAIsA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 160,
+"vertex_data": PackedByteArray("fh04PgAAgL6i6ew8xF8TPgAAgL7dtYQ9fh04Pqd5R76PwvU9fh04PgAAgL6i6ew8fh04Pqd5R76PwvU916NwPqd5R77dtYQ916NwPqd5R77dtYQ9fh04Pqd5R76PwvU9fh04Pqd5Rz6PwvU916NwPqd5Rz7dtYQ916NwPqd5Rz7dtYQ9fh04Pqd5Rz6PwvU9xF8TPgAAgD7dtYQ916NwPqd5Rz7dtYQ9xF8TPgAAgD7dtYQ9fh04PgAAgD6i6ew8AAAAAAAAgL4AAAAAxF8TPgAAgL7dtYQ9fh04PgAAgL6i6ew8AAAAAAAAgD4AAAAAfh04PgAAgD6i6ew8xF8TPgAAgD7dtYQ9fh04PgAAgL6i6ey8fh04PgAAgL6i6ew816NwPqd5R77dtYQ9fh04PgAAgL6i6ey816NwPqd5R77dtYQ916NwPqd5R77dtYS916NwPqd5R77dtYS916NwPqd5R77dtYQ916NwPqd5Rz7dtYQ916NwPqd5Rz7dtYS916NwPqd5Rz7dtYS916NwPqd5Rz7dtYQ9fh04PgAAgD6i6ew816NwPqd5Rz7dtYS9fh04PgAAgD6i6ew8fh04PgAAgD6i6ey8AAAAAAAAgL4AAAAAfh04PgAAgL6i6ew8fh04PgAAgL6i6ey8fh04PgAAgD6i6ey8xF8TPgAAgL7dtYS9fh04PgAAgL6i6ey816NwPqd5R77dtYS9xF8TPgAAgL7dtYS916NwPqd5R77dtYS9fh04Pqd5R76PwvW9fh04Pqd5R76PwvW916NwPqd5R77dtYS916NwPqd5Rz7dtYS9fh04Pqd5Rz6PwvW9fh04Pqd5Rz6PwvW916NwPqd5Rz7dtYS9fh04PgAAgD6i6ey8fh04Pqd5Rz6PwvW9fh04PgAAgD6i6ey8xF8TPgAAgD7dtYS9fh04PgAAgL6i6ey8xF8TPgAAgL7dtYS9xF8TPgAAgD7dtYS9xF8TvgAAgL7dtYS9xF8TPgAAgL7dtYS9fh04Pqd5R76PwvW9xF8TvgAAgL7dtYS9fh04Pqd5R76PwvW9fh04vqd5R76PwvW9fh04vqd5R76PwvW9fh04Pqd5R76PwvW9fh04Pqd5Rz6PwvW9fh04vqd5R76PwvW9fh04Pqd5Rz6PwvW9fh04vqd5Rz6PwvW9fh04vqd5Rz6PwvW9fh04Pqd5Rz6PwvW9xF8TPgAAgD7dtYS9xF8TvgAAgD7dtYS9xF8TvgAAgL7dtYS9AAAAAAAAgD4AAAAAxF8TvgAAgD7dtYS9xF8TPgAAgD7dtYS9fh04vgAAgL6i6ey8xF8TvgAAgL7dtYS9fh04vqd5R76PwvW9fh04vgAAgL6i6ey8fh04vqd5R76PwvW916Nwvqd5R77dtYS916Nwvqd5R77dtYS9fh04vqd5R76PwvW9fh04vqd5Rz6PwvW916Nwvqd5R77dtYS9fh04vqd5Rz6PwvW916Nwvqd5Rz7dtYS916Nwvqd5Rz7dtYS9fh04vqd5Rz6PwvW9xF8TvgAAgD7dtYS916Nwvqd5Rz7dtYS9xF8TvgAAgD7dtYS9fh04vgAAgD6i6ey8fh04vgAAgL6i6ey8fh04vgAAgD6i6ey8xF8TvgAAgD7dtYS9fh04vgAAgL6i6ew8fh04vgAAgL6i6ey816Nwvqd5R77dtYS9fh04vgAAgL6i6ew816Nwvqd5R77dtYS916Nwvqd5R77dtYQ916Nwvqd5R77dtYQ916Nwvqd5R77dtYS916Nwvqd5Rz7dtYS916Nwvqd5Rz7dtYQ916Nwvqd5Rz7dtYQ916Nwvqd5Rz7dtYS9fh04vgAAgD6i6ey816Nwvqd5Rz7dtYQ9fh04vgAAgD6i6ey8fh04vgAAgD6i6ew8fh04vgAAgL6i6ew8AAAAAAAAgD4AAAAAfh04vgAAgD6i6ew8fh04vgAAgD6i6ey8xF8TvgAAgL7dtYQ9fh04vgAAgL6i6ew816Nwvqd5R77dtYQ9xF8TvgAAgL7dtYQ916Nwvqd5R77dtYQ9fh04vqd5R76PwvU9fh04vqd5R76PwvU916Nwvqd5R77dtYQ916Nwvqd5Rz7dtYQ9fh04vqd5Rz6PwvU9fh04vqd5Rz6PwvU916Nwvqd5Rz7dtYQ9fh04vgAAgD6i6ew8fh04vqd5Rz6PwvU9fh04vgAAgD6i6ew8xF8TvgAAgD7dtYQ9xF8TvgAAgL7dtYQ9xF8TvgAAgD7dtYQ9fh04vgAAgD6i6ew8xF8TPgAAgL7dtYQ9xF8TvgAAgL7dtYQ9fh04vqd5R76PwvU9fh04Pqd5R76PwvU9fh04Pqd5R76PwvU9fh04vqd5R76PwvU9fh04vqd5Rz6PwvU9fh04Pqd5R76PwvU9fh04vqd5Rz6PwvU9fh04Pqd5Rz6PwvU9fh04Pqd5Rz6PwvU9fh04vqd5Rz6PwvU9xF8TvgAAgD7dtYQ9fh04Pqd5Rz6PwvU9xF8TvgAAgD7dtYQ9xF8TPgAAgD7dtYQ9AAAAAAAAgL4AAAAAxF8TvgAAgL7dtYQ9xF8TPgAAgL7dtYQ9EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1RVqar/v/9/VFWpqv+//39UVamq/7//f1RVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VFWpqv+//z9UVamq/7//P1RVqar/v/8/VFWpqv+//z9UVamq/7//P1RVqar///9//3//v////3//f/+/////f/9//7////9//3//v/+//79UVVTV/7//v1RVVNX/v/+/VFVU1f+//79UVVTV/7//v1RVVNX/v/+/VFVU1f9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9///8AAP+/IsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNin////v6qqqar///+/qqqpqv///7+qqqmq////v6qqqaoixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtv/fwAAAAD/v/9/AAAAAP+//3///wAA/7//vwAAVFWpqv+/AABUVamq/78AAFRVqar/vwAAVFWpqv+/AABUVamq/78AAFRVqar//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA//////9/AID/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvFAAD/v1RVqaoAAP+/VFWpqgAA/79UVamqAAD/v1RVqaoAAP+/VFWpqgAA/79UVamq3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh/38AAAAA/7//f///AAD/v/9///8AAP+//z//P1RVVNX/P/8/VFVU1f8//z9UVVTV/z//P1RVVNX/P/8/VFVU1f8//z9UVVTVAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//7//P/+/VFWpqv8//79UVamq/z//v1RVqar/P/+/VFWpqv8//79UVamq/z//v1RVqar/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2/8//3+qqqmq/z//f6qqqar/P/9/qqqpqv8//3+qqqmq7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin/38AAAAA/7//f///AAD/v/9///8AAP+//3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/+/VFWpqv9//79UVamq/3//v1RVqar/f/+/VFWpqv9//79UVamq/3//v1RVqar/fwAAAAD/v/9/AAAAAP+//38AAAAA/78=")
+}]
 
-[sub_resource type="SphereMesh" id="mesh_5"]
-radius = 0.235
-height = 0.44
-radial_segments = 8
-rings = 4
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4utdd"]
+albedo_color = Color(0.9137255, 0.8862745, 0.85490197, 1)
+roughness = 0.68
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_7kaws"]
+_surfaces = [{
+"aabb": AABB(-0.205, -0.23, -0.085, 0.41, 0.46, 0.17),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAFgAYABkAGgAbABwAGgAcAB0AHgAfACAAHgAgACEAIgAjACQAEwAlABQAJgAnACgAKQAqACsALAAtAC4ALAAuAC8AMAAxADIAMwA0ADUAEAA2ADcAEwA4ACUAOQA6ADsAPAA9AD4APwBAAEEAQgBDAEQARQBGAEcASABJAEoAEAA3AEsATABNAE4ATwBQAFEAUgBTAFQAVQBWAFcAWABZAFoAWwBcAF0AXgBfAGAAEABLAGEAEwBiAGMAZABlAGYAZABmAGcAaABpAGoAaABqAGsAbABtAG4AbABuAG8AEABhAHAAcQByAHMAdAB1AHYAdwB4AHkAegB7AHwAegB8AH0AfgB/AIAAgQCCAIMAEABwAIQAEwCFAIYAhwCIAIkAhwCJAIoAiwCMAI0AjgCPAJAAkQCSAJMAlACVAJYAlwCYAJkAEwAVAIUA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 154,
+"vertex_data": PackedByteArray("sOEpPh+Fa74p0Kc8TdsPPh+Fa76kATw9sOEpPkp7Q757FK49sOEpPh+Fa74p0Kc8sOEpPkp7Q757FK49hetRPkp7Q76kATw9hetRPkp7Q76kATw9sOEpPkp7Q757FK49sOEpPkp7Qz57FK49hetRPkp7Qz6kATw9hetRPkp7Qz6kATw9sOEpPkp7Qz57FK49TdsPPh+Faz6kATw9hetRPkp7Qz6kATw9TdsPPh+Faz6kATw9sOEpPh+Faz4p0Kc8AAAAAB+Fa74AAAAATdsPPh+Fa76kATw9sOEpPh+Fa74p0Kc8AAAAAB+Faz4AAAAAsOEpPh+Faz4p0Kc8TdsPPh+Faz6kATw9sOEpPh+Fa74p0Ke8sOEpPh+Fa74p0Kc8hetRPkp7Q76kATw9hetRPkp7Q76kATy9hetRPkp7Q76kATy9hetRPkp7Q76kATw9hetRPkp7Qz6kATw9hetRPkp7Qz6kATy9hetRPkp7Qz6kATy9hetRPkp7Qz6kATw9sOEpPh+Faz4p0Kc8sOEpPh+Faz4p0Ke8AAAAAB+Fa74AAAAAsOEpPh+Fa74p0Kc8sOEpPh+Fa74p0Ke8sOEpPh+Faz4p0Ke8TdsPPh+Fa76kATy9sOEpPh+Fa74p0Ke8hetRPkp7Q76kATy9TdsPPh+Fa76kATy9hetRPkp7Q76kATy9sOEpPkp7Q757FK69sOEpPkp7Q757FK69hetRPkp7Q76kATy9hetRPkp7Qz6kATy9sOEpPkp7Qz57FK69sOEpPkp7Qz57FK69hetRPkp7Qz6kATy9sOEpPh+Faz4p0Ke8sOEpPkp7Qz57FK69sOEpPh+Faz4p0Ke8TdsPPh+Faz6kATy9sOEpPh+Fa74p0Ke8TdsPPh+Fa76kATy9TdsPPh+Faz6kATy9TdsPvh+Fa76kATy9TdsPPh+Fa76kATy9sOEpPkp7Q757FK69TdsPvh+Fa76kATy9sOEpPkp7Q757FK69sOEpvkp7Q757FK69sOEpvkp7Q757FK69sOEpPkp7Q757FK69sOEpPkp7Qz57FK69sOEpvkp7Q757FK69sOEpPkp7Qz57FK69sOEpvkp7Qz57FK69sOEpvkp7Qz57FK69sOEpPkp7Qz57FK69TdsPPh+Faz6kATy9sOEpvkp7Qz57FK69TdsPPh+Faz6kATy9TdsPvh+Faz6kATy9TdsPvh+Fa76kATy9AAAAAB+Faz4AAAAATdsPvh+Faz6kATy9TdsPPh+Faz6kATy9sOEpvh+Fa74p0Ke8TdsPvh+Fa76kATy9sOEpvkp7Q757FK69sOEpvh+Fa74p0Ke8sOEpvkp7Q757FK69hetRvkp7Q76kATy9hetRvkp7Q76kATy9sOEpvkp7Q757FK69sOEpvkp7Qz57FK69hetRvkp7Q76kATy9sOEpvkp7Qz57FK69hetRvkp7Qz6kATy9hetRvkp7Qz6kATy9sOEpvkp7Qz57FK69TdsPvh+Faz6kATy9hetRvkp7Qz6kATy9TdsPvh+Faz6kATy9sOEpvh+Faz4p0Ke8sOEpvh+Fa74p0Ke8sOEpvh+Faz4p0Ke8TdsPvh+Faz6kATy9sOEpvh+Fa74p0Kc8sOEpvh+Fa74p0Ke8hetRvkp7Q76kATy9hetRvkp7Q76kATw9hetRvkp7Q76kATw9hetRvkp7Q76kATy9hetRvkp7Qz6kATy9hetRvkp7Qz6kATw9hetRvkp7Qz6kATw9hetRvkp7Qz6kATy9sOEpvh+Faz4p0Ke8sOEpvh+Faz4p0Kc8sOEpvh+Fa74p0Kc8AAAAAB+Faz4AAAAAsOEpvh+Faz4p0Kc8sOEpvh+Faz4p0Ke8TdsPvh+Fa76kATw9sOEpvh+Fa74p0Kc8hetRvkp7Q76kATw9TdsPvh+Fa76kATw9hetRvkp7Q76kATw9sOEpvkp7Q757FK49sOEpvkp7Q757FK49hetRvkp7Q76kATw9hetRvkp7Qz6kATw9sOEpvkp7Qz57FK49sOEpvkp7Qz57FK49hetRvkp7Qz6kATw9sOEpvh+Faz4p0Kc8sOEpvkp7Qz57FK49sOEpvh+Faz4p0Kc8TdsPvh+Faz6kATw9TdsPvh+Fa76kATw9TdsPvh+Faz6kATw9sOEpvh+Faz4p0Kc8TdsPPh+Fa76kATw9TdsPvh+Fa76kATw9sOEpvkp7Q757FK49sOEpPkp7Q757FK49sOEpPkp7Q757FK49sOEpvkp7Q757FK49sOEpvkp7Qz57FK49sOEpPkp7Q757FK49sOEpvkp7Qz57FK49sOEpPkp7Qz57FK49sOEpPkp7Qz57FK49sOEpvkp7Qz57FK49TdsPvh+Faz6kATw9sOEpPkp7Qz57FK49TdsPvh+Faz6kATw9TdsPPh+Faz6kATw9AAAAAB+Fa74AAAAATdsPvh+Fa76kATw9TdsPPh+Fa76kATw9EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1VVqar/v/9/VVWpqv+//39VVamq/7//f1VVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VFWpqv+//z9UVamq/7//P1RVqar/v/8/VFWpqv///3//f/+/////f/9//7////9//3//v////3//f/+//7//v1RVVNX/v/+/VFVU1f+//79UVVTV/7//v1RVVNX/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/vyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYp////7+pqqmq////v6mqqar///+/qaqpqv///7+pqqmqIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bb/38AAAAA/7//fwAAAAD/v/9///8AAP+//78AAFVVqar/vwAAVVWpqv+/AABVVamq/78AAFVVqar/vwAAVVWpqv+/AABVVamq//////9/AID//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA/7///6oqVJX/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf+///+qKlSV/38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7/cOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868UAAP+/VVWpqgAA/79VVamqAAD/v1VVqaoAAP+/VVWpqgAA/79VVamqAAD/v1VVqarcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KH/fwAAAAD/v/9///8AAP+//3///wAA/7//P/8/VFVU1f8//z9UVVTV/z//P1RVVNX/P/8/VFVU1QAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+//z//v1RVqar/P/+/VFWpqv8//79UVamq/z//v1RVqar/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2/8//3+pqqmq/z//f6mqqar/P/9/qaqpqv8//3+pqqmq7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin/38AAAAA/7//f///AAD/v/9///8AAP+//3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/+/VVWpqv9//79VVamq/3//v1VVqar/f/+/VVWpqv9//79VVamq/3//v1VVqar/fwAAAAD/v/9/AAAAAP+//38AAAAA/78=")
+}]
 
 [sub_resource type="SphereMesh" id="mesh_6"]
 radius = 0.078
 height = 0.396
 radial_segments = 12
 rings = 6
+
+[sub_resource type="StandardMaterial3D" id="turquoise"]
+albedo_color = Color(0.169, 0.639, 0.69, 1)
+roughness = 0.79
 
 [sub_resource type="CylinderMesh" id="mesh_7"]
 top_radius = 0.204
@@ -77,6 +82,10 @@ height = 0.415
 radial_segments = 32
 rings = 16
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sjtrs"]
+albedo_color = Color(0.07058824, 0.16862746, 0.23921569, 1)
+roughness = 0.68
+
 [sub_resource type="SphereMesh" id="mesh_10"]
 radius = 0.275
 height = 0.386
@@ -89,6 +98,37 @@ bottom_radius = 0.11
 height = 0.081
 radial_segments = 10
 rings = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_kb3gi"]
+_surfaces = [{
+"aabb": AABB(-0.105, -0.0435, -0.05, 0.21, 0.087, 0.1),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHAAeAB8AIAAhACIAIwAkACUAJgAnACgAEwApABQAKgArACwALQAuAC8AMAAxADIAMAAyADMANAA1ADYANwA4ADkAEAA6ADsAEwA8ACkAPQA+AD8AQABBAEIAQwBEAEUARgBHAEgASQBKAEsATABNAE4AEAA7AE8AUABRAFIAUwBUAFUAVgBXAFgAWQBaAFsAXABdAF4AXwBgAGEAYgBjAGQAEABPAGUAEwBmAGcAaABpAGoAawBsAG0AbgBvAHAAbgBwAHEAcgBzAHQAdQB2AHcAEABlAHgAeQB6AHsAfAB9AH4AfwCAAIEAggCDAIQAggCEAIUAhgCHAIgAiQCKAIsAEAB4AIwAEwCNAI4AjwCQAJEAkgCTAJQAlQCWAJcAmACZAJoAmwCcAJ0AngCfAKAAoQCiAKMAEwAVAI0A"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 164,
+"vertex_data": PackedByteArray("PA+uPQ4tMr38IIs8FmyTPQ4tMr2XrfU8PA+uPRluwLzNzEw9PA+uPQ4tMr38IIs8PA+uPRluwLzNzEw9PQrXPRluwLyXrfU8PQrXPRluwLyXrfU8PA+uPRluwLzNzEw9PA+uPRluwDzNzEw9PQrXPRluwDyXrfU8PQrXPRluwDyXrfU8PA+uPRluwDzNzEw9FmyTPQ4tMj2XrfU8PQrXPRluwDyXrfU8FmyTPQ4tMj2XrfU8PA+uPQ4tMj38IIs8AAAAAA4tMr0AAAAAFmyTPQ4tMr2XrfU8PA+uPQ4tMr38IIs8AAAAAA4tMj0AAAAAPA+uPQ4tMj38IIs8FmyTPQ4tMj2XrfU8PA+uPQ4tMr38IIu8PA+uPQ4tMr38IIs8PQrXPRluwLyXrfU8PA+uPQ4tMr38IIu8PQrXPRluwLyXrfU8PQrXPRluwLyXrfW8PQrXPRluwLyXrfW8PQrXPRluwLyXrfU8PQrXPRluwDyXrfU8PQrXPRluwDyXrfW8PQrXPRluwDyXrfW8PQrXPRluwDyXrfU8PA+uPQ4tMj38IIs8PQrXPRluwDyXrfW8PA+uPQ4tMj38IIs8PA+uPQ4tMj38IIu8AAAAAA4tMr0AAAAAPA+uPQ4tMr38IIs8PA+uPQ4tMr38IIu8PA+uPQ4tMj38IIu8FmyTPQ4tMr2XrfW8PA+uPQ4tMr38IIu8PQrXPRluwLyXrfW8FmyTPQ4tMr2XrfW8PQrXPRluwLyXrfW8PA+uPRluwLzNzEy9PA+uPRluwLzNzEy9PQrXPRluwLyXrfW8PQrXPRluwDyXrfW8PA+uPRluwDzNzEy9PA+uPRluwDzNzEy9PQrXPRluwDyXrfW8PA+uPQ4tMj38IIu8PA+uPRluwDzNzEy9PA+uPQ4tMj38IIu8FmyTPQ4tMj2XrfW8PA+uPQ4tMr38IIu8FmyTPQ4tMr2XrfW8FmyTPQ4tMj2XrfW8FmyTvQ4tMr2XrfW8FmyTPQ4tMr2XrfW8PA+uPRluwLzNzEy9FmyTvQ4tMr2XrfW8PA+uPRluwLzNzEy9PA+uvRluwLzNzEy9PA+uvRluwLzNzEy9PA+uPRluwLzNzEy9PA+uPRluwDzNzEy9PA+uvRluwLzNzEy9PA+uPRluwDzNzEy9PA+uvRluwDzNzEy9PA+uvRluwDzNzEy9PA+uPRluwDzNzEy9FmyTPQ4tMj2XrfW8PA+uvRluwDzNzEy9FmyTPQ4tMj2XrfW8FmyTvQ4tMj2XrfW8FmyTvQ4tMr2XrfW8AAAAAA4tMj0AAAAAFmyTvQ4tMj2XrfW8FmyTPQ4tMj2XrfW8PA+uvQ4tMr38IIu8FmyTvQ4tMr2XrfW8PA+uvRluwLzNzEy9PA+uvQ4tMr38IIu8PA+uvRluwLzNzEy9PQrXvRluwLyXrfW8PQrXvRluwLyXrfW8PA+uvRluwLzNzEy9PA+uvRluwDzNzEy9PQrXvRluwLyXrfW8PA+uvRluwDzNzEy9PQrXvRluwDyXrfW8PQrXvRluwDyXrfW8PA+uvRluwDzNzEy9FmyTvQ4tMj2XrfW8PQrXvRluwDyXrfW8FmyTvQ4tMj2XrfW8PA+uvQ4tMj38IIu8PA+uvQ4tMr38IIu8PA+uvQ4tMj38IIu8FmyTvQ4tMj2XrfW8PA+uvQ4tMr38IIs8PA+uvQ4tMr38IIu8PQrXvRluwLyXrfW8PA+uvQ4tMr38IIs8PQrXvRluwLyXrfW8PQrXvRluwLyXrfU8PQrXvRluwLyXrfU8PQrXvRluwLyXrfW8PQrXvRluwDyXrfW8PQrXvRluwDyXrfU8PQrXvRluwDyXrfU8PQrXvRluwDyXrfW8PA+uvQ4tMj38IIu8PQrXvRluwDyXrfU8PA+uvQ4tMj38IIu8PA+uvQ4tMj38IIs8PA+uvQ4tMr38IIs8AAAAAA4tMj0AAAAAPA+uvQ4tMj38IIs8PA+uvQ4tMj38IIu8FmyTvQ4tMr2XrfU8PA+uvQ4tMr38IIs8PQrXvRluwLyXrfU8FmyTvQ4tMr2XrfU8PQrXvRluwLyXrfU8PA+uvRluwLzNzEw9PA+uvRluwLzNzEw9PQrXvRluwLyXrfU8PQrXvRluwDyXrfU8PA+uvRluwDzNzEw9PA+uvRluwDzNzEw9PQrXvRluwDyXrfU8PA+uvQ4tMj38IIs8PA+uvRluwDzNzEw9PA+uvQ4tMj38IIs8FmyTvQ4tMj2XrfU8FmyTvQ4tMr2XrfU8FmyTvQ4tMj2XrfU8PA+uvQ4tMj38IIs8FmyTPQ4tMr2XrfU8FmyTvQ4tMr2XrfU8PA+uvRluwLzNzEw9FmyTPQ4tMr2XrfU8PA+uvRluwLzNzEw9PA+uPRluwLzNzEw9PA+uPRluwLzNzEw9PA+uvRluwLzNzEw9PA+uvRluwDzNzEw9PA+uPRluwLzNzEw9PA+uvRluwDzNzEw9PA+uPRluwDzNzEw9PA+uPRluwDzNzEw9PA+uvRluwDzNzEw9FmyTvQ4tMj2XrfU8PA+uPRluwDzNzEw9FmyTvQ4tMj2XrfU8FmyTPQ4tMj2XrfU8AAAAAA4tMr0AAAAAFmyTvQ4tMr2XrfU8FmyTPQ4tMr2XrfU8EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1VVqar/v/9/VVWpqv+//39VVamq/7//f1VVqaoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VFWqqv+//z9UVaqq/7//P1RVqqr/v/8/VFWqqv+//z9UVaqq/7//P1RVqqr///9//3//v////3//f/+/////f/9//7////9//3//v/+//79UVVTV/7//v1RVVNX/v/+/VFVU1f+//79UVVTV/7//v1RVVNX/v/+/VFVU1f9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9///8AAP+/IsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNin////v6mqqar///+/qaqpqv///7+pqqmq////v6mqqaoixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtv/fwAAAAD/v/9/AAAAAP+//3///wAA/7//vwAAVFWpqv+/AABUVamq/78AAFRVqar/vwAAVFWpqv+/AABUVamq/78AAFRVqar//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA//////9/AID/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf+///+qKlSV/7///6oqVJX/fwAAAAD/v/9///8AAP+//3///wAA/7//f///AAD/v9w5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxQAA/79VVamqAAD/v1VVqaoAAP+/VVWpqgAA/79VVamqAAD/v1VVqaoAAP+/VVWpqtw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsof9/AAAAAP+//3///wAA/7//f///AAD/v/8//z9UVVTV/z//P1RVVNX/P/8/VFVU1f8//z9UVVTV/z//P1RVVNX/P/8/VFVU1QAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+//z//v1RVqar/P/+/VFWpqv8//79UVamq/z//v1RVqqr/P/+/VFWqqv8//79UVaqq/38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7/uXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtv/P/9/qaqpqv8//3+pqqmq/z//f6mqqar/P/9/qaqpqu5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp/9/AAAAAP+//3///wAA/7//f///AAD/v/9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//79UVamq/3//v1RVqar/f/+/VFWpqv9//79UVamq/3//v1RVqar/f/+/VFWpqv9/AAAAAP+//38AAAAA/7//fwAAAAD/vw==")
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtk1x"]
+albedo_color = Color(0.9490196, 0.70980394, 0.26666668, 1)
+roughness = 0.68
+emission_enabled = true
+emission = Color(0.9490196, 0.70980394, 0.26666668, 1)
+emission_energy_multiplier = 0.32
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_6ubsx"]
+_surfaces = [{
+"aabb": AABB(-0.0755, -0.028, -0.0145, 0.151, 0.056, 0.029),
+"format": 34359742471,
+"index_count": 192,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUABgAHAAgABgAIAAkACgALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHAAeAB8AIAAhACIAIAAiACMAJAAlACYAEwAnABQAKAApACoAKwAsAC0ALgAvADAALgAwADEAMgAzADQANQA2ADcAEAA4ADkAEwA6ACcAOwA8AD0APgA/AEAAQQBCAEMARABFAEYARwBIAEkASgBLAEwAEAA5AE0ATgBPAFAAUQBSAFMAVABVAFYAVwBYAFkAWgBbAFwAXQBeAF8AYABhAGIAEABNAGMAEwBkAGUAZgBnAGgAaQBqAGsAbABtAG4AbABuAG8AcABxAHIAcAByAHMAEABjAHQAdQB2AHcAeAB5AHoAewB8AH0AfgB/AIAAfgCAAIEAggCDAIQAhQCGAIcAEAB0AIgAEwCJAIoAiwCMAI0AjgCPAJAAkQCSAJMAlACVAJYAlwCYAJkAmgCbAJwAnQCeAJ8AEwAVAIkA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 160,
+"vertex_data": PackedByteArray("vvaMPUJg5bz7A2U7sRWEPUJg5bxmSQA8vvaMPUG8rrxokW08vvaMPUJg5bz7A2U7vvaMPUG8rrxokW08vp+aPUG8rrxmSQA8vp+aPUG8rrxmSQA8vvaMPUG8rrxokW08vvaMPUG8rjxokW08vp+aPUG8rjxmSQA8vp+aPUG8rjxmSQA8vvaMPUG8rjxokW08sRWEPUJg5TxmSQA8vp+aPUG8rjxmSQA8sRWEPUJg5TxmSQA8vvaMPUJg5Tz7A2U7AAAAAEJg5bwAAAAAsRWEPUJg5bxmSQA8vvaMPUJg5bz7A2U7AAAAAEJg5TwAAAAAvvaMPUJg5Tz7A2U7sRWEPUJg5TxmSQA8vvaMPUJg5bz7A2W7vvaMPUJg5bz7A2U7vp+aPUG8rrxmSQA8vvaMPUJg5bz7A2W7vp+aPUG8rrxmSQA8vp+aPUG8rrxmSQC8vp+aPUG8rrxmSQC8vp+aPUG8rrxmSQA8vp+aPUG8rjxmSQA8vp+aPUG8rjxmSQC8vp+aPUG8rjxmSQC8vp+aPUG8rjxmSQA8vvaMPUJg5Tz7A2U7vvaMPUJg5Tz7A2W7AAAAAEJg5bwAAAAAvvaMPUJg5bz7A2U7vvaMPUJg5bz7A2W7vvaMPUJg5Tz7A2W7sRWEPUJg5bxmSQC8vvaMPUJg5bz7A2W7vp+aPUG8rrxmSQC8sRWEPUJg5bxmSQC8vp+aPUG8rrxmSQC8vvaMPUG8rrxokW28vvaMPUG8rrxokW28vp+aPUG8rrxmSQC8vp+aPUG8rjxmSQC8vvaMPUG8rjxokW28vvaMPUG8rjxokW28vp+aPUG8rjxmSQC8vvaMPUJg5Tz7A2W7vvaMPUG8rjxokW28vvaMPUJg5Tz7A2W7sRWEPUJg5TxmSQC8vvaMPUJg5bz7A2W7sRWEPUJg5bxmSQC8sRWEPUJg5TxmSQC8sRWEvUJg5bxmSQC8sRWEPUJg5bxmSQC8vvaMPUG8rrxokW28sRWEvUJg5bxmSQC8vvaMPUG8rrxokW28vvaMvUG8rrxokW28vvaMvUG8rrxokW28vvaMPUG8rrxokW28vvaMPUG8rjxokW28vvaMvUG8rrxokW28vvaMPUG8rjxokW28vvaMvUG8rjxokW28vvaMvUG8rjxokW28vvaMPUG8rjxokW28sRWEPUJg5TxmSQC8vvaMvUG8rjxokW28sRWEPUJg5TxmSQC8sRWEvUJg5TxmSQC8sRWEvUJg5bxmSQC8AAAAAEJg5TwAAAAAsRWEvUJg5TxmSQC8sRWEPUJg5TxmSQC8vvaMvUJg5bz7A2W7sRWEvUJg5bxmSQC8vvaMvUG8rrxokW28vvaMvUJg5bz7A2W7vvaMvUG8rrxokW28vp+avUG8rrxmSQC8vp+avUG8rrxmSQC8vvaMvUG8rrxokW28vvaMvUG8rjxokW28vp+avUG8rrxmSQC8vvaMvUG8rjxokW28vp+avUG8rjxmSQC8vp+avUG8rjxmSQC8vvaMvUG8rjxokW28sRWEvUJg5TxmSQC8vp+avUG8rjxmSQC8sRWEvUJg5TxmSQC8vvaMvUJg5Tz7A2W7vvaMvUJg5bz7A2W7vvaMvUJg5Tz7A2W7sRWEvUJg5TxmSQC8vvaMvUJg5bz7A2U7vvaMvUJg5bz7A2W7vp+avUG8rrxmSQC8vvaMvUJg5bz7A2U7vp+avUG8rrxmSQC8vp+avUG8rrxmSQA8vp+avUG8rrxmSQA8vp+avUG8rrxmSQC8vp+avUG8rjxmSQC8vp+avUG8rjxmSQA8vp+avUG8rjxmSQA8vp+avUG8rjxmSQC8vvaMvUJg5Tz7A2W7vvaMvUJg5Tz7A2U7vvaMvUJg5bz7A2U7AAAAAEJg5TwAAAAAvvaMvUJg5Tz7A2U7vvaMvUJg5Tz7A2W7sRWEvUJg5bxmSQA8vvaMvUJg5bz7A2U7vp+avUG8rrxmSQA8sRWEvUJg5bxmSQA8vp+avUG8rrxmSQA8vvaMvUG8rrxokW08vvaMvUG8rrxokW08vp+avUG8rrxmSQA8vp+avUG8rjxmSQA8vvaMvUG8rjxokW08vvaMvUG8rjxokW08vp+avUG8rjxmSQA8vvaMvUJg5Tz7A2U7vvaMvUG8rjxokW08vvaMvUJg5Tz7A2U7sRWEvUJg5TxmSQA8sRWEvUJg5bxmSQA8sRWEvUJg5TxmSQA8vvaMvUJg5Tz7A2U7sRWEPUJg5bxmSQA8sRWEvUJg5bxmSQA8vvaMvUG8rrxokW08sRWEPUJg5bxmSQA8vvaMvUG8rrxokW08vvaMPUG8rrxokW08vvaMPUG8rrxokW08vvaMvUG8rrxokW08vvaMvUG8rjxokW08vvaMPUG8rrxokW08vvaMvUG8rjxokW08vvaMPUG8rjxokW08vvaMPUG8rjxokW08vvaMvUG8rjxokW08sRWEvUJg5TxmSQA8vvaMPUG8rjxokW08sRWEvUJg5TxmSQA8sRWEPUJg5TxmSQA8AAAAAEJg5bwAAAAAsRWEvUJg5bxmSQA8sRWEPUJg5bxmSQA8EKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyhEKMiRk0w7KEQoyJGTTDsoRCjIkZNMOyh/7//f1VVqqr/v/9/VVWqqv+//39VVaqq/7//f1VVqqoQo9y5JjzrxRCj3LkmPOvFEKPcuSY868UQo9y5JjzrxRCj3LkmPOvFEKPcuSY868X/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///AAD/v/9///8AAP+//3///wAA/7//v/8/VVWpqv+//z9VVamq/7//P1VVqar/v/8/VVWqqv+//z9VVaqq/7//P1VVqqr///9//3//v////3//f/+/////f/9//7////9//3//v/+//79VVVTV/7//v1VVVNX/v/+/VVVU1f+//79VVVTV/38AAAAA/7//fwAAAAD/v/9/AAAAAP+//3///wAA/78ixhEjmmDYpyLGESOaYNinIsYRI5pg2KcixhEjmmDYpyLGESOaYNinIsYRI5pg2Kf///+/qaqqqv///7+pqqqq////v6mqqqr///+/qaqqqiLG7dyGG4bbIsbt3IYbhtsixu3chhuG2yLG7dyGG4bbIsbt3IYbhtsixu3chhuG2/9/AAAAAP+//38AAAAA/7//f///AAD/v/+/AABUVamq/78AAFRVqar/vwAAVFWpqv+/AABUVamq/78AAFRVqar/vwAAVFWpqv//////fwCA//////9/AID//////38AgP//////fwCA//////9/AID//////38AgP+///+qKlSV/7///6oqVJX/v///qipUlf+///+qKlSV/7///6oqVJX/v///qipUlf9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/3DkRIyY868XcOREjJjzrxdw5ESMmPOvF3DkRIyY868XcOREjJjzrxdw5ESMmPOvFAAD/v1VVqqoAAP+/VVWqqgAA/79VVaqqAAD/v1VVqqoAAP+/VVWqqgAA/79VVaqq3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh3Dnt3E0w7KHcOe3cTTDsodw57dxNMOyh/38AAAAA/7//f///AAD/v/9///8AAP+//z//P1VVVNX/P/8/VVVU1f8//z9VVVTV/z//P1VVVNX/P/8/VVVU1f8//z9VVVTVAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//7//P/+/VVWqqv8//79VVaqq/z//v1VVqqr/P/+/VVWqqv9/AAAAAP+//3///wAA/7//f///AAD/v/9///8AAP+/7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb7lwiRoYbhtvuXCJGhhuG2+5cIkaGG4bb/z//f6mqqqr/P/9/qaqqqv8//3+pqqqq/z//f6mqqqruXNy5mmDYp+5c3LmaYNin7lzcuZpg2KfuXNy5mmDYp+5c3LmaYNin7lzcuZpg2Kf/fwAAAAD/v/9///8AAP+//3///wAA/7//f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/8/qipUlf9//z+qKlSV/3//P6oqVJX/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/+/VFWpqv9//79UVamq/3//v1RVqar/f/+/VFWpqv9//79UVamq/3//v1RVqar/fwAAAAD/v/9/AAAAAP+//38AAAAA/78=")
+}]
 
 [sub_resource type="CylinderMesh" id="mesh_12"]
 top_radius = 0.136
@@ -122,6 +162,19 @@ height = 0.174
 radial_segments = 16
 rings = 6
 
+[sub_resource type="BoxMesh" id="VentilaMochila"]
+size = Vector3(0.178, 0.026, 0.014)
+
+[sub_resource type="BoxMesh" id="Parche"]
+size = Vector3(0.092, 0.078, 0.013)
+
+[sub_resource type="CylinderMesh" id="mesh_1"]
+top_radius = 0.3
+bottom_radius = 0.29
+height = 0.12
+radial_segments = 8
+rings = 0
+
 [sub_resource type="CapsuleMesh" id="mesh_17"]
 radius = 0.129
 height = 0.45
@@ -153,313 +206,665 @@ height = 0.044
 radial_segments = 12
 rings = 0
 
-[sub_resource type="BoxMesh" id="VentilaMochila"]
-size = Vector3(0.178, 0.026, 0.014)
-
 [sub_resource type="SphereMesh" id="CaderaTraje"]
 radius = 0.276
 height = 0.24
 radial_segments = 16
 rings = 8
 
-[sub_resource type="BoxMesh" id="Parche"]
-size = Vector3(0.092, 0.078, 0.013)
+[sub_resource type="Animation" id="Animation_eqnoq"]
+length = 0.92
+loop_mode = 1
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cadera/Torso/HombroIzq")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.12533322, 0, 0, 0.9921147, 0.23, 1, 7.694428e-18, 0, 0, 1, 0.46, 1, -0.12533322, 0, 0, 0.9921147, 0.69, 1, -2.3083286e-17, 0, 0, 1, 0.92, 1, 0.12533322, 0, 0, 0.9921147)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cadera/Torso/HombroDer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, -0.12533322, 0, 0, 0.9921147, 0.23, 1, -7.694428e-18, 0, 0, 1, 0.46, 1, 0.12533322, 0, 0, 0.9921147, 0.69, 1, 2.3083286e-17, 0, 0, 1, 0.92, 1, -0.12533322, 0, 0, 0.9921147)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cadera/Torso/HombroIzq/Codo")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.23, 1, 0, 0, 0, 1, 0.46, 1, 0, 0, 0, 1, 0.69, 1, 0, 0, 0, 1, 0.92, 1, 0, 0, 0, 1)
+tracks/3/type = "rotation_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cadera/Torso/HombroDer/Codo")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.23, 1, 0, 0, 0, 1, 0.46, 1, 0, 0, 0, 1, 0.69, 1, 0, 0, 0, 1, 0.92, 1, 0, 0, 0, 1)
+tracks/4/type = "rotation_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cadera/MusloIzq")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, -0.15643448, 0, 0, 0.98768836, 0.23, 1, -9.618036e-18, 0, 0, 1, 0.46, 1, 0.15643448, 0, 0, 0.98768836, 0.69, 1, 2.8854108e-17, 0, 0, 1, 0.92, 1, -0.15643448, 0, 0, 0.98768836)
+tracks/5/type = "rotation_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cadera/MusloDer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0.15643448, 0, 0, 0.98768836, 0.23, 1, 9.618036e-18, 0, 0, 1, 0.46, 1, -0.15643448, 0, 0, 0.98768836, 0.69, 1, -2.8854108e-17, 0, 0, 1, 0.92, 1, 0.15643448, 0, 0, 0.98768836)
+tracks/6/type = "rotation_3d"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cadera/MusloIzq/Rodilla")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.23, 1, 0, 0, 0, 1, 0.46, 1, 0.15643448, 0, 0, 0.98768836, 0.69, 1, 2.8854108e-17, 0, 0, 1, 0.92, 1, 0, 0, 0, 1)
+tracks/7/type = "rotation_3d"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cadera/MusloDer/Rodilla")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = PackedFloat32Array(0, 1, 0.15643448, 0, 0, 0.98768836, 0.23, 1, 9.618036e-18, 0, 0, 1, 0.46, 1, 0, 0, 0, 1, 0.69, 1, 0, 0, 0, 1, 0.92, 1, 0.15643448, 0, 0, 0.98768836)
+tracks/8/type = "rotation_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Cadera/Torso")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.23, 1, 0, 0, 0, 1, 0.46, 1, 0, 0, 0, 1, 0.69, 1, 0, 0, 0, 1, 0.92, 1, 0, 0, 0, 1)
+tracks/9/type = "rotation_3d"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cadera/Torso/Cabeza")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.23, 1, 0, 0, 0, 1, 0.46, 1, 0, 0, 0, 1, 0.69, 1, 0, 0, 0, 1, 0.92, 1, 0, 0, 0, 1)
 
-[node name="Astronauta" type="Node3D"]
+[sub_resource type="Animation" id="Animation_7kaws"]
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cadera/Torso/HombroIzq")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.29241472, -0.1177617, 0.08927777, 0.9448044, 1, 1, 0.29241472, -0.1177617, 0.08927777, 0.9448044)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cadera/Torso/HombroDer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.29241472, 0.1177617, -0.08927777, 0.9448044, 1, 1, 0.29241472, 0.1177617, -0.08927777, 0.9448044)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cadera/Torso/HombroIzq/Codo")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0.40673664, 0, 0, 0.9135454, 1, 1, 0.40673664, 0, 0, 0.9135454)
+tracks/3/type = "rotation_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cadera/Torso/HombroDer/Codo")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0.40673664, 0, 0, 0.9135454, 1, 1, 0.40673664, 0, 0, 0.9135454)
+tracks/4/type = "rotation_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cadera/MusloIzq")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/5/type = "rotation_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cadera/MusloDer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/6/type = "rotation_3d"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cadera/MusloIzq/Rodilla")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/7/type = "rotation_3d"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cadera/MusloDer/Rodilla")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/8/type = "rotation_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Cadera/Torso")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/9/type = "rotation_3d"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cadera/Torso/Cabeza")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
 
-[node name="Cadera" type="Node3D" parent="."]
-position = Vector3(0, 0.82, 0)
+[sub_resource type="Animation" id="Animation_kb3gi"]
+length = 1.24
+loop_mode = 1
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cadera/Torso/HombroIzq")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0.38973618, -0.10632405, 0.1108471, 0.90802747, 1.24, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cadera/Torso/HombroDer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0.35463014, 0.12865274, -0.11881104, 0.91846067, 1.24, 1, 0, 0, 0, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cadera/Torso/HombroIzq/Codo")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0.3007058, 0, 0, 0.95371693, 1.24, 1, 0, 0, 0, 1)
+tracks/3/type = "rotation_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cadera/Torso/HombroDer/Codo")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0.26723838, 0, 0, 0.96363044, 1.24, 1, 0, 0, 0, 1)
+tracks/4/type = "rotation_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cadera/MusloIzq")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0, 0, 0, 1, 1.24, 1, 0, 0, 0, 1)
+tracks/5/type = "rotation_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cadera/MusloDer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0, 0, 0, 1, 1.24, 1, 0, 0, 0, 1)
+tracks/6/type = "rotation_3d"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cadera/MusloIzq/Rodilla")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0, 0, 0, 1, 1.24, 1, 0, 0, 0, 1)
+tracks/7/type = "rotation_3d"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cadera/MusloDer/Rodilla")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0, 0, 0, 1, 1.24, 1, 0, 0, 0, 1)
+tracks/8/type = "rotation_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Cadera/Torso")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, -0.19936793, 0, 0, 0.9799247, 1.24, 1, 0, 0, 0, 1)
+tracks/9/type = "rotation_3d"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cadera/Torso/Cabeza")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.62, 1, 0, 0, 0, 1, 1.24, 1, 0, 0, 0, 1)
 
-[node name="Torso" type="Node3D" parent="Cadera"]
-position = Vector3(0, 0.08, 0)
+[sub_resource type="Animation" id="Animation_6ubsx"]
+loop_mode = 1
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cadera/Torso/HombroIzq")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cadera/Torso/HombroDer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cadera/Torso/HombroIzq/Codo")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/3/type = "rotation_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cadera/Torso/HombroDer/Codo")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/4/type = "rotation_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cadera/MusloIzq")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/5/type = "rotation_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cadera/MusloDer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/6/type = "rotation_3d"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cadera/MusloIzq/Rodilla")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/7/type = "rotation_3d"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cadera/MusloDer/Rodilla")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/8/type = "rotation_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Cadera/Torso")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+tracks/9/type = "rotation_3d"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cadera/Torso/Cabeza")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.24, 0)
+[sub_resource type="Animation" id="Animation_ofpkc"]
+length = 1.2
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Cadera/Torso/HombroIzq")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Cadera/Torso/HombroDer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0.58597326, 0.0461171, -0.063474745, 0.806523, 1.2, 1, 0.58597326, 0.0461171, -0.063474745, 0.806523)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Cadera/Torso/HombroIzq/Codo")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/3/type = "rotation_3d"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Cadera/Torso/HombroDer/Codo")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0.15643448, 0, 0, 0.98768836, 1.2, 1, 0.15643448, 0, 0, 0.98768836)
+tracks/4/type = "rotation_3d"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Cadera/MusloIzq")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/5/type = "rotation_3d"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Cadera/MusloDer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/6/type = "rotation_3d"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Cadera/MusloIzq/Rodilla")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/7/type = "rotation_3d"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Cadera/MusloDer/Rodilla")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/8/type = "rotation_3d"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Cadera/Torso")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+tracks/9/type = "rotation_3d"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Cadera/Torso/Cabeza")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 1, 1.2, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ltt37"]
+_data = {
+&"caminar": SubResource("Animation_eqnoq"),
+&"cargar_hielo": SubResource("Animation_7kaws"),
+&"cavar": SubResource("Animation_kb3gi"),
+&"reposo": SubResource("Animation_6ubsx"),
+&"tocar_domo": SubResource("Animation_ofpkc")
+}
+
+[node name="Astronauta" type="Node3D" unique_id=518896659]
+
+[node name="Cadera" type="Node3D" parent="." unique_id=259490571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 0)
+
+[node name="Torso" type="Node3D" parent="Cadera" unique_id=2014361457]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1282148452]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.76, 0, 0.24, 0)
+material_override = SubResource("bone")
 mesh = SubResource("mesh_0")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.76)
 
-[node name="Cinturon" type="MeshInstance3D" parent="Cadera"]
-position = Vector3(0, 0.02, 0)
-mesh = SubResource("mesh_1")
+[node name="PanelPecho" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1943551491]
+transform = Transform3D(0.86, 0, 0, 0, 0.7940369, -0.06702814, 0, 0.09749548, 0.5459004, 0.023, 0.264, -0.245)
 material_override = SubResource("seam")
-scale = Vector3(1, 0.43, 0.88)
-
-[node name="PanelPecho" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0.023, 0.264, -0.245)
 mesh = SubResource("mesh_2")
-material_override = SubResource("seam")
-rotation_degrees = Vector3(7, 0, 0)
-scale = Vector3(0.86, 0.80, 0.55)
 
-[node name="Indicador" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0.075, 0.276, -0.271)
-mesh = SubResource("mesh_3")
+[node name="Indicador" type="MeshInstance3D" parent="Cadera/Torso" unique_id=938822279]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075, 0.276, -0.271)
 material_override = SubResource("amber")
-
-[node name="Mochila" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.259, 0.327)
-mesh = SubResource("mesh_4")
-material_override = SubResource("seam")
-scale = Vector3(0.94, 1.09, 0.61)
-
-[node name="CubiertaMochila" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.266, 0.452)
-mesh = SubResource("mesh_5")
-material_override = SubResource("bone")
-scale = Vector3(0.84, 1.09, 0.37)
-
-[node name="TanqueIzquierdo" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(-0.23, 0.257, 0.382)
-mesh = SubResource("mesh_6")
-material_override = SubResource("bone")
-
-[node name="TanqueDerecho" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0.23, 0.257, 0.382)
-mesh = SubResource("mesh_6")
-material_override = SubResource("bone")
-
-[node name="Cabeza" type="Node3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.51, 0)
-
-[node name="Cuello" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(0, 0.04, 0)
-mesh = SubResource("mesh_7")
-material_override = SubResource("turquoise")
-
-[node name="Casco" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(0, 0.26, 0)
-mesh = SubResource("mesh_8")
-material_override = SubResource("bone")
-scale = Vector3(0.91, 0.94, 0.91)
-
-[node name="MarcoVisor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(0, 0.284, -0.248)
-mesh = SubResource("mesh_9")
-material_override = SubResource("seam")
-scale = Vector3(0.92, 0.9, 0.49)
-
-[node name="Visor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(0, 0.284, -0.273)
-mesh = SubResource("mesh_10")
-material_override = SubResource("visor")
-scale = Vector3(0.92, 0.9, 0.49)
-
-[node name="HombroIzq" type="Node3D" parent="Cadera/Torso"]
-position = Vector3(-0.34, 0.43, 0)
-
-[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq"]
-position = Vector3(-0.055, -0.06, 0)
-rotation_degrees = Vector3(0, 0, -21)
-mesh = SubResource("mesh_12")
-material_override = SubResource("turquoise")
-scale = Vector3(1.01, 1, 0.95)
-
-[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq"]
-position = Vector3(-0.075, -0.18, 0)
-rotation_degrees = Vector3(0, 0, -12)
-mesh = SubResource("mesh_13")
-material_override = SubResource("bone")
-
-[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroIzq"]
-position = Vector3(-0.095, -0.3, 0)
-
-[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo"]
-position = Vector3(0, 0.005, 0)
-mesh = SubResource("mesh_14")
-material_override = SubResource("bone")
-scale = Vector3(0.99, 1, 0.97)
-
-[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo"]
-position = Vector3(-0.013, -0.112, 0)
-mesh = SubResource("mesh_15")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.94)
-
-[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroIzq/Codo"]
-position = Vector3(-0.02, -0.23, 0)
-
-[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano"]
-position = Vector3(0, -0.037, -0.012)
-mesh = SubResource("mesh_16")
-material_override = SubResource("turquoise")
-scale = Vector3(1, 1, 0.84)
-
-[node name="MusloIzq" type="Node3D" parent="Cadera"]
-position = Vector3(-0.149, -0.04, 0)
-
-[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloIzq"]
-position = Vector3(0, -0.126, 0)
-mesh = SubResource("mesh_17")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.97)
-
-[node name="Rodilla" type="Node3D" parent="Cadera/MusloIzq"]
-position = Vector3(0, -0.3, 0)
-
-[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla"]
-position = Vector3(0, -0.045, -0.087)
-mesh = SubResource("mesh_18")
-material_override = SubResource("turquoise")
-scale = Vector3(0.86, 0.78, 0.4)
-
-[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla"]
-position = Vector3(0, -0.134, 0)
-mesh = SubResource("mesh_19")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.95)
-
-[node name="Tobillo" type="Node3D" parent="Cadera/MusloIzq/Rodilla"]
-position = Vector3(0, -0.28, 0)
-
-[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo"]
-position = Vector3(0, -0.109, -0.065)
-mesh = SubResource("mesh_20")
-material_override = SubResource("seam")
-scale = Vector3(0.86, 1, 1.23)
-
-[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo"]
-position = Vector3(0, -0.178, -0.065)
-mesh = SubResource("mesh_22")
-material_override = SubResource("seam")
-scale = Vector3(0.91, 1, 1.29)
-
-[node name="HombroDer" type="Node3D" parent="Cadera/Torso"]
-position = Vector3(0.34, 0.43, 0)
-
-[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroDer"]
-position = Vector3(0.055, -0.06, 0)
-rotation_degrees = Vector3(0, 0, 21)
-mesh = SubResource("mesh_12")
-material_override = SubResource("turquoise")
-scale = Vector3(1.01, 1, 0.95)
-
-[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer"]
-position = Vector3(0.075, -0.18, 0)
-rotation_degrees = Vector3(0, 0, 12)
-mesh = SubResource("mesh_13")
-material_override = SubResource("bone")
-
-[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroDer"]
-position = Vector3(0.095, -0.3, 0)
-
-[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo"]
-position = Vector3(0, 0.005, 0)
-mesh = SubResource("mesh_14")
-material_override = SubResource("bone")
-scale = Vector3(0.99, 1, 0.97)
-
-[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo"]
-position = Vector3(0.013, -0.112, 0)
-mesh = SubResource("mesh_15")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.94)
-
-[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroDer/Codo"]
-position = Vector3(0.02, -0.23, 0)
-
-[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano"]
-position = Vector3(0, -0.037, -0.012)
-mesh = SubResource("mesh_16")
-material_override = SubResource("turquoise")
-scale = Vector3(1, 1, 0.84)
-
-[node name="MusloDer" type="Node3D" parent="Cadera"]
-position = Vector3(0.149, -0.04, 0)
-
-[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloDer"]
-position = Vector3(0, -0.126, 0)
-mesh = SubResource("mesh_17")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.97)
-
-[node name="Rodilla" type="Node3D" parent="Cadera/MusloDer"]
-position = Vector3(0, -0.3, 0)
-
-[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla"]
-position = Vector3(0, -0.045, -0.087)
-mesh = SubResource("mesh_18")
-material_override = SubResource("turquoise")
-scale = Vector3(0.86, 0.78, 0.4)
-
-[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla"]
-position = Vector3(0, -0.134, 0)
-mesh = SubResource("mesh_19")
-material_override = SubResource("bone")
-scale = Vector3(1, 1, 0.95)
-
-[node name="Tobillo" type="Node3D" parent="Cadera/MusloDer/Rodilla"]
-position = Vector3(0, -0.28, 0)
-
-[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo"]
-position = Vector3(0, -0.109, -0.065)
-mesh = SubResource("mesh_20")
-material_override = SubResource("seam")
-scale = Vector3(0.86, 1, 1.23)
-
-[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo"]
-position = Vector3(0, -0.178, -0.065)
-mesh = SubResource("mesh_22")
-material_override = SubResource("seam")
-scale = Vector3(0.91, 1, 1.29)
-
-[node name="ComunicadorIzq" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(-0.298, 0.244, 0.016)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("mesh_11")
-material_override = SubResource("turquoise")
-
-[node name="ComunicadorDer" type="MeshInstance3D" parent="Cadera/Torso/Cabeza"]
-position = Vector3(0.298, 0.244, 0.016)
-rotation_degrees = Vector3(0, 0, 90)
-mesh = SubResource("mesh_11")
-material_override = SubResource("turquoise")
-
-[node name="IndicadorTurquesa" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(-0.017, 0.273, -0.271)
-scale = Vector3(1.4, 0.59, 1)
 mesh = SubResource("mesh_3")
-material_override = SubResource("turquoise")
 
-[node name="Ventila1" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.205, 0.535)
-mesh = SubResource("VentilaMochila")
+[node name="Mochila" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1678507318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.259, 0.327)
 material_override = SubResource("seam")
+mesh = SubResource("ArrayMesh_eqnoq")
 
-[node name="Ventila2" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.251, 0.535)
-mesh = SubResource("VentilaMochila")
-material_override = SubResource("seam")
+[node name="CubiertaMochila" type="MeshInstance3D" parent="Cadera/Torso" unique_id=917819071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.266, 0.402)
+material_override = SubResource("StandardMaterial3D_4utdd")
+mesh = SubResource("ArrayMesh_7kaws")
 
-[node name="Ventila3" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(0, 0.297, 0.535)
-mesh = SubResource("VentilaMochila")
-material_override = SubResource("seam")
-
-[node name="PelvisTraje" type="MeshInstance3D" parent="Cadera"]
-position = Vector3(0, -0.028, 0)
-rotation_degrees = Vector3(0, 0, 0)
-scale = Vector3(1, 1, 0.77)
-mesh = SubResource("CaderaTraje")
+[node name="TanqueIzquierdo" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1160857565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, 0.257, 0.382)
 material_override = SubResource("bone")
+mesh = SubResource("mesh_6")
 
-[node name="ParcheMision" type="MeshInstance3D" parent="Cadera/Torso"]
-position = Vector3(-0.179, 0.335, -0.208)
-rotation_degrees = Vector3(4, 20, 0)
-scale = Vector3(1, 1, 1)
+[node name="TanqueDerecho" type="MeshInstance3D" parent="Cadera/Torso" unique_id=912098101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, 0.257, 0.382)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_6")
+
+[node name="Cabeza" type="Node3D" parent="Cadera/Torso" unique_id=570228563]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.51, 0)
+
+[node name="Cuello" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=93941981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_7")
+
+[node name="Casco" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=1682725520]
+transform = Transform3D(0.91, 0, 0, 0, 0.94, 0, 0, 0, 0.91, 0, 0.26, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_8")
+
+[node name="MarcoVisor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=651103458]
+transform = Transform3D(0.92, 0, 0, 0, 0.9, 0, 0, 0, 0.49, 0, 0.284, -0.248)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_9")
+
+[node name="Visor" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=169647653]
+transform = Transform3D(0.92, 0, 0, 0, 0.9, 0, 0, 0, 0.49, 0, 0.284, -0.273)
+material_override = SubResource("StandardMaterial3D_sjtrs")
+mesh = SubResource("mesh_10")
+
+[node name="ComunicadorIzq" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=1645725210]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.298, 0.244, 0.016)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_11")
+
+[node name="ComunicadorDer" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=826280338]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0.298, 0.244, 0.016)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_11")
+
+[node name="SoporteLampara" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=2016224503]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.494, -0.119)
+material_override = SubResource("StandardMaterial3D_sjtrs")
+mesh = SubResource("ArrayMesh_kb3gi")
+
+[node name="LamparaAmbar" type="MeshInstance3D" parent="Cadera/Torso/Cabeza" unique_id=1220024206]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.513, -0.172)
+material_override = SubResource("StandardMaterial3D_dtk1x")
+mesh = SubResource("ArrayMesh_6ubsx")
+
+[node name="HombroIzq" type="Node3D" parent="Cadera/Torso" unique_id=214717991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.34, 0.43, 0)
+
+[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq" unique_id=1977513675]
+transform = Transform3D(0.9429162, 0.35836795, 0, -0.36195162, 0.9335804, 0, 0, 0, 0.95, -0.055, -0.06, 0)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_12")
+
+[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq" unique_id=441052506]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, -0.075, -0.18, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_13")
+
+[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroIzq" unique_id=1654503771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.095, -0.3, 0)
+
+[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo" unique_id=1169596081]
+transform = Transform3D(0.99, 0, 0, 0, 1, 0, 0, 0, 0.97, 0, 0.005, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_14")
+
+[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo" unique_id=1436822210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.94, -0.013, -0.112, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_15")
+
+[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroIzq/Codo" unique_id=1667910649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, -0.23, 0)
+
+[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano" unique_id=512841746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.84, 0, -0.037, -0.012)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_16")
+
+[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano" unique_id=294751043]
+transform = Transform3D(0.4404091, -0.20603444, 0, 0.21480186, 0.4224332, 0, 0, 0, 0.54, 0.061, -0.029, -0.039)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_16")
+
+[node name="AnclaHerramienta" type="Marker3D" parent="Cadera/Torso/HombroIzq/Codo/Mano" unique_id=2043177827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.036, -0.063)
+
+[node name="HombroDer" type="Node3D" parent="Cadera/Torso" unique_id=1334998592]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34, 0.43, 0)
+
+[node name="Hombrera" type="MeshInstance3D" parent="Cadera/Torso/HombroDer" unique_id=1079683686]
+transform = Transform3D(0.9429162, -0.35836795, 0, 0.36195162, 0.9335804, 0, 0, 0, 0.95, 0.055, -0.06, 0)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_12")
+
+[node name="Brazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer" unique_id=1585711591]
+transform = Transform3D(0.9781476, -0.2079117, 0, 0.2079117, 0.9781476, 0, 0, 0, 1, 0.075, -0.18, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_13")
+
+[node name="Codo" type="Node3D" parent="Cadera/Torso/HombroDer" unique_id=1852023814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.095, -0.3, 0)
+
+[node name="Union" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo" unique_id=1680686795]
+transform = Transform3D(0.99, 0, 0, 0, 1, 0, 0, 0, 0.97, 0, 0.005, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_14")
+
+[node name="Antebrazo" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo" unique_id=511628686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.94, 0.013, -0.112, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_15")
+
+[node name="Mano" type="Node3D" parent="Cadera/Torso/HombroDer/Codo" unique_id=1121672454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, -0.23, 0)
+
+[node name="Guante" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano" unique_id=542087022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.84, 0, -0.037, -0.012)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_16")
+
+[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano" unique_id=1853174495]
+transform = Transform3D(0.4404091, 0.20603444, 0, -0.21480186, 0.4224332, 0, 0, 0, 0.54, -0.061, -0.029, -0.039)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_16")
+
+[node name="AnclaHerramienta" type="Marker3D" parent="Cadera/Torso/HombroDer/Codo/Mano" unique_id=797330760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.036, -0.063)
+
+[node name="IndicadorTurquesa" type="MeshInstance3D" parent="Cadera/Torso" unique_id=6050174]
+transform = Transform3D(1.4, 0, 0, 0, 0.59, 0, 0, 0, 1, -0.017, 0.273, -0.271)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_3")
+
+[node name="Ventila1" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1826307257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.205, 0.496)
+material_override = SubResource("seam")
+mesh = SubResource("VentilaMochila")
+
+[node name="Ventila2" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1786659173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.251, 0.496)
+material_override = SubResource("seam")
+mesh = SubResource("VentilaMochila")
+
+[node name="Ventila3" type="MeshInstance3D" parent="Cadera/Torso" unique_id=647371745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.297, 0.496)
+material_override = SubResource("seam")
+mesh = SubResource("VentilaMochila")
+
+[node name="ParcheMision" type="MeshInstance3D" parent="Cadera/Torso" unique_id=1909003574]
+transform = Transform3D(0.9396926, 0.023858117, 0.341187, 0, 0.9975641, -0.06975647, -0.34202012, 0.06554964, 0.9374036, -0.179, 0.335, -0.208)
+material_override = SubResource("turquoise")
 mesh = SubResource("Parche")
-material_override = SubResource("turquoise")
 
-[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroIzq/Codo/Mano"]
-position = Vector3(0.061, -0.029, -0.039)
-rotation_degrees = Vector3(0, 0, 26)
-scale = Vector3(0.49, 0.47, 0.54)
-mesh = SubResource("mesh_16")
-material_override = SubResource("turquoise")
+[node name="AnclaCarga" type="Marker3D" parent="Cadera/Torso" unique_id=1844794506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, -0.4)
 
-[node name="Pulgar" type="MeshInstance3D" parent="Cadera/Torso/HombroDer/Codo/Mano"]
-position = Vector3(-0.061, -0.029, -0.039)
-rotation_degrees = Vector3(0, 0, -26)
-scale = Vector3(0.49, 0.47, 0.54)
-mesh = SubResource("mesh_16")
+[node name="AnclaMochila" type="Marker3D" parent="Cadera/Torso" unique_id=752269458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.235, 0.49)
+
+[node name="Cinturon" type="MeshInstance3D" parent="Cadera" unique_id=1784104762]
+transform = Transform3D(1, 0, 0, 0, 0.43, 0, 0, 0, 0.88, 0, 0.02, 0)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_1")
+
+[node name="MusloIzq" type="Node3D" parent="Cadera" unique_id=2007551469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149, -0.04, 0)
+
+[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloIzq" unique_id=182660263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.97, 0, -0.126, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_17")
+
+[node name="Rodilla" type="Node3D" parent="Cadera/MusloIzq" unique_id=415827035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+
+[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla" unique_id=916406409]
+transform = Transform3D(0.86, 0, 0, 0, 0.78, 0, 0, 0, 0.4, 0, -0.045, -0.087)
 material_override = SubResource("turquoise")
+mesh = SubResource("mesh_18")
+
+[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla" unique_id=544907542]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.95, 0, -0.134, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_19")
+
+[node name="Tobillo" type="Node3D" parent="Cadera/MusloIzq/Rodilla" unique_id=1144973948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 0)
+
+[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo" unique_id=916501149]
+transform = Transform3D(0.86, 0, 0, 0, 1, 0, 0, 0, 1.23, 0, -0.109, -0.065)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_20")
+
+[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloIzq/Rodilla/Tobillo" unique_id=113725501]
+transform = Transform3D(0.91, 0, 0, 0, 1, 0, 0, 0, 1.29, 0, -0.178, -0.065)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_22")
+
+[node name="MusloDer" type="Node3D" parent="Cadera" unique_id=544181186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.149, -0.04, 0)
+
+[node name="Pantalon" type="MeshInstance3D" parent="Cadera/MusloDer" unique_id=966256613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.97, 0, -0.126, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_17")
+
+[node name="Rodilla" type="Node3D" parent="Cadera/MusloDer" unique_id=1308434286]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+
+[node name="Rodillera" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla" unique_id=1495750712]
+transform = Transform3D(0.86, 0, 0, 0, 0.78, 0, 0, 0, 0.4, 0, -0.045, -0.087)
+material_override = SubResource("turquoise")
+mesh = SubResource("mesh_18")
+
+[node name="Pierna" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla" unique_id=287458523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.95, 0, -0.134, 0)
+material_override = SubResource("bone")
+mesh = SubResource("mesh_19")
+
+[node name="Tobillo" type="Node3D" parent="Cadera/MusloDer/Rodilla" unique_id=509240126]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.28, 0)
+
+[node name="Bota" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo" unique_id=1113732860]
+transform = Transform3D(0.86, 0, 0, 0, 1, 0, 0, 0, 1.23, 0, -0.109, -0.065)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_20")
+
+[node name="Suela" type="MeshInstance3D" parent="Cadera/MusloDer/Rodilla/Tobillo" unique_id=732680225]
+transform = Transform3D(0.91, 0, 0, 0, 1, 0, 0, 0, 1.29, 0, -0.178, -0.065)
+material_override = SubResource("seam")
+mesh = SubResource("mesh_22")
+
+[node name="PelvisTraje" type="MeshInstance3D" parent="Cadera" unique_id=377343552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.77, 0, -0.028, 0)
+material_override = SubResource("bone")
+mesh = SubResource("CaderaTraje")
+
+[node name="Poses" type="AnimationPlayer" parent="." unique_id=1226797252]
+libraries/ = SubResource("AnimationLibrary_ltt37")
