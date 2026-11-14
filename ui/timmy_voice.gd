@@ -37,14 +37,18 @@ func set_voice(language: String, id: String) -> void:
     selected_voices[language] = id
 
 func voice_id(language: String) -> String:
-    var voices := voices_for(language)
-    if voices.is_empty():
-        return ""
-    var chosen := str(selected_voices.get(language, ""))
+    return pick_voice(voices_for(language), language, str(selected_voices.get(language, "")))
+
+static func pick_voice(voices: Array[Dictionary], language: String, chosen := "") -> String:
+    if voices.is_empty(): return ""
     for item in voices:
-        if str(item["id"]) == chosen:
-            return chosen
-    return str(voices[0]["id"])
+        if not chosen.is_empty() and str(item.get("id", "")) == chosen: return chosen
+    var base := language.to_lower().replace("_", "-").get_slice("-", 0)
+    var preferred := "zira" if base == "en" else ("sabina" if base == "es" else "")
+    if not preferred.is_empty():
+        for item in voices:
+            if str(item.get("name", "")).to_lower().contains(preferred): return str(item.get("id", ""))
+    return str(voices[0].get("id", ""))
 
 func speak(text: String, language: String) -> bool:
     stop()
