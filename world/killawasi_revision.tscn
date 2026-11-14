@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://world/killawasi_revision.gd" id="1_tq74g"]
 [ext_resource type="PackedScene" path="res://world/moon_world.tscn" id="2_7fcwp"]
-[ext_resource type="PackedScene" path="res://assets/3d/astronauta.tscn" id="3_504gp"]
+[ext_resource type="PackedScene" path="res://assets/3d/robot_humanoide.tscn" id="3_504gp"]
 [ext_resource type="PackedScene" path="res://assets/3d/vicuna.tscn" id="4_bfrlf"]
 [ext_resource type="PackedScene" path="res://assets/3d/reciclador_agua.tscn" id="5_uvean"]
 [ext_resource type="PackedScene" path="res://assets/3d/jardin_lunar.tscn" id="6_ji5w1"]
@@ -19,7 +19,7 @@ script = ExtResource("1_tq74g")
 
 [node name="Mundo" type="Node3D" parent="." unique_id=489413000 instance=ExtResource("2_7fcwp")]
 
-[node name="Astronauta" type="Node3D" parent="." unique_id=1667792553 instance=ExtResource("3_504gp")]
+[node name="Robot" type="Node3D" parent="." unique_id=1667792553 instance=ExtResource("3_504gp")]
 transform = Transform3D(-0.8660254, 0, 0.50000006, 0, 1, 0, -0.50000006, 0, -0.8660254, -3.6, 0, 9.6)
 
 [node name="Vicuna" type="Node3D" parent="." unique_id=1242789834 instance=ExtResource("4_bfrlf")]

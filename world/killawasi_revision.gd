@@ -1,7 +1,7 @@
 extends Node3D
 ## Escena de revisión del arte de Killawasi (F6).
 ## N día/noche · D escudo del domo (100, 70, 30, 0) · A nivel del tanque · P gota del procesador
-## L puerta y escalerilla · 1–5 poses · C cambia de cámara · T nube de tormenta · F12 guarda una captura.
+## L puerta y escalerilla · 1–5 expresiones del robot y poses de la vicuña · C cambia de cámara · T nube de tormenta · F12 guarda una captura.
 
 const VISTAS := [
 	{"objetivo": Vector3(4.2, 3.4, 1.5), "giro": 6.0, "altura": 7.0, "distancia": 41.0, "fov": 42.0},
@@ -22,7 +22,6 @@ var acceso_abierto := true
 
 func _ready() -> void:
 	_encuadrar()
-	$Astronauta/Poses.play("reposo")
 	$Vicuna/Poses.play("respirar")
 
 
@@ -67,5 +66,5 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			print("Captura guardada en ", ProjectSettings.globalize_path("user://killawasi_captura.png"))
 	var index := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5].find(event.keycode)
 	if index >= 0:
-		$Astronauta/Poses.play(["reposo", "caminar", "cavar", "cargar_hielo", "tocar_domo"][index])
+		$Robot.cambiar_expresion($Robot.EXPRESIONES[index])
 		$Vicuna/Poses.play(["respirar", "hablar", "senal", "aviso", "celebrar"][index])
