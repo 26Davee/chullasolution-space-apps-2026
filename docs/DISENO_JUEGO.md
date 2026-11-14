@@ -1,4 +1,4 @@
-# Diseño del juego · Inti Killa
+# Diseño del juego · Killawasi
 
 Estado: **sábado 14 de noviembre, 11:30.** Lo decidió el líder (puesto 1) con el equipo. Si algo de aquí cambia, se cambia en este archivo por Pull Request, no en el chat.
 Todos los números de este documento son **valores de prueba en unidades de juego**. No son datos de NASA. Se ajustan jugando.
@@ -7,7 +7,7 @@ Todos los números de este documento son **valores de prueba en unidades de jueg
 
 | Tema | Decisión |
 |---|---|
-| Nombre | **Inti Killa**: «Sol» y «Luna» en kichwa |
+| Nombre | **Killawasi**: «killa» (luna) y «wasi» (casa) en kichwa, «Casa de la Luna». Pendiente confirmar con la persona que habla kichwa |
 | Guía | **Vicuña astronauta**, personaje original nuestro |
 | Estilo | **Low-poly** con luces suaves, como una maqueta (ver [`ESTILO_VISUAL.md`](ESTILO_VISUAL.md)) |
 | Personaje que juega | **El astronauta**: aterriza y se mueve por la Luna. La Vicuña es la guía que lo acompaña |
@@ -58,27 +58,46 @@ Valores de prueba:
 
 El viaje cuesta Vida y tiempo. Mejor herramienta significa más hielo por viaje y menos Vida perdida.
 
-| Nivel | Herramienta | Hielo por viaje | Vida perdida · Cadete | Vida perdida · Ingeniero |
-|---|---|---|---|---|
-| 1 | Pala | 2 | −10 | −15 |
-| 2 | Pico | 4 | −9 | −14 |
-| 3 | Taladro manual | 7 | −6 | −9 |
-| 4 | Taladro con mochila | 10 | −3 | −5 |
+| Herramienta | Cómo se consigue | Hielo por viaje | Excavar | Viaje total | Hielo por minuto | Vida perdida Cadete | Vida perdida Ingeniero | Vida por cada hielo (Cadete) |
+|---|---|---|---|---|---|---|---|---|
+| 1. Pala | al empezar | 2 | 20 s | 60 s | 2,0 | −10 | −15 | 5,0 |
+| 2. Pico | rama Herramientas, 2★ | 4 | 14 s | 54 s | 4,4 | −9 | −14 | 2,3 |
+| 3. Taladro manual | rama Herramientas, 4★ | 7 | 10 s | 50 s | 8,4 | −6 | −9 | 0,9 |
+| 4. Taladro con mochila | rama Herramientas, 6★ | 10 | 6 s | 46 s | 13,0 | −3 | −5 | 0,3 |
 
-El jugador empieza con la pala. Las herramientas se mejoran con estrellas, en la rama **Herramientas** del árbol (pico 2★, taladro manual 4★, taladro con mochila 6★).
+Cada herramienta es más eficiente que la anterior: más hielo por viaje, menos tiempo excavando y menos Vida perdida. El viaje total son 40 s caminando más el tiempo de excavar. Durante la nube la Vida perdida se multiplica por 1,5.
 
 Los números de Vida son una **propuesta** para afinar con Anahi. Propuesta también: la Vida sube descansando dentro del domo con oxígeno.
+
+## Con qué aparece el astronauta y niveles de la base
+
+El astronauta aterriza con: traje (Vida 100), **pala**, la **cápsula** como base (proyecta el escudo, Escudo 100), **1 panel solar gratis** y reservas de Energía 60, Agua 20, Oxígeno 60 y Hielo 0.
+
+La base sube de nivel con las **estrellas ganadas en total** (esas no se gastan; las del árbol sí). Cada nivel desbloquea piezas y cupos:
+
+| Nivel | Nombre | Estrellas ganadas | Desbloquea | Cupos |
+|---|---|---|---|---|
+| 1 | Aterrizaje | 0 | Panel solar, procesador de hielo, generador de oxígeno | 2 paneles, 1 procesador, 1 generador |
+| 2 | Campamento | 3 | Tanque de agua | 3 paneles, 1 tanque |
+| 3 | Base | 6 | Segundo procesador de hielo | 4 paneles, 2 procesadores |
+| 4 | Estación | 10 | Reciclador de agua y segundo tanque | 5 paneles, 2 tanques, 1 reciclador |
+| 5 | Colonia (si sobra tiempo) | 14 | Más cupos y una base más grande | 6 paneles |
+
+El agua máxima es 60 y cada tanque suma 50. Detalle completo, con tasas, costos y un ejemplo de 10 minutos, en el documento «Killawasi · Reglas del juego, costos y estructuras».
 
 ## Piezas y costos
 
 **Todas las piezas se pueden construir en los dos modos.** Lo que cambia es el costo: en Cadete cuestan menos y en Ingeniero cuestan una vez y media más. Valores de prueba en unidades de juego (no son datos de NASA):
 
-| Pieza | Qué hace | Cadete (energía) | Ingeniero (energía) |
-|---|---|---|---|
-| Panel solar | Da energía de día. De noche no produce | 15 | 23 |
-| Procesador de hielo | Convierte el hielo en agua | 25 | 38 |
-| Generador de oxígeno | Usa agua y energía para hacer aire | 30 | 45 |
-| Reparar el escudo (acción) | Gasta energía y tiempo | 20 + 5 s | 30 + 8 s |
+| Pieza | Qué hace | Desde el nivel | Cadete (energía) | Ingeniero (energía) |
+|---|---|---|---|---|
+| Panel solar | Da energía de día (+0,6 por s). De noche no produce | 1 | 15 (el primero es gratis) | 23 (el primero es gratis) |
+| Procesador de hielo | Convierte 1 hielo en 10 de agua en 5 s | 1 | 25 | 38 |
+| Generador de oxígeno | Usa agua y energía para hacer aire (+0,45 por s) | 1 | 30 | 45 |
+| Tanque de agua | Agua máxima +50 | 2 | 20 | 30 |
+| Reciclador de agua | El generador gasta 30 % menos agua | 4 | 35 | 53 |
+| Jardín | Vida +0,2 por s extra (rama Vida, 6★) | árbol | 40 | 60 |
+| Reparar el escudo (acción) | Devuelve +50 de Escudo en Cadete, +40 en Ingeniero | 1 | 20 + 5 s | 30 + 8 s |
 
 Estos números van en una tabla de datos por modo, no escritos dentro del código.
 
@@ -93,7 +112,7 @@ Estos números van en una tabla de datos por modo, no escritos dentro del códig
 
 | Rama | Qué mejora |
 |---|---|
-| Energía | Más paneles, baterías, más producción |
+| Energía | Panel eficiente, batería y paneles de alto rendimiento (los paneles nuevos los da el nivel de la base) |
 | Vida | Procesar hielo más rápido, oxígeno, jardín |
 | Escudo | Más resistencia y reparación más barata |
 | **Herramientas** | Pala, pico, taladro y mochila |
@@ -149,3 +168,18 @@ Las claves nuevas que se pasan entre puestos (por ejemplo `hielo`, `escudo`, `he
 ## Lo que no entra
 
 Cuentas, anuncios, compras, rachas diarias, datos personales, y cualquier voz o imagen de menores de 18 años.
+
+## Bloque 2: qué hace cada puesto hasta la versión 1 (sáb 16:00)
+
+Primero se sube al repositorio lo hecho en el bloque 1. Después:
+
+| Puesto | Persona | Entrega | Hora tope |
+|---|---|---|---|
+| 3 | Carlos Valladares | Astronauta y cápsula (`.glb` en `assets/3d/`, 1 unidad = 1 m, pivote en los pies, animaciones quieto y caminar). Luego terreno con casillas, cráter de hielo, panel solar y pala | Astronauta 13:00. Resto 15:00 |
+| 4 | Nicolás Ladino | Caminar con clic y cámara siguiendo; recoger hielo; colocar piezas en casillas; tocar la base para reparar (con un cubo hasta que llegue el astronauta) | Caminar 14:00. Resto 15:30 |
+| 2 | Anahi | Tablas `data/balance/cadete.json` e `ingeniero.json`; simulación; calendario de nubes; un conjunto de datos de NASA con su ficha | Tablas 13:30. Simulación 15:00. Ficha 16:00 |
+| 5 | Gael | 13 misiones como datos, estrellas, nivel de la base (0, 3, 6, 10), árbol de 12 mejoras | Datos 14:00. Lógica 15:30 |
+| 6 | Andrea | Seis barras, estrellas, nivel y misión en pantalla; aviso de la nube; textos de bienvenida y tutorial (pasos 1 a 3) ES/EN | HUD 14:30. Tutorial 15:30 |
+| 1 | Ángel | Fusionar PR #1 y #2, `docs/CONTRATOS.md`, escenas título → tutorial → menú → juego, integración | Contratos 13:00. Integración 15:30. Versión 1 16:00 |
+
+Sincronía: 13:00 contratos y astronauta, 15:00 todos con su Pull Request abierto, 15:30 integración, 16:00 versión 1. Cada puesto usa un sustituto simple hasta que llegue lo del otro.
