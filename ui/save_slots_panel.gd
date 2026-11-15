@@ -125,7 +125,9 @@ func refresh() -> void:
 			play_button = btn
 	if play_button == null:
 		play_button = first_action_btn
-	resume_available = any_occupied and save_manager != null and bool(save_manager.leer_slot_resumen(save_manager.active_slot).get("occupied", false))
+	var cur_exp = save_manager.obtener_datos_completos().get("expedicion", {}) if save_manager != null else {}
+	var has_active_exp := cur_exp is Dictionary and not (cur_exp as Dictionary).is_empty()
+	resume_available = has_active_exp or (any_occupied and save_manager != null and bool(save_manager.leer_slot_resumen(save_manager.active_slot).get("occupied", false)))
 
 
 func _build_card(info: Dictionary) -> Control:

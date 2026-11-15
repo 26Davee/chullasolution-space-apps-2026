@@ -118,6 +118,8 @@ func configure(cfg: Dictionary) -> void:
 		var btn := Button.new()
 		btn.text = str(action.get("text", ""))
 		btn.disabled = bool(action.get("disabled", false))
+		btn.clip_text = true
+		btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		btn.custom_minimum_size = Vector2(0, 34)
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL if actions.size() > 1 or bool(action.get("expand", true)) else Control.SIZE_SHRINK_BEGIN
@@ -141,14 +143,16 @@ func configure(cfg: Dictionary) -> void:
 	visible = true
 
 
-func update_screen_position(camera: Camera3D, y_offset: float = -18.0) -> void:
+func update_screen_position(camera: Camera3D, y_offset: float = -18.0, right_margin: float = 16.0) -> void:
 	if not visible or not tracking or camera == null or not is_instance_valid(camera):
 		return
 	if camera.is_position_behind(world_pos):
+		hide()
 		return
 	var projected := camera.unproject_position(world_pos)
 	var min_size := _body_box.get_combined_minimum_size()
 	size = Vector2(card_width, min_size.y + 24.0)
-	var x := clampf(projected.x - size.x * 0.5, 16.0, 1280.0 - size.x - 16.0)
+	var max_x := maxf(16.0, 1280.0 - size.x - right_margin)
+	var x := clampf(projected.x - size.x * 0.5, 16.0, max_x)
 	var y := clampf(projected.y - size.y + y_offset, 68.0, 622.0 - size.y)
 	position = Vector2(x, y)

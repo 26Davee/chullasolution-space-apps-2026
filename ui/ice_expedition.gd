@@ -138,11 +138,13 @@ func arrived(destination: Vector3) -> void:
 		changed.emit()
 func _extract() -> void:
 	var gs = _gs()
-	var amount = 8 if gs.herramienta_nivel >= 3 else (5 if gs.herramienta_nivel == 2 else 3)
+	var lvl := int(gs.herramienta_nivel)
+	var amount: int = game._ice_yield_for_tool(lvl) if game != null and game.has_method("_ice_yield_for_tool") else (8 if lvl >= 3 else (5 if lvl == 2 else 3))
 	collected = mini(mini(amount,10-gs.hielo),int(stock.get(selected,0)))
 	stock[selected] = int(stock.get(selected,0))-collected
 	gs.cambiar_recurso("hielo",collected)
-	gs.pagar_robot(10 if gs.herramienta_nivel >= 3 else 16)
+	var cost: float = game._ice_extraction_cost_for_tool(lvl) if game != null and game.has_method("_ice_extraction_cost_for_tool") else (10.0 if lvl >= 3 else 16.0)
+	gs.pagar_robot(cost)
 	gs.notificar_evento_mision("hielo_extraido_crater",{"hielo_obtenido":collected})
 	game._show_toast(game.gx("ice_collected",{"n":collected}))
 	return_home()

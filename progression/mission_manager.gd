@@ -183,7 +183,7 @@ func notificar_evento(nombre_evento: String, datos: Dictionary = {}) -> void:
 
 	# Contadores históricos útiles entre misiones.
 	if nombre_evento == "retorno_domo_completado" or nombre_evento == "viaje_hielo_completado":
-		if _mision_activa_id == "mision_11" and _triggers_cumplidos_actual.has("reserva_agua_baja_detectada"):
+		if _mision_activa_id == "mision_11":
 			_viajes_hielo_m11 += 1
 			if _viajes_hielo_m11 >= 2:
 				_marcar_trigger_si_aplica("dos_viajes_hielo_completados")
@@ -312,14 +312,14 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 				_marcar_trigger_si_aplica("segundo_panel_construido")
 			if energia >= 90.0:
 				_marcar_trigger_si_aplica("energia_acumulada_90")
-			if es_dia and tiempo_ciclo >= 210.0:
+			if (es_dia and tiempo_ciclo >= 180.0) or not es_dia:
 				_marcar_trigger_si_aplica("aviso_ocaso_recibido")
 		"mision_07":
 			if not es_dia:
 				_marcar_trigger_si_aplica("puesta_de_sol_iniciada")
 				_tiempo_en_noche_s += delta_s
 				_energia_min_noche = minf(_energia_min_noche, energia)
-				if _tiempo_en_noche_s >= 225.0 and _energia_min_noche > 15.0:
+				if _tiempo_en_noche_s >= 180.0 and _energia_min_noche > 15.0:
 					_marcar_trigger_si_aplica("noche_3_minutos_transcurrida")
 			elif _triggers_cumplidos_actual.has("noche_3_minutos_transcurrida") and oxigeno >= 50.0:
 				_marcar_trigger_si_aplica("amanecer_alcanzado")

@@ -139,8 +139,8 @@
             "requisito": "generador_eficiente",
             "efecto": {
               "tipo": "desbloqueo_jardin",
-              "descripcion": "Unlocks the Garden module: plants add +0.10/s oxygen by photosynthesis while watered to support your human crew.",
-              "descripcion_es": "Desbloquea el módulo del Jardín: las plantas aportan +0.10/s de oxígeno por fotosíntesis mientras tengan agua para ayudar a la tripulación humana.",
+              "descripcion": "Delivers an extra Lunar Garden pod and allows up to 2 gardens installed (each watered garden adds +0.10/s oxygen).",
+              "descripcion_es": "Entrega una cápsula extra de Jardín Lunar y permite instalar hasta 2 jardines (cada jardín regado aporta +0.10/s de oxígeno).",
               "valor": 0.1
             },
             "carta_nasa": {

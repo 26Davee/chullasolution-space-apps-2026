@@ -468,7 +468,7 @@ func _al_aplicar_efecto_mejora(tipo: String, datos: Dictionary) -> void:
 		"herramienta_hielo":
 			herramienta_nivel = int(datos.get("herramienta_nivel", herramienta_nivel))
 		"desbloqueo_jardin":
-			jardin_instalado = true
+			pass
 
 
 # ─────────────────────────── Puente con la simulación (puesto 2) ───────────────────────────

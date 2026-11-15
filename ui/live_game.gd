@@ -14,13 +14,13 @@ const SupplyDropScript = preload("res://interaction/supply_drop.gd")
 const MODULES := ["panel_solar", "procesador_hielo", "generador_oxigeno", "tanque_agua", "jardin"]
 const MODULE_ART := {"panel_solar": "solar", "procesador_hielo": "processor", "generador_oxigeno": "oxygen", "jardin": "garden"}
 const UPGRADE_DROPS := {"panel_extra": "panel_solar", "jardin_lunar": "jardin"}
+const PASSIVE_TRIGGERS := ["partida_iniciada"]
 
 var _active_drop_id := ""
 var _pending_pickup_drop_id := ""
 var session: Node
 var home_paused := false
 var _session_ready := false
-var _last_advice := ""
 var _toast_queue: Array = []
 var _alerted: Dictionary = {}
 var _focus_before: Control
@@ -72,8 +72,11 @@ func _post_ready_init() -> void:
 	_session_ready = true
 	_bridge._zero_handled = false
 	_bridge.configure_profile({"nickname": _player_name(), "mode": gs.modo_juego})
-	gs.obtener_mission_manager().progreso_objetivo_actualizado.connect(func(_id, _done, _total): _refresh_active_mission_panel())
-	gs.obtener_mission_manager().mision_fallida.connect(func(id, text):
+	var mm: Node = gs.obtener_mission_manager()
+	mm.progreso_objetivo_actualizado.connect(func(_id, _done, _total): _refresh_active_mission_panel())
+	mm.simulacro_supertormenta_solicitado.connect(_on_m14_superstorm_requested)
+	mm.mision_activa_cambiada.connect(_on_mission_activated)
+	mm.mision_fallida.connect(func(id, text):
 		session.add_message("failure:" + id + ":" + str(roundi(gs.tiempo_juego)), "text", {"text": text})
 		_show_toast(text, 5.0)
 	)
@@ -161,9 +164,10 @@ func _update_cam_button_label() -> void: pass
 
 
 func _build_placement_and_toast() -> void:
-	_toast_panel = UI.panel(_ui_root, Rect2(390, 566, 500, 48), Color("#0c1c31f2"), 14)
+	_toast_panel = UI.panel(_ui_root, Rect2(360, 560, 520, 58), Color("#0c1c31f2"), 14)
 	_toast_panel.hide()
-	_toast_label = UI.label(_toast_panel, "", Rect2(16, 10, 468, 28), 14, UI.WHITE, true)
+	_toast_label = UI.label(_toast_panel, "", Rect2(16, 6, 488, 46), 14, UI.WHITE, true)
+	_toast_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
@@ -176,6 +180,8 @@ func _process(delta: float) -> void:
 		var item: Dictionary = _toast_queue.pop_front()
 		_toast_label.text = str(item.text)
 		_toast_timer = float(item.seconds)
+		var drawer_open := is_instance_valid(_drawer) and _drawer.visible
+		_toast_panel.position.x = 320.0 if drawer_open else 380.0
 		_toast_panel.show()
 		if bool(item.get("voice", false)):
 			_speak(str(item.text))
@@ -390,12 +396,19 @@ func _build_drawer_data(section: String, extra: Dictionary) -> Dictionary:
 					tex = atlas
 				else:
 					tex = load("res://assets/ui/activities/" + str(MODULE_ART[id]) + "-v1.png")
+				var count := _structure_count(gs, id)
+				var limit := _structure_limit(id)
+				var stock := int(session.inventory.get(id, 0)) if session != null else 0
+				var upgrade_gated: bool = (id == "panel_solar" and count >= limit and not _has_upgrade("panel_extra")) or (id == "jardin" and count >= limit and not _has_upgrade("jardin_lunar"))
 				mods.append({
 					"id": id,
 					"name": module_name(id),
-					"stock": int(session.inventory.get(id, 0)) if session != null else 0,
+					"stock": stock,
+					"installed": count,
+					"limit": limit,
 					"cost": module_cost(id),
-					"locked": id == "jardin" and not _has_upgrade("jardin_lunar"),
+					"locked": count >= limit,
+					"need_upgrade": upgrade_gated,
 					"texture": tex,
 					"has_picture": true,
 				})
@@ -605,16 +618,21 @@ func module_cost(id: String) -> int:
 func _start_build(id: String) -> void:
 	if session == null:
 		return
+	var gs := _gs()
+	var count := _structure_count(gs, id)
+	var limit := _structure_limit(id)
+	if count >= limit:
+		if id == "panel_solar" and not _has_upgrade("panel_extra"):
+			_show_toast(_msg("Desbloquea Panel Solar Extra en Mejoras para ampliar el límite.", "Unlock Extra Solar Panel in Upgrades to expand the limit."))
+		elif id == "jardin" and not _has_upgrade("jardin_lunar"):
+			_show_toast(tx("garden_locked"))
+		else:
+			_show_toast(_msg("Límite de %s alcanzado (%d/%d)." % [module_name(id), count, limit], "%s limit reached (%d/%d)." % [module_name(id), count, limit]))
+		return
 	if int(session.inventory.get(id, 0)) <= 0:
 		_show_toast(tx("no_stock"))
 		return
-	if id == "panel_solar" and _gs().paneles_instalados >= _structure_limit(id):
-		_show_toast(_msg("Desbloquea Panel solar extra en Mejoras para ampliar el límite.", "Unlock Extra Solar Panel in Upgrades to expand the limit."))
-		return
-	if id == "jardin" and not _has_upgrade("jardin_lunar"):
-		_show_toast(tx("garden_locked"))
-		return
-	if not _gs().puede_pagar("energia", module_cost(id)):
+	if not gs.puede_pagar("energia", module_cost(id)):
 		_show_toast(_msg("Energía insuficiente.", "Not enough base energy."))
 		return
 	_close_drawer()
@@ -627,9 +645,23 @@ func _start_build(id: String) -> void:
 func _on_piece_placed(piece_id: StringName, _position: Vector3) -> void:
 	var id := str(piece_id)
 	var gs := _gs()
+	var last: Node = null
+	if is_instance_valid(estructuras_colocadas) and estructuras_colocadas.get_child_count() > 0:
+		var cand := estructuras_colocadas.get_child(estructuras_colocadas.get_child_count() - 1)
+		if str(cand.get_meta(&"piece_id", &"")) == id:
+			last = cand
+	var count := _structure_count(gs, id, last)
+	var limit := _structure_limit(id)
+	if count >= limit:
+		if is_instance_valid(last):
+			last.queue_free()
+		_pending_build_id = ""
+		_show_toast(_msg("Límite de %s alcanzado (%d/%d)." % [module_name(id), limit, limit], "%s limit reached (%d/%d)." % [module_name(id), limit, limit]))
+		return
 	if session == null or int(session.inventory.get(id, 0)) <= 0 or not gs.puede_pagar("energia", module_cost(id)):
-		var last := estructuras_colocadas.get_child(estructuras_colocadas.get_child_count() - 1)
-		last.queue_free()
+		if is_instance_valid(last):
+			last.queue_free()
+		_pending_build_id = ""
 		_show_toast(tx("no_stock"))
 		return
 	gs.pagar("energia", module_cost(id))
@@ -667,17 +699,20 @@ func _run_processing() -> void:
 	if not gs.procesador_instalado or gs.hielo <= 0 or _robot_distance_to_processing_zone() > _dome_recharge_radius() or not gs.puede_pagar("energia", mini(gs.hielo, _processor_capacity()) * 0.5):
 		super._run_processing()
 		return
-	_begin_action("processing", 1.2 if _has_upgrade("procesar_rapido") else 2.4)
+	_begin_action("processing", 3.0 if _has_upgrade("procesar_rapido") else 5.0)
 	_open_section_drawer("processing")
 
 
 func _run_repair() -> void:
 	var gs := _gs()
-	if gs.escudo >= 99.5 or not gs.puede_pagar("energia", 8 if _has_upgrade("reparar_barato") else 12):
+	if gs.escudo >= 99.5:
+		super._run_repair()
+		return
+	if not gs.puede_pagar("energia", _repair_energy_cost()):
 		super._run_repair()
 		return
 	_callout_mode = ""
-	_begin_action("repair", 3.0)
+	_begin_action("repair", _repair_time_seconds())
 
 
 func _begin_action(id: String, seconds: float) -> void:
@@ -699,13 +734,44 @@ func _open_timmy() -> void:
 	_open_section_drawer("timmy", {"title": "Timmy", "subtitle": tx("next"), "body": _next_advice(), "confirm_label": tx("understood")})
 
 
+func _visible_mission_counts(m: Dictionary) -> Dictionary:
+	var triggers: Array = m.get("trigger", [])
+	var mm: Node = _gs().obtener_mission_manager()
+	var done: Array = mm.obtener_triggers_cumplidos() if mm != null else []
+	var vis_total := 0
+	var vis_done := 0
+	for t in triggers:
+		var tid := str(t)
+		if PASSIVE_TRIGGERS.has(tid):
+			continue
+		vis_total += 1
+		if done.has(tid):
+			vis_done += 1
+	if vis_total == 0:
+		vis_total = maxi(1, triggers.size())
+		vis_done = done.size()
+	return {"done": vis_done, "total": vis_total}
+
+
+func _storm_eta_suffix(id: String) -> String:
+	var gs := _gs()
+	if gs == null or not (id in ["mision_10", "mision_12", "mision_14", "mision_16"]):
+		return ""
+	if bool(gs.nube_activa) or bool(gs.alerta_nube) or not _storms_unlocked_for_mission(gs):
+		return ""
+	return tx("storm_eta", {"s": maxi(1, int(ceil(float(gs.tiempo_para_nube))))})
+
+
 func _next_advice() -> String:
 	var mission: Dictionary = _gs().obtener_mision_activa_localizada()
 	var objectives: Array = mission.get("objetivo", [])
-	var done: Array = _gs().obtener_mission_manager().obtener_triggers_cumplidos()
-	var triggers: Array = mission.get("trigger", [])
-	var index := mini(maxi(0, objectives.size() - 1), int(floor(float(done.size()) * objectives.size() / maxi(1, triggers.size()))))
-	return tx("hint", {"name": _player_name(), "goal": str(objectives[index]) if not objectives.is_empty() else tx("victory")})
+	var counts := _visible_mission_counts(mission)
+	var index := mini(maxi(0, objectives.size() - 1), int(floor(float(counts.done) * objectives.size() / maxi(1, int(counts.total)))))
+	var text := tx("hint", {"name": _player_name(), "goal": str(objectives[index]) if not objectives.is_empty() else tx("victory")})
+	var eta := _storm_eta_suffix(str(mission.get("id", "")))
+	if not eta.is_empty():
+		text += " " + eta + "."
+	return text
 
 
 func _speak(text: String) -> void:
@@ -722,14 +788,17 @@ func _refresh_active_mission_panel() -> void:
 		var fallback_title := tx("victory") if session != null and session.all_missions_complete() else tr("mission.none")
 		_hud.set_mission_summary(fallback_title, 1, 1)
 		return
-	var triggers: Array = m.get("trigger", [])
-	var done: Array = gs.obtener_mission_manager().obtener_triggers_cumplidos()
+	var counts := _visible_mission_counts(m)
 	var goals: Array = m.get("objetivo", [])
-	var index := mini(maxi(0, goals.size() - 1), int(floor(float(done.size()) * goals.size() / maxi(1, triggers.size()))))
+	var index := mini(maxi(0, goals.size() - 1), int(floor(float(counts.done) * goals.size() / maxi(1, int(counts.total)))))
 	var short_desc := str(_goals.get("es" if TranslationServer.get_locale().begins_with("es") else "en", {}).get(str(m.id), str(m.get("mision", ""))))
 	if short_desc.is_empty() and not goals.is_empty():
 		short_desc = str(goals[index])
-	_hud.set_mission_summary(short_desc, done.size(), maxi(1, triggers.size()), str(m.get("mision", "")) + "\n" + "\n".join(goals))
+	var details := str(m.get("mision", "")) + "\n" + "\n".join(goals)
+	var eta := _storm_eta_suffix(str(m.id))
+	if not eta.is_empty():
+		details += "\n" + eta
+	_hud.set_mission_summary(short_desc, int(counts.done), int(counts.total), details)
 
 
 func _refresh_storm_banner() -> void:
@@ -750,6 +819,7 @@ func _refresh_storm_banner() -> void:
 
 func _refresh_world_callouts() -> void:
 	var hide_world: bool = _landing_active or home_paused or is_instance_valid(_modal_layer) or (is_instance_valid(_drawer) and bool(_drawer.blocks_world()))
+	var right_margin: float = (_drawer.size.x + 28.0) if (is_instance_valid(_drawer) and _drawer.visible) else 16.0
 	if is_instance_valid(_place_callout):
 		if hide_world or not placement_system.is_placing() or _pending_build_id.is_empty():
 			_place_callout.hide()
@@ -764,13 +834,13 @@ func _refresh_world_callouts() -> void:
 				"body": info,
 				"body_color": Color("#d3e1ee") if valid else Color("#ff927a"),
 				"world_pos": placement_system.get_ghost_position() + Vector3(0, 1.8, 0),
-				"width": 234,
+				"width": 256,
 				"actions": [
 					{"text": tx("cancel"), "primary": false, "callback": func(): placement_system.cancel_placement()},
 					{"text": tx("place_confirm"), "primary": true, "disabled": not valid, "callback": func(): placement_system.confirm_current()},
 				],
 			})
-			_place_callout.update_screen_position(camara, -14.0)
+			_place_callout.update_screen_position(camara, -14.0, right_margin)
 
 	if not is_instance_valid(_world_callout):
 		return
@@ -811,7 +881,7 @@ func _refresh_world_callouts() -> void:
 			_world_callout.configure({
 				"icon": "warning", "tint": Color("#ff927a"),
 				"title": gx("blocked"),
-				"world_pos": robot_pos + Vector3(0, 2.2, 0), "width": 250,
+				"world_pos": robot_pos + Vector3(0, 2.2, 0), "width": 266,
 				"actions": [
 					{"text": gx("stop_trip"), "primary": false, "callback": func(): ice.cancel()},
 					{"text": gx("retry"), "primary": true, "callback": func(): ice.retry()},
@@ -841,7 +911,7 @@ func _refresh_world_callouts() -> void:
 			"actions": [{"text": tx("return_dome"), "primary": true, "expand": false, "callback": _return_to_dome}],
 		})
 	elif _callout_mode == "repair_prompt":
-		var repair_cost := 8 if _has_upgrade("reparar_barato") else 12
+		var repair_cost := _repair_energy_cost()
 		_world_callout.configure({
 			"icon": "repair", "tint": Color("#68b9ff"),
 			"title": tx("repair_title"), "body": tx("repair_summary", {"pct": roundi(gs.escudo)}),
@@ -870,7 +940,7 @@ func _refresh_world_callouts() -> void:
 		_world_callout.hide()
 		return
 
-	_world_callout.update_screen_position(camara, -18.0)
+	_world_callout.update_screen_position(camara, -18.0, right_margin)
 
 
 func _finish_rest_prompt() -> void:
@@ -982,19 +1052,21 @@ func _open_reward(reward: Dictionary) -> void:
 		var sup_parts: Array[String] = []
 		for sid in supplies:
 			sup_parts.append("%s ×%d" % [module_name(str(sid)), int(supplies[sid])])
-		var sup_box := UI.panel(panel, Rect2(28, y, 504, 52), Color("#132740"), 12)
+		var sup_box := UI.panel(panel, Rect2(28, y, 504, 62), Color("#132740"), 12)
 		UI.label(sup_box, tx("supplies"), Rect2(14, 6, 220, 18), 12, UI.CYAN, true)
-		UI.label(sup_box, ", ".join(sup_parts), Rect2(14, 24, 476, 22), 14, UI.WHITE, true)
-		y += 62.0
+		var sup_lbl := UI.label(sup_box, ", ".join(sup_parts), Rect2(14, 24, 476, 32), 14, UI.WHITE, false)
+		sup_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		y += 72.0
 
 	var science_title := ""
 	for mission in session.mm.obtener_todas_las_misiones():
 		if str(mission.id) == str(reward.id):
 			science_title = str(session.mm.obtener_mision_localizada(mission).get("carta_nasa", {}).get("titulo", ""))
 	if not science_title.is_empty():
-		var sci_box := UI.panel(panel, Rect2(28, y, 504, 52), Color("#132740"), 12)
+		var sci_box := UI.panel(panel, Rect2(28, y, 504, 62), Color("#132740"), 12)
 		UI.label(sci_box, gx("letter"), Rect2(14, 6, 300, 18), 12, UI.GOLD, true)
-		UI.label(sci_box, science_title, Rect2(14, 24, 476, 22), 14, UI.WHITE, true)
+		var sci_lbl := UI.label(sci_box, science_title, Rect2(14, 24, 476, 32), 14, UI.WHITE, false)
+		sci_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 	UI.button(panel, tx("view_card"), Rect2(28, 356, 242, 48), func():
 		session.acknowledge_reward(str(reward.id))
@@ -1207,9 +1279,42 @@ func _upgrade_reason(id: String, result: Dictionary) -> String:
 func _build_progression_dict() -> Dictionary:
 	var data := super._build_progression_dict()
 	var mm: Node = _gs().obtener_mission_manager()
-	data["objective_done"] = mm.obtener_triggers_cumplidos().size()
-	data["objective_total"] = mm.obtener_mision_activa().get("trigger", []).size()
+	var counts := _visible_mission_counts(mm.obtener_mision_activa())
+	data["objective_done"] = int(counts.done)
+	data["objective_total"] = int(counts.total)
 	return data
+
+
+func _on_m14_superstorm_requested(_id_mision: String) -> void:
+	var gs := _gs()
+	if gs == null:
+		return
+	var mm: Node = gs.obtener_mission_manager()
+	if mm != null and mm.obtener_triggers_cumplidos().has("escudo_llego_cero"):
+		_m14_superstorm_armed = false
+		return
+	_m14_superstorm_armed = true
+	_gen_overload_cooldown = 0.0
+	if not bool(gs.nube_activa) and not bool(gs.alerta_nube):
+		gs.tiempo_para_nube = minf(float(gs.tiempo_para_nube), _storm_warning_seconds() + 6.0)
+		_storm_warning_emitted = false
+
+
+func _on_mission_activated(mision: Dictionary) -> void:
+	var id := str(mision.get("id", ""))
+	var gs := _gs()
+	if gs == null or id.is_empty():
+		return
+	if id == "mision_11" and float(gs.agua) > 10.0 and gs.en_partida and (session == null or not session.loading):
+		gs.fijar_recurso("agua", 9.0)
+		var text := tx("m11_leak")
+		if session != null:
+			session.add_message("m11_leak", "text", {"text": text})
+		_queue_alert(text, 4.5, true)
+	elif id == "mision_14":
+		_on_m14_superstorm_requested(id)
+	else:
+		_m14_superstorm_armed = false
 
 
 func _tick_fallback_simulation(delta: float) -> void:

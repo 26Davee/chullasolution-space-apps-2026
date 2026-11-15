@@ -286,12 +286,12 @@
         "amanecer_alcanzado"
       ],
       "objetivo": [
-        "Endure the full 4 minutes of lunar night without sunlight",
+        "Endure the 3-minute lunar night without sunlight",
         "Keep energy above 15 points until sunrise returns",
         "Keep dome air above 50 oxygen points"
       ],
       "objetivo_es": [
-        "Aguantar los 4 minutos completos de la noche lunar sin luz del Sol",
+        "Aguantar los 3 minutos completos de la noche lunar sin luz del Sol",
         "Mantener la energía por encima de 15 puntos hasta que vuelva a amanecer",
         "Cuidar que el aire dentro del domo no baje de 50 puntos de oxígeno"
       ],
@@ -376,12 +376,12 @@
         "escudo_restaurado_100"
       ],
       "objetivo": [
-        "Click or tap on the Dome after the storm passes",
+        "Click the ship or open Repair shield after the storm passes",
         "Spend battery energy to reinforce the damaged shield",
         "Wait a few seconds for repairs to finish and restore Shield to 100%"
       ],
       "objetivo_es": [
-        "Tocar o hacer clic sobre el Domo después de que pase la tormenta",
+        "Tocar la nave o abrir Reparar escudo después de que pase la tormenta",
         "Usar energía de las baterías para reforzar el escudo dañado",
         "Esperar unos segundos mientras se repara y dejar el Escudo al 100%"
       ],

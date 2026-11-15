@@ -65,14 +65,14 @@ func _ready() -> void:
 
 
 func _build_resource_card() -> void:
-	var card := UI.panel(self, Rect2(16, 16, 260, 174), Color("#0c1c31de"), 16)
+	var card := UI.panel(self, Rect2(16, 16, 286, 174), Color("#0c1c31de"), 16)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	for i in IDS.size():
 		var id: String = IDS[i]
 		var btn := Button.new()
 		btn.name = "Resource_" + id
 		btn.position = Vector2(8, 10 + i * 31)
-		btn.size = Vector2(244, 29)
+		btn.size = Vector2(270, 29)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		btn.pressed.connect(resource_pressed.emit.bind(id))
 		_style_row_button(btn, false)
@@ -87,8 +87,9 @@ func _build_resource_card() -> void:
 		icon.size = Vector2(16, 16)
 		btn.add_child(icon)
 
-		var lbl := UI.label(btn, "", Rect2(30, 3, 98, 22), 13, UI.WHITE, false)
+		var lbl := UI.label(btn, "", Rect2(30, 3, 118, 22), 13, UI.WHITE, false)
 		lbl.autowrap_mode = TextServer.AUTOWRAP_OFF
+		lbl.clip_text = true
 		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		_labels[id] = lbl
 
@@ -98,18 +99,18 @@ func _build_resource_card() -> void:
 		bar.add_theme_font_size_override("font_size", 1)
 		bar.add_theme_stylebox_override("background", UI.style(Color("#25374e"), Color.TRANSPARENT, 0, 3))
 		bar.add_theme_stylebox_override("fill", UI.style(COLORS[i], Color.TRANSPARENT, 0, 3))
-		bar.position = Vector2(132, 11)
-		bar.size = Vector2(64, 6)
+		bar.position = Vector2(154, 11)
+		bar.size = Vector2(62, 6)
 		btn.add_child(bar)
 		bars[id] = bar
 
-		var val := UI.label(btn, "0%", Rect2(196, 3, 42, 22), 13, UI.WHITE, true)
+		var val := UI.label(btn, "0%", Rect2(220, 3, 44, 22), 13, UI.WHITE, true)
 		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		values[id] = val
 
 
 func _build_top_pill() -> void:
-	var pill := UI.panel(self, Rect2(442, 16, 396, 40), Color("#0c1c31de"), 14)
+	var pill := UI.panel(self, Rect2(414, 16, 452, 40), Color("#0c1c31de"), 14)
 	pill.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	_phase_icon = Icon.new()
@@ -120,38 +121,44 @@ func _build_top_pill() -> void:
 	_phase_icon.size = Vector2(18, 18)
 	pill.add_child(_phase_icon)
 
-	_clock = UI.label(pill, "", Rect2(38, 8, 116, 24), 14, UI.WHITE, true)
+	_clock = UI.label(pill, "", Rect2(38, 8, 122, 24), 14, UI.WHITE, true)
 	_clock.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_clock.clip_text = true
+	_clock.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_add_divider(pill, 160)
+	_add_divider(pill, 166)
 
 	var ice_icon := Icon.new()
 	ice_icon.kind = "ice"
 	ice_icon.disc = false
 	ice_icon.tint = Color("#68b9ff")
-	ice_icon.position = Vector2(174, 11)
+	ice_icon.position = Vector2(180, 11)
 	ice_icon.size = Vector2(18, 18)
 	pill.add_child(ice_icon)
 
-	_ice_label = UI.label(pill, "", Rect2(198, 8, 84, 24), 14, UI.WHITE, true)
+	_ice_label = UI.label(pill, "", Rect2(204, 8, 96, 24), 14, UI.WHITE, true)
 	_ice_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_ice_label.clip_text = true
+	_ice_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_add_divider(pill, 286)
+	_add_divider(pill, 306)
 
 	var star_icon := Icon.new()
 	star_icon.kind = "star"
 	star_icon.disc = false
 	star_icon.tint = UI.GOLD
-	star_icon.position = Vector2(300, 11)
+	star_icon.position = Vector2(320, 11)
 	star_icon.size = Vector2(18, 18)
 	pill.add_child(star_icon)
 
-	_stars_label = UI.label(pill, "", Rect2(324, 8, 66, 24), 14, UI.WHITE, true)
+	_stars_label = UI.label(pill, "", Rect2(344, 8, 98, 24), 14, UI.WHITE, true)
 	_stars_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_stars_label.clip_text = true
+	_stars_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
 func _build_storm_banner() -> void:
-	storm_banner = UI.panel(self, Rect2(436, 66, 408, 56), Color("#152031eb"), 14)
+	storm_banner = UI.panel(self, Rect2(414, 66, 452, 56), Color("#152031eb"), 14)
 	storm_banner.add_theme_stylebox_override("panel", UI.style(Color("#152031eb"), Color("#ff927a"), 1, 14))
 	storm_banner.mouse_filter = Control.MOUSE_FILTER_STOP
 	storm_banner.hide()
@@ -164,13 +171,17 @@ func _build_storm_banner() -> void:
 	warn_icon.size = Vector2(20, 20)
 	storm_banner.add_child(warn_icon)
 
-	_storm_title = UI.label(storm_banner, "", Rect2(44, 7, 232, 22), 14, UI.WHITE, true)
+	_storm_title = UI.label(storm_banner, "", Rect2(44, 7, 272, 22), 14, UI.WHITE, true)
 	_storm_title.autowrap_mode = TextServer.AUTOWRAP_OFF
-	_storm_sub = UI.label(storm_banner, "", Rect2(44, 29, 232, 18), 12, Color("#c7d6e6"))
+	_storm_title.clip_text = true
+	_storm_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_storm_sub = UI.label(storm_banner, "", Rect2(44, 29, 272, 18), 12, Color("#c7d6e6"))
 	_storm_sub.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_storm_sub.clip_text = true
 	_storm_sub.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_storm_btn = UI.button(storm_banner, "", Rect2(284, 11, 112, 34), storm_notice_pressed.emit)
+	_storm_btn = UI.button(storm_banner, "", Rect2(324, 11, 116, 34), storm_notice_pressed.emit)
+	_storm_btn.clip_text = true
 	_storm_btn.add_theme_font_size_override("font_size", 13)
 	_storm_btn.add_theme_stylebox_override("normal", UI.style(Color("#1e3148"), Color("#536e87"), 1, 10))
 
@@ -178,8 +189,8 @@ func _build_storm_banner() -> void:
 func _build_settings_button() -> void:
 	_settings_btn = Button.new()
 	_settings_btn.name = "SettingsButton"
-	_settings_btn.position = Vector2(1118, 16)
-	_settings_btn.size = Vector2(146, 40)
+	_settings_btn.position = Vector2(1110, 16)
+	_settings_btn.size = Vector2(154, 40)
 	_settings_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_settings_btn.pressed.connect(settings_pressed.emit)
 	_paint_pill_button(_settings_btn, false, 14)
@@ -193,16 +204,18 @@ func _build_settings_button() -> void:
 	icon.size = Vector2(18, 18)
 	_settings_btn.add_child(icon)
 
-	var lbl := UI.label(_settings_btn, "", Rect2(38, 8, 100, 24), 14, UI.WHITE, true)
+	var lbl := UI.label(_settings_btn, "", Rect2(38, 8, 108, 24), 14, UI.WHITE, true)
 	lbl.name = "Caption"
 	lbl.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lbl.clip_text = true
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
 func _build_mission_pill() -> void:
 	mission_card = Button.new()
 	mission_card.name = "ActiveMissionPill"
 	mission_card.position = Vector2(16, 654)
-	mission_card.size = Vector2(296, 50)
+	mission_card.size = Vector2(328, 50)
 	mission_card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	mission_card.pressed.connect(mission_pressed.emit)
 	_paint_pill_button(mission_card, false, 14)
@@ -216,11 +229,12 @@ func _build_mission_pill() -> void:
 	icon.size = Vector2(18, 18)
 	mission_card.add_child(icon)
 
-	_mission_label = UI.label(mission_card, "", Rect2(40, 9, 206, 22), 14, UI.WHITE, true)
+	_mission_label = UI.label(mission_card, "", Rect2(40, 9, 232, 22), 14, UI.WHITE, true)
 	_mission_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_mission_label.clip_text = true
 	_mission_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_mission_count = UI.label(mission_card, "0/1", Rect2(246, 9, 38, 22), 13, Color("#68b9ff"), true)
+	_mission_count = UI.label(mission_card, "0/1", Rect2(274, 9, 42, 22), 13, Color("#68b9ff"), true)
 	_mission_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	_mission_bar = ProgressBar.new()
@@ -230,20 +244,20 @@ func _build_mission_pill() -> void:
 	_mission_bar.add_theme_stylebox_override("background", UI.style(Color("#25374e"), Color.TRANSPARENT, 0, 3))
 	_mission_bar.add_theme_stylebox_override("fill", UI.style(UI.CYAN, Color.TRANSPARENT, 0, 3))
 	_mission_bar.position = Vector2(14, 37)
-	_mission_bar.size = Vector2(268, 4)
+	_mission_bar.size = Vector2(300, 4)
 	mission_card.add_child(_mission_bar)
 
 
 func _build_bottom_dock() -> void:
-	var dock := UI.panel(self, Rect2(414, 636, 452, 68), Color("#0c1c31e6"), 18)
+	var dock := UI.panel(self, Rect2(394, 636, 492, 68), Color("#0c1c31e6"), 18)
 	dock.mouse_filter = Control.MOUSE_FILTER_STOP
 	for i in DOCK_TABS.size():
 		var tab_id: String = DOCK_TABS[i][0]
 		var icon_kind: String = DOCK_TABS[i][1]
 		var btn := Button.new()
 		btn.name = "Dock_" + tab_id
-		btn.position = Vector2(8 + i * 88, 6)
-		btn.size = Vector2(82, 56)
+		btn.position = Vector2(8 + i * 96, 6)
+		btn.size = Vector2(90, 56)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		btn.pressed.connect(dock_pressed.emit.bind(tab_id))
 		dock.add_child(btn)
@@ -254,17 +268,19 @@ func _build_bottom_dock() -> void:
 		icon.kind = icon_kind
 		icon.disc = false
 		icon.tint = UI.WHITE
-		icon.position = Vector2(30, 8)
+		icon.position = Vector2(34, 8)
 		icon.size = Vector2(22, 22)
 		btn.add_child(icon)
 
-		var lbl := UI.label(btn, "", Rect2(4, 33, 74, 20), 13, UI.WHITE, true)
+		var lbl := UI.label(btn, "", Rect2(4, 33, 82, 20), 13, UI.WHITE, true)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.autowrap_mode = TextServer.AUTOWRAP_OFF
+		lbl.clip_text = true
+		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		_dock_labels[tab_id] = lbl
 
 		if tab_id == "more":
-			_more_badge = UI.panel(btn, Rect2(58, 6, 10, 10), UI.GOLD, 5)
+			_more_badge = UI.panel(btn, Rect2(64, 6, 10, 10), UI.GOLD, 5)
 			_more_badge.hide()
 
 

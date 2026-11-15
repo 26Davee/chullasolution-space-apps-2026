@@ -51,7 +51,10 @@ func _build_frame() -> void:
 
 	_title_label = Label.new()
 	_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_title_label.add_theme_font_size_override("font_size", 19)
+	_title_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_title_label.clip_text = true
+	_title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_title_label.add_theme_font_size_override("font_size", 18)
 	_title_label.add_theme_color_override("font_color", UI.WHITE)
 	header.add_child(_title_label)
 
@@ -110,7 +113,7 @@ func open_section(section_kind: String, data: Dictionary) -> void:
 	var width := 376.0 if section_kind in ["missions", "upgrades", "science", "construction"] else 336.0
 	var inner_w := width - 36.0
 	get_node("Header").size.x = inner_w
-	_content.custom_minimum_size.x = inner_w - 6.0
+	_content.custom_minimum_size.x = inner_w - 10.0
 
 	_header_icon.kind = str(data.get("icon", _default_icon_for(section_kind)))
 	_header_icon.tint = data.get("tint", UI.CYAN)
@@ -203,16 +206,19 @@ func _populate_construction(data: Dictionary, w: float) -> void:
 	grid.add_theme_constant_override("h_separation", 8)
 	grid.add_theme_constant_override("v_separation", 8)
 	_content.add_child(grid)
-	var card_w := (w - 16.0) * 0.5
+	var card_w := floorf((w - 20.0) * 0.5)
 	var modules: Array = data.get("modules", [])
 	for mod in modules:
 		var id := str(mod.id)
 		var stock := int(mod.stock)
+		var installed := int(mod.get("installed", 0))
+		var limit := int(mod.get("limit", 1))
 		var locked := bool(mod.locked)
+		var need_upgrade := bool(mod.get("need_upgrade", false))
 		var cost := int(mod.cost)
 		var btn := Button.new()
 		btn.name = "Module_" + id
-		btn.custom_minimum_size = Vector2(card_w, 134)
+		btn.custom_minimum_size = Vector2(card_w, 138)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		UI.paint(btn, false)
 		btn.add_theme_stylebox_override("normal", UI.style(Color("#132740"), Color("#536e87") if not locked and stock > 0 else Color("#334861"), 1, 12))
@@ -233,13 +239,21 @@ func _populate_construction(data: Dictionary, w: float) -> void:
 
 		var title := UI.label(btn, str(mod.name), Rect2(10, 68, card_w - 20, 22), 14, UI.WHITE, true)
 		title.autowrap_mode = TextServer.AUTOWRAP_OFF
+		title.clip_text = true
 		title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-		var line2 := tr("live.build_locked") if locked else (tr("live.build_one_avail" if stock == 1 else "live.build_many_avail").format({"n": stock}))
-		UI.label(btn, line2, Rect2(10, 90, card_w - 20, 18), 12, Color("#d3e1ee"))
+		var avail_txt := tr("live.build_one_avail" if stock == 1 else "live.build_many_avail").format({"n": stock})
+		var line2 := tr("live.build_limit_reached").format({"placed": installed, "limit": limit}) if locked else ("%s · %d/%d" % [avail_txt, installed, limit])
+		var l2 := UI.label(btn, line2, Rect2(10, 90, card_w - 20, 18), 12, Color("#d3e1ee"))
+		l2.autowrap_mode = TextServer.AUTOWRAP_OFF
+		l2.clip_text = true
+		l2.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-		var line3 := tr("live.build_need_upgrade") if locked else (tr("live.build_from_missions") if stock == 0 and id == "tanque_agua" else tr("live.build_energy_cost").format({"n": cost}))
-		UI.label(btn, line3, Rect2(10, 108, card_w - 20, 18), 12, UI.CYAN if not locked else Color("#a4b7c9"))
+		var line3 := tr("live.build_need_upgrade") if need_upgrade else (tr("live.build_from_missions") if (stock == 0 and not locked and id in ["tanque_agua", "jardin"]) else tr("live.build_energy_cost").format({"n": cost}))
+		var l3 := UI.label(btn, line3, Rect2(10, 110, card_w - 20, 18), 12, UI.CYAN if not locked else Color("#a4b7c9"))
+		l3.autowrap_mode = TextServer.AUTOWRAP_OFF
+		l3.clip_text = true
+		l3.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
 func _populate_expedition(data: Dictionary, _w: float) -> void:
@@ -303,8 +317,10 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		var tag := tr("live.missions_done") if is_done else (tr("live.missions_active") if is_current else (tr("live.missions_next") if not found_next else tr("live.missions_pending")))
 		if not is_done and not is_current and not found_next:
 			found_next = true
-		var box := UI.panel(_content, Rect2(0, 0, 0, 0), Color("#17324b") if is_current else Color("#132740"), 12)
+		var box := PanelContainer.new()
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		box.add_theme_stylebox_override("panel", UI.style(Color("#17324b") if is_current else Color("#132740"), UI.GOLD if is_current else Color("#3c5670"), 2 if is_current else 1, 12))
+		_content.add_child(box)
 		var inner := VBoxContainer.new()
 		inner.add_theme_constant_override("separation", 5)
 		var margin := MarginContainer.new()
@@ -314,20 +330,21 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		margin.add_theme_constant_override("margin_bottom", 10)
 		margin.add_child(inner)
 		box.add_child(margin)
-		box.custom_minimum_size = Vector2(0, 108 if is_current else 68)
-		margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 		var top_row := HBoxContainer.new()
+		top_row.add_theme_constant_override("separation", 8)
 		inner.add_child(top_row)
 		var lbl := Label.new()
 		lbl.text = title
 		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.add_theme_font_size_override("font_size", 15 if is_current else 14)
 		lbl.add_theme_color_override("font_color", UI.WHITE)
 		top_row.add_child(lbl)
 
 		var badge := Label.new()
 		badge.text = tag
+		badge.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		badge.add_theme_font_size_override("font_size", 12)
 		badge.add_theme_color_override("font_color", UI.GOLD if is_current else (Color("#7fe7bf") if is_done else Color("#9db4ca")))
 		top_row.add_child(badge)
@@ -339,7 +356,8 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		desc.add_theme_font_size_override("font_size", 12)
 		desc.add_theme_color_override("font_color", Color("#c7d6e6"))
 		if not is_current:
-			desc.max_lines_visible = 1
+			desc.max_lines_visible = 2
+			desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		inner.add_child(desc)
 
 		if is_current:
@@ -376,8 +394,11 @@ func _populate_upgrades(data: Dictionary, _w: float) -> void:
 	if _selected_branch.is_empty() or not (_selected_branch in branches):
 		_selected_branch = branches[0] if not branches.is_empty() else ""
 
-	var tabs := HBoxContainer.new()
-	tabs.add_theme_constant_override("separation", 6)
+	var tabs := GridContainer.new()
+	tabs.columns = 2
+	tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tabs.add_theme_constant_override("h_separation", 6)
+	tabs.add_theme_constant_override("v_separation", 6)
 	_content.add_child(tabs)
 	for b in branches:
 		var branch_id := b
@@ -579,6 +600,9 @@ func _populate_audio(data: Dictionary, _w: float) -> void:
 	_add_section_heading(tr("live.voice"))
 	_voice_choice = OptionButton.new()
 	_voice_choice.custom_minimum_size = Vector2(0, 36)
+	_voice_choice.fit_to_longest_item = false
+	_voice_choice.clip_text = true
+	_voice_choice.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_voice_choice.add_theme_font_size_override("font_size", 14)
 	UI.paint(_voice_choice)
 	_voice_choice.add_item("Sabina" if lang == "es" else "Zira")
@@ -728,23 +752,22 @@ func _add_slider_row(title: String, value_text: String, min_v: float, max_v: flo
 	slider.step = step_v
 	slider.value = current
 	slider.value_changed.connect(func(v: float):
-		val_lbl.text = ("%d%%" % int(v)) if max_v >= 10 else ("%.2gx" % v)
+		val_lbl.text = ("%d%%" % int(v)) if max_v >= 10 else ("%.2fx" % v)
 		on_change.call(v)
 	)
 	col.add_child(slider)
 
 
 func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: String, cb: Callable, highlight := false) -> void:
-	var btn := Button.new()
-	btn.custom_minimum_size = Vector2(0, 56 if not subtitle.is_empty() else 44)
-	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if cb.is_valid() else Control.CURSOR_ARROW
-	btn.disabled = not cb.is_valid()
-	UI.paint(btn, false)
-	btn.add_theme_stylebox_override("normal", UI.style(Color("#17324b") if highlight else Color("#132740"), UI.GOLD if highlight else Color("#405a74"), 2 if highlight else 1, 12))
-	btn.add_theme_stylebox_override("disabled", UI.style(Color("#132740"), Color("#405a74"), 1, 12))
-	if cb.is_valid():
-		btn.pressed.connect(cb)
-	_content.add_child(btn)
+	var holder := MarginContainer.new()
+	holder.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	holder.custom_minimum_size = Vector2(0, 56 if not subtitle.is_empty() else 44)
+	_content.add_child(holder)
+
+	var panel := PanelContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_theme_stylebox_override("panel", UI.style(Color("#17324b") if highlight else Color("#132740"), UI.GOLD if highlight else Color("#405a74"), 2 if highlight else 1, 12))
+	holder.add_child(panel)
 
 	var margin := MarginContainer.new()
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -752,8 +775,7 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 	margin.add_theme_constant_override("margin_right", 12)
 	margin.add_theme_constant_override("margin_top", 8)
 	margin.add_theme_constant_override("margin_bottom", 8)
-	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	btn.add_child(margin)
+	panel.add_child(margin)
 
 	var hbox := HBoxContainer.new()
 	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -772,24 +794,24 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	col.add_theme_constant_override("separation", 1)
+	col.add_theme_constant_override("separation", 2)
 	hbox.add_child(col)
 
 	var t := Label.new()
 	t.text = title
 	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.add_theme_font_size_override("font_size", 14)
 	t.add_theme_color_override("font_color", UI.WHITE)
-	t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	col.add_child(t)
 
 	if not subtitle.is_empty():
 		var s := Label.new()
 		s.text = subtitle
 		s.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		s.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		s.add_theme_font_size_override("font_size", 12)
 		s.add_theme_color_override("font_color", Color("#b6c9db"))
-		s.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		col.add_child(s)
 
 	if cb.is_valid():
@@ -801,18 +823,33 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 		chev.add_theme_color_override("font_color", Color("#8ea9c4"))
 		hbox.add_child(chev)
 
+		var hit := Button.new()
+		hit.tooltip_text = title
+		hit.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		hit.add_theme_stylebox_override("normal", UI.style(Color.TRANSPARENT, Color.TRANSPARENT, 0, 12))
+		hit.add_theme_stylebox_override("hover", UI.style(Color(0.35, 0.88, 0.86, 0.08), UI.CYAN, 1, 12))
+		hit.add_theme_stylebox_override("pressed", UI.style(Color(0.35, 0.88, 0.86, 0.16), UI.GOLD, 2, 12))
+		hit.add_theme_stylebox_override("focus", UI.style(Color.TRANSPARENT, UI.CYAN, 2, 12))
+		hit.pressed.connect(cb)
+		holder.add_child(hit)
+
 
 func _pill_button(text: String, icon_kind: String, tint: Color, cb: Callable, active := false) -> Button:
 	var btn := Button.new()
 	btn.text = text
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.custom_minimum_size = Vector2(0, 36)
+	btn.clip_text = true
+	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	UI.paint(btn, active)
 	btn.add_theme_font_size_override("font_size", 13)
-	btn.add_theme_stylebox_override("normal", UI.style(Color("#1c3a56") if active else Color("#132740"), UI.GOLD if active else Color("#405a74"), 2 if active else 1, 10))
+	var style := UI.style(Color("#1c3a56") if active else Color("#132740"), UI.GOLD if active else Color("#405a74"), 2 if active else 1, 10)
 	if not icon_kind.is_empty():
+		style.content_margin_left = 20.0
+		style.content_margin_right = 10.0
 		btn.tooltip_text = text
+	btn.add_theme_stylebox_override("normal", style)
 	btn.pressed.connect(cb)
 	if not icon_kind.is_empty() and not active:
 		btn.add_theme_color_override("font_color", UI.WHITE)
