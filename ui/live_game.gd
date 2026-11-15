@@ -1049,7 +1049,7 @@ func _maybe_show_reward() -> void:
 
 func _open_reward(reward: Dictionary) -> void:
 	var panel := _open_modal("reward", tx("reward_title"), Vector2(560, 440))
-	var m_title := CatalogScript.text("misiones." + str(reward.id) + ".titulo", str(reward.id))
+	var m_title := str(reward.get("title", CatalogScript.text("misiones." + str(reward.id) + ".titulo", str(reward.id))))
 	UI.label(panel, m_title, Rect2(28, 72, 504, 34), 20, UI.WHITE, true)
 
 	var star_box := UI.panel(panel, Rect2(28, 114, 150, 38), Color("#193750"), 12)
@@ -1514,7 +1514,7 @@ func _spawn_upgrade_supply_drop(upgrade_id: String) -> void:
 	var entry := {"id": upgrade_id, "upgrade_id": upgrade_id, "piece_id": piece_id, "position": [chosen.x, chosen.y, chosen.z]}
 	session.pending_drops.append(entry)
 	_create_drop_node(entry, false)
-	_show_toast(tx("drop_spawned", {"item": module_name(piece_id)}), 4.2)
+	_show_toast(tx("drop_spawned", {"module": module_name(piece_id)}), 4.2)
 
 
 func _create_drop_node(entry: Dictionary, immediate_landed: bool) -> Node3D:

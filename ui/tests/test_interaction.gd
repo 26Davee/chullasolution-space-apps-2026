@@ -110,11 +110,13 @@ func run() -> void:
 	var inv_before: int = int(game.session.inventory.get("panel_solar", 0))
 	gs.obtener_save_manager().registrar_mision_completada("mision_01", 5)
 	game._on_upgrade_requested("panel_extra")
+	var supply_notices: Array = game._toast_queue.map(func(item): return str(item.text))
 	game._close_modal()
 	await frames()
 	check(is_equal_approx(game._dome_expansion_scale(), 6.75), "Dome expands from 3.0 to 3.0 + (3.0 * 1.25) = 6.75")
 	check(game.placement_system.dome_inner_radius > 37.0, "Dome inner placement radius scales up with dome")
 	check(game.session.pending_drops.size() == 1, "Upgrade spawns a collectible SupplyDrop")
+	check(supply_notices.any(func(text): return not text.contains("{module}") and text.contains(game.module_name("panel_solar"))), "Supply notice names the module instead of exposing a placeholder")
 	var drop_node: Node3D = game._find_drop_node("panel_extra")
 	check(drop_node != null and str(drop_node.get_meta("station_section", "")) == "supply_drop", "SupplyDrop node bound as collectible station")
 	game._active_drop_id = "panel_extra"

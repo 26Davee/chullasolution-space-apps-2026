@@ -35,6 +35,12 @@ func check_drawer(drawer: Panel, locale: String) -> void:
         if node is ScrollBar: continue
         var rect: Rect2 = node.get_global_rect()
         check(rect.end.x <= edge-8,"Content does not overflow horizontally: "+locale+" "+drawer.kind+" "+node.get_class())
+    for button in drawer._content.find_children("*","Button",true,false):
+        var symbol = button.get_node_or_null("ActionIcon")
+        if symbol == null: continue
+        check(symbol.get_script().resource_path == "res://ui/ui_icon.gd","Compact actions use a real vector icon")
+        check(symbol.size == Vector2(18,18) and button.size.y <= 44,"Action icon and button remain compact: "+locale)
+        check(button.get_rect().encloses(Rect2(button.position+symbol.position,symbol.size)),"Icon remains inside its action button")
     if drawer.kind == "upgrades":
         var branch: String = drawer.Catalog.text("branches."+drawer._selected_branch,drawer._selected_branch)
         for button in drawer._content.find_children("*","Button",true,false):
@@ -89,6 +95,12 @@ func run() -> void:
             await create_timer(1.15).timeout
             await frames()
             check_dialogue(lesson)
+            check(not is_instance_valid(lesson.game._modal_layer),"No unexplained notice appears on entering: "+locale+" "+id)
+            if id == "ending":
+                lesson.primary_button.pressed.emit()
+                await frames()
+                check(is_instance_valid(lesson.game._modal_layer),"The finale opens after its labelled action")
+                check_dialogue(lesson)
             if is_instance_valid(lesson.game._modal_layer):
                 var panel: Control = lesson.game._modal_layer.get_child(1)
                 for node in lesson.game._modal_layer.get_children():

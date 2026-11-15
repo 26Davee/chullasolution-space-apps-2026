@@ -75,6 +75,10 @@ func run() -> void:
                 check(lesson.done,"Bars only explain; no click is needed")
                 for button in lesson.game._hud.resource_buttons.values():
                     check(button.focus_mode == Control.FOCUS_NONE and button.mouse_filter == Control.MOUSE_FILTER_IGNORE,"Bars cannot demand an interaction")
+            if lesson.step == "recovery":
+                check(lesson.done and not is_instance_valid(lesson.game._modal_layer),"Both recovery rules are explained as text, without demonstration buttons")
+            if lesson.step == "supplies" and is_instance_valid(lesson.game._modal_layer):
+                check(lesson.stage == 1 and lesson.state.agua > lesson._water_before,"Rewards follow a real processing task, not a timer")
             if lesson.done:
                 click(lesson.primary_button)
             elif lesson.step == "construction" and lesson.game.placement_system.is_placing():
@@ -105,6 +109,8 @@ func run() -> void:
     root.add_child(skip)
     await frames(5)
     skip.voice.muted = true
+    while skip.game._landing_active: await create_timer(0.1).timeout
+    await frames()
     var finished: Array = []
     skip.home_entered.connect(func(): finished.append(true))
     click(skip.skip_button)

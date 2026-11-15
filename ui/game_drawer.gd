@@ -277,10 +277,10 @@ func _populate_expedition(data: Dictionary, _w: float) -> void:
 	var mid_row := HBoxContainer.new()
 	mid_row.add_theme_constant_override("separation", 8)
 	_content.add_child(mid_row)
-	var scan_btn := _pill_button(tr("live.ice_scan_btn"), "target", UI.CYAN, func(): navigate_requested.emit("scan_ice", {}))
+	var scan_btn := _pill_button(tr("live.ice_scan_btn"), "radar", UI.CYAN, func(): navigate_requested.emit("scan_ice", {}))
 	scan_btn.disabled = not bool(data.get("can_scan", false))
 	mid_row.add_child(scan_btn)
-	mid_row.add_child(_pill_button(tr("live.return_dome"), "escudo", UI.CYAN, func(): navigate_requested.emit("return_dome", {})))
+	mid_row.add_child(_pill_button(tr("live.return_dome"), "base", UI.CYAN, func(): navigate_requested.emit("return_dome", {})))
 
 	if phase in ["idle", "blocked"]:
 		var label := tr("guide.retry") if phase == "blocked" else tr("live.ice_start_btn")
@@ -846,15 +846,24 @@ func _pill_button(text: String, icon_kind: String, tint: Color, cb: Callable, ac
 		btn.tooltip_text = text
 	btn.add_theme_stylebox_override("normal", style)
 	btn.pressed.connect(cb)
-	if not icon_kind.is_empty() and not active:
-		btn.add_theme_color_override("font_color", UI.WHITE)
-		var dot := ColorRect.new()
-		dot.color = tint
-		dot.position = Vector2(8, 15)
-		dot.size = Vector2(6, 6)
-		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		btn.add_child(dot)
 	_fit_button(btn)
+	if not icon_kind.is_empty():
+		for state_name in ["normal","hover","pressed","focus","disabled"]:
+			var box := btn.get_theme_stylebox(state_name).duplicate()
+			box.content_margin_left = 34
+			box.content_margin_right = 8
+			btn.add_theme_stylebox_override(state_name,box)
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var symbol := Icon.new()
+		symbol.name = "ActionIcon"
+		symbol.kind = icon_kind
+		symbol.disc = false
+		symbol.tint = tint
+		symbol.size = Vector2(18,18)
+		btn.add_child(symbol)
+		btn.resized.connect(func(): symbol.position = Vector2(9,(btn.size.y-symbol.size.y)*0.5))
+		symbol.position = Vector2(9,(btn.size.y-symbol.size.y)*0.5)
+
 	return btn
 
 
@@ -931,7 +940,8 @@ func _wrap_button_caption(btn: Button) -> void:
 	var caption := btn.tooltip_text
 	var font := btn.get_theme_font("font")
 	var font_size := btn.get_theme_font_size("font_size")
-	var available := btn.size.x - 20.0
+	var box := btn.get_theme_stylebox("normal")
+	var available := btn.size.x - box.content_margin_left - box.content_margin_right - 4.0
 	var lines := PackedStringArray()
 	var line := ""
 	for word in caption.split(" ", false):

@@ -10,7 +10,7 @@ Construir selecciona una imagen y coloca un holograma 3D válido dentro del domo
 
 ## Curso común antes del perfil
 
-`ui/intro.gd` ejecuta 24 lecciones en inglés y español. Timmy señala el control siguiente, explica cada cambio y espera el resultado de las prácticas. Las cinco barras se resaltan como indicadores y no requieren clic. Las recompensas, recuperación y final llegan como avisos automáticos. Recuperación enseña las dos reglas sin elegir un rol.
+`ui/intro.gd` ejecuta 24 lecciones en inglés y español. Timmy señala el control siguiente, explica cada cambio y espera el resultado de las prácticas. Las cinco barras se resaltan como indicadores y no requieren clic. Las recompensas de práctica aparecen tras terminar una tarea real de procesar hielo: Timmy explica el objetivo, señala Más → Procesar hielo y espera el agua. Recuperación explica las dos reglas como texto, sin elegir un rol ni abrir demostraciones. El final se presenta primero con Timmy; el botón Finalizar/Finish abre la celebración de ejemplo. Estas actividades usan únicamente el estado aislado del curso.
 
 Se utiliza `scenes/juego.tscn` con `ui/tutorial_game.gd`, que hereda la partida real. Cámara, modelos, colocación, rutas de hielo, acciones, paneles, recursos y voz se reutilizan. La enseñanza mantiene sus recursos sin consumo pasivo para que el niño pueda leer y escuchar a su ritmo; las acciones conservan sus controles y efectos. El hielo viaja físicamente y las reparaciones/procesamiento requieren esperar.
 

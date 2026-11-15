@@ -6,14 +6,14 @@ Rama: `p6/interfaz-tutorial-perfil`. Base del juego: `provicional_V1` en `1296d7
 
 - Tutorial sobre la escena y acciones reales, con Timmy indicando el control siguiente y esperando resultados.
 - Barras explicativas sin clic obligatorio; controles con dibujos de ratón y teclas.
-- Avisos automáticos de recompensas, recuperación de ambos modos y final; sin botón flotante de práctica.
+- Recompensas de práctica tras completar una tarea; recuperación explicada en texto para ambos modos; final precedido por Timmy y una acción explícita.
 - Resolver con Timmy funcional en la práctica del aviso de agua.
 - Nombre y edad después del curso; omitir, repetir y regresar al menú conservan sus recorridos.
 - English/Spanish e Inglés/Español según idioma; selección de Zira/Sabina conservada.
 - Capa de interfaz que dejaba interceptados los clics en terreno corregida.
 - La colocación valida la posición del clic, evitando confirmar una posición anterior del holograma.
 - Tarjetas de máquinas conservan botones y foco entre fotogramas.
-- Cancelar construcción/viaje y cerrar recuperación no dejan el tutorial sin salida.
+- Cancelar construcción/viaje no deja el tutorial sin salida; recuperación permite continuar después de leer su explicación.
 - Transición visual al checkpoint o reinicio, con bloqueo de entrada durante el efecto y liberación al terminar.
 - Datos de prueba y curso aislados de las partidas reales.
 
@@ -21,8 +21,8 @@ Rama: `p6/interfaz-tutorial-perfil`. Base del juego: `provicional_V1` en `1296d7
 
 | Prueba | Recorridos verificados |
 |---|---|
-| `ui/tests/test_tutorial.gd` | Curso completo EN/ES, controles reales, holograma con rayo físico y validación, escanear/seleccionar/viajar/volver, procesar, reparar, recargar, mensajes, entrega automática, compra de mejora, ciencia, idioma/voz, ambas recuperaciones y final. Comprueba que los recursos y guardado reales no cambien. |
-| `ui/tests/test_tutorial_detours.gd` | Cancelar construcción y expedición; reintentar; salir antes de terminar la explicación de recuperación; dos demostraciones obligatorias; idioma y detención de voz. |
+| `ui/tests/test_tutorial.gd` | Curso completo EN/ES, controles reales, holograma con rayo físico y validación, escanear/seleccionar/viajar/volver, procesar, reparar, recargar, mensajes, entrega después de completar la tarea, compra de mejora, ciencia, idioma/voz, explicación de ambos modos y final confirmado. Comprueba que los recursos y guardado reales no cambien. |
+| `ui/tests/test_tutorial_detours.gd` | Cancelar construcción y expedición; reintentar; recompensas y final esperan la acción guiada; recuperación textual sin botones de demostración; idioma y detención de voz. |
 | `ui/tests/test_main_navigation.gd` | Nueva partida, omitir antes del perfil, nombre requerido, Cadete/Ingeniero, menú antes de Jugar, revisión sin repetir datos, reanudar, dos slots independientes y cancelar reinicio. |
 | `ui/tests/test_outcomes.gd` | Energía y oxígeno a cero en ambos modos; batería del robot no causa derrota; botón correcto de recuperación; transición y liberación de entrada; restauración de checkpoint o reinicio real; perfil conservado; preferencias Zira/Sabina. |
 | `ui/tests/test_live_game.gd` | Paneles, pausa, guardado/carga, respaldo corrupto, entregas únicas, inventario, costes, mejoras, recuperación, 16 misiones y final único, tres slots, borrado aislado, objetivos nocturnos y límites visuales. |
@@ -59,3 +59,13 @@ Se reprodujo el fallo pendiente al reconstruir el panel de procesamiento despué
 Las tarjetas de partidas separan nombre, progreso y fecha del área de acciones; las ranuras vacías usan dos líneas. Al refrescar el idioma, los controles anteriores salen inmediatamente del contenedor. Se implementó la llamada faltante `SaveManager.guardar_idioma`: la preferencia se guarda en los metadatos de la interfaz y se recupera al abrir el menú o cargar otra partida, sin crear una expedición ni modificar sus recursos. La selección de idioma desde Ajustes utiliza la misma preferencia. Los metadatos anteriores sin este campo siguen siendo válidos.
 
 Validación: cinco grupos de pruebas aprobados (navegación principal, tutorial completo EN/ES, alternativas del tutorial, juego integrado y límites visuales). Se añadieron comprobaciones del cambio real EN/ES, recarga de metadatos, conservación del idioma al reanudar, separación de textos y acciones, reconstrucción repetida del procesamiento y altura de los botones después de las acciones reales. Se revisaron ocho capturas nativas EN/ES de partidas, procesamiento, audio y mensajes en Godot 4.7.2 Compatibility a 1280 × 720. Pruebas ejecutadas sobre una copia con datos aislados. El aviso del motor headless sobre el almacén de certificados de Windows es independiente de los scripts; la ejecución gráfica finaliza sin errores.
+
+## Iconos y secuencia de avisos guiados · 2026-11-15
+
+- Escanear, Volver al domo, Procesar hielo y Recargar robot usan símbolos vectoriales reales en lugar de cuadritos de color. Mantienen 44 píxeles de alto; el texto ocupa hasta dos líneas dentro del ancho existente. El contenedor no aumenta para acomodar los iconos.
+- La lección de recuperación explica energía/oxígeno a cero, checkpoint de Cadete, reinicio de Ingeniero y la diferencia de la batería del robot, en el diálogo de Timmy. Se eliminaron el aviso automático y sus botones See/Ver. Las reglas reales de pérdida se mantienen.
+- La lección de recompensas ahora exige completar una tarea de agua con los controles reales del procesador. Solo al terminar el procesamiento se muestra la entrega de práctica; no se abre al entrar en la lección ni por un temporizador.
+- La lección del final empieza con una explicación de Timmy. Finalizar/Finish completa la misión de ejemplo y abre la celebración. Volver al menú de esa demostración permite continuar el tutorial.
+- Los textos nuevos están en EN/ES y las prácticas continúan aisladas de las partidas guardadas. Se corrigió además el parámetro del aviso de suministro, que mostraba el marcador literal en vez del nombre del módulo.
+
+Validación: cinco grupos aprobados (tutorial completo, alternativas, navegación principal, interacción y límites visuales). El curso completo también se ejecutó con renderizado nativo Compatibility a 1280 × 720 en ambos idiomas, con doce capturas revisadas. La prueba de Omitir espera a que termine el aterrizaje y el control esté visible antes de pulsarlo. Comprobaciones del tamaño estable, iconos, ausencia de avisos anticipados, acción real antes de la recompensa y explicación de recuperación en ambos modos.

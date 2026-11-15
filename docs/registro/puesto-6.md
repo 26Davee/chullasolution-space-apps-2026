@@ -61,3 +61,7 @@ Validación final de este pulido: ocho pruebas aprobadas y revisión de catorce 
 ### 2026-11-15 · tamaños estables y error EN/ES
 
 Codex asistió en la reproducción y corrección del botón que crecía al reconstruir un panel oculto, separación del texto y las acciones en las tarjetas de partidas, y conexión faltante de `guardar_idioma`. Incluye ajustes de interfaz en core/main.gd y preferencia de idioma en progression/save_manager.gd, además de los controles compartidos y pruebas de regresión. Se verificaron cinco grupos de pruebas y ocho capturas nativas EN/ES; los datos de prueba se aislaron de las partidas reales. Sin nuevas imágenes, fuentes externas, datos NASA ni cambios de balance.
+
+### 2026-11-15 · iconos y avisos con contexto en el tutorial
+
+Codex asistió en sustituir los cuadrados decorativos por iconos vectoriales de radar, domo, agua y batería, conservando tamaños compactos. Se cambió la recuperación del tutorial a explicación textual de ambos modos; la recompensa requiere completar una tarea real de procesamiento y la celebración final espera la explicación de Timmy y el botón Finalizar/Finish. Incluye traducciones EN/ES, corrección del nombre del módulo en el aviso de suministro, pruebas de acciones/avisos y documentación. Se ejecutaron cinco grupos de pruebas y un recorrido gráfico completo EN/ES con doce capturas. Sin imágenes generadas, nuevas fuentes, datos NASA ni cambios de balance o reglas de la partida.

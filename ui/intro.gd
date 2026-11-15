@@ -28,9 +28,6 @@ var done := false
 var _last_hint := ""
 var _last_actions: Dictionary = {}
 var _notice_opened := false
-var _notice_pending := false
-var _step_revision := 0
-var _recovery: Control
 var _transitioning := false
 var _water_before := 0.0
 var _shield_before := 0.0
@@ -41,9 +38,6 @@ var _settings_visited: Dictionary = {}
 var _awaiting_solve := false
 var _focused_target := 0
 var _profile: Dictionary = {}
-var _recovery_demos: Dictionary = {}
-var _recovery_buttons: Dictionary = {}
-var _recovery_continue: Button
 var _progress: Label
 func apply_profile_dict(profile: Dictionary) -> void:
     # Profile belongs to the menu. The common lesson never assigns name or mode.
@@ -111,8 +105,6 @@ func _ready() -> void:
     game._hud._timmy_btn.pressed.connect(_repeat)
     _show_step()
 func _show_step() -> void:
-    _step_revision += 1
-    _notice_pending = false
     stage = 0
     done = _completed_steps.has(step)
     _last_actions.clear()
@@ -131,7 +123,7 @@ func _show_step() -> void:
     if game.placement_system.is_placing(): game.placement_system.cancel_placement()
     back_button.disabled = index == 0
     primary_button.text = tr("tutorial.yes") if step == "ready" else tr("v2.next")
-    var passive := step in ["arrival","base","cycle","ready"] or RESOURCE_IDS.has(step)
+    var passive := step in ["arrival","base","cycle","recovery","ready"] or RESOURCE_IDS.has(step)
     if passive: done = true
     if step == "expedition":
         game.ice.discovered = ["crater"]
@@ -144,7 +136,7 @@ func _show_step() -> void:
         state.energia_robot = 45
         game._hud.set_state(game._bridge.get_state())
         _battery_before = state.energia_robot
-    if step == "processing":
+    if step in ["processing","supplies"]:
         state.fijar_recurso("agua",20)
         state.hielo = maxi(3,state.hielo)
         _ensure_processor()
@@ -168,7 +160,6 @@ func _show_step() -> void:
     else:
         state.tiempo_juego = 0
         state.es_dia = true
-    if step in ["supplies","recovery","ending"] and not done: _auto_notice(step)
     _refresh_guide()
 func _ensure_processor() -> void:
     if state.procesador_instalado: return
@@ -180,6 +171,8 @@ func _ensure_processor() -> void:
 func _on_action(action: String, payload: Dictionary) -> void:
     _last_actions[action] = payload
     match step:
+        "supplies":
+            if action == "run_processing" and game._action == "processing": stage = 1
         "construction":
             if action == "build_module": stage = 1
         "expedition":
@@ -222,10 +215,9 @@ func _process(_delta: float) -> void:
     if step == "construction" and stage == 1 and game.estructuras_colocadas.get_children().any(func(node): return str(node.get_meta("piece_id","")) == "panel_solar"): _complete()
     if step == "expedition" and stage >= 3 and game.ice.phase == "idle" and state.hielo > 0: _complete()
     if step == "expedition" and stage >= 3 and game.ice.phase == "idle" and state.hielo == 0: stage = 2
-    if step in ["supplies","recovery","ending"] and not done and not _notice_opened and not _notice_pending and not is_instance_valid(game._modal_layer): _auto_notice(step)
-    if step == "recovery" and _notice_opened and not done and not is_instance_valid(game._modal_layer):
-        _notice_opened = false
-        _auto_notice("recovery")
+    # A reward follows a completed action; the finale requires an explicit click.
+    if step == "supplies" and stage == 1 and not done and not _notice_opened and state.agua > _water_before and game._action.is_empty():
+        _open_lesson_notice("supplies")
     if step == "processing" and state.agua > _water_before and game._action.is_empty(): _complete()
     if step == "repair" and state.escudo > _shield_before and game._action.is_empty(): _complete()
     if step == "recharge" and state.energia_robot >= 99: _complete()
@@ -250,7 +242,7 @@ func _refresh_guide() -> void:
     var drawer: Panel = game._drawer
     var open := drawer.visible
     var kind: String = drawer.kind if open else ""
-    if done and not (RESOURCE_IDS.has(step) or step in ["arrival","base","cycle","ready"]):
+    if done and not (RESOURCE_IDS.has(step) or step in ["arrival","base","cycle","recovery","ready"]):
         text = tr("lesson.close")
         if is_instance_valid(game._modal_layer): target = _find_button(tr("live.continue"),game._modal_layer)
         elif open: target = drawer.get_node("Header/CloseButton")
@@ -294,7 +286,7 @@ func _refresh_guide() -> void:
                 else:
                     text = tr("lesson.wait")
                     if game.ice.phase == "blocked": target = _find_button(tr("guide.retry"))
-            "processing":
+            "processing","supplies":
                 if not game._action.is_empty(): text = tr("lesson.wait")
                 elif kind == "processing": target = _find_button(tr("live.process_start_btn"))
                 elif kind == "more": target = _find_button(tr("live.processing"))
@@ -317,13 +309,9 @@ func _refresh_guide() -> void:
                     else: target = game._hud.dock_buttons.more
                 elif kind == "messages": target = _find_button(tr("lesson.solve"))
                 else: target = game._hud._storm_btn
-            "recovery":
-                if is_instance_valid(game._modal_layer):
-                    target = _recovery_buttons.get("cadet" if not _recovery_demos.has("cadet") else "engineer") if _recovery_demos.size() < 2 else _recovery_continue
+            "recovery": target = primary_button
             "ending":
-                if is_instance_valid(game._modal_layer): target = _find_button(tr("live.home"),game._modal_layer)
-            "supplies":
-                if is_instance_valid(game._modal_layer): target = _find_button(tr("live.continue"),game._modal_layer)
+                target = _find_button(tr("live.home"),game._modal_layer) if is_instance_valid(game._modal_layer) else primary_button
             "letters","upgrades","science":
                 var section: String = {"letters":"messages"}.get(step,step)
                 if kind == section:
@@ -337,21 +325,23 @@ func _refresh_guide() -> void:
                 elif kind == "more": target = _find_button(tr("live."+section))
                 else: target = game._hud.dock_buttons.more
     var modal_open := is_instance_valid(game._modal_layer)
-    if modal_open and step == "recovery": text = tr("coach.recovery")
-    if modal_open and step == "supplies": text = tr("coach.reward")
+    if modal_open and step == "supplies":
+        text = tr("coach.reward")
+        target = _find_button(tr("live.continue"),game._modal_layer)
     if modal_open and step == "ending": text = tr("visual.ending_hint")
-    if done and not open and not modal_open and not RESOURCE_IDS.has(step) and step not in ["arrival","base","cycle","ready"]:
+    if done and not open and not modal_open and not RESOURCE_IDS.has(step) and step not in ["arrival","base","cycle","recovery","ready"]:
         text = tr("visual.continue_hint")
     if step == "alerts" and done: text = tr("lesson.solved")
     back_button.text = tr("v2.back")
     repeat_button.text = tr("v2.repeat")
     skip_button.text = tr("lesson.skip")
-    primary_button.text = tr("tutorial.yes" if step == "ready" else "v2.next")
+    var finale_prompt := step == "ending" and not done and not _notice_opened
+    primary_button.text = tr("lesson.finish_mission" if finale_prompt else "tutorial.yes" if step == "ready" else "v2.next")
     dialogue_label.text = text
     _layout_dialogue(modal_open)
     _progress.text = str(index+1)+" / "+str(STEPS.size())
     bubble.tooltip_text = tr("lesson.training")+" · "+str(index+1)+"/"+str(STEPS.size())
-    primary_button.disabled = not done
+    primary_button.disabled = not done and not finale_prompt
     coach.point_at(target,"",false,false)
     if is_instance_valid(target) and target.focus_mode != FOCUS_NONE and not (target is BaseButton and target.disabled):
         var id := target.get_instance_id()
@@ -362,7 +352,11 @@ func _refresh_guide() -> void:
         _last_hint = text
         if is_instance_valid(voice): voice.speak(text,language)
 func _advance() -> void:
-    if not done or _transitioning: return
+    if _transitioning: return
+    if step == "ending" and not done and not _notice_opened:
+        _open_lesson_notice("ending")
+        return
+    if not done: return
     if step == "ready":
         _finish()
         return
@@ -378,57 +372,20 @@ func _leave_notice() -> void:
     if is_instance_valid(game._modal_layer): game._close_modal()
     game.session.finished = false
     _complete()
-func _auto_notice(expected: String) -> void:
-    if _notice_pending: return
-    _notice_pending = true
-    var revision := _step_revision
-    await get_tree().create_timer(1.0).timeout
-    if revision != _step_revision: return
-    _notice_pending = false
-    if not is_inside_tree() or step != expected or done or _transitioning or is_instance_valid(game._modal_layer): return
+func _open_lesson_notice(expected: String) -> void:
+    if step != expected or done or _notice_opened or _transitioning or is_instance_valid(game._modal_layer): return
     _notice_opened = true
+    game._close_drawer()
     if expected == "supplies":
         var sm: Node = state.obtener_save_manager()
         sm.registrar_mision_completada("mision_01",3,"carta_mision_01")
         game.session.inventory["panel_solar"] = int(game.session.inventory.get("panel_solar",0))+1
-        game._open_reward({"id":"mision_01","stars":3,"supplies":{"panel_solar":1}})
-    elif expected == "recovery":
-        _open_recovery()
-    else:
+        game._open_reward({"id":"mision_01","stars":3,"supplies":{"panel_solar":1},"title":tr("lesson.reward_objective")})
+    elif expected == "ending":
         var sm: Node = state.obtener_save_manager()
         for mission in game.session.mm.obtener_todas_las_misiones():
             if not sm.esta_mision_completada(str(mission.id)): sm.registrar_mision_completada(str(mission.id),1,"carta_"+str(mission.id))
         game._open_victory()
-func _open_recovery() -> void:
-    var panel: Control = game._open_modal("training_recovery",tr("recovery.title"),Vector2(800,460))
-    (panel.get_child(1) as Button).hide()
-    _recovery_demos.clear()
-    _recovery_buttons.clear()
-    UI.label(panel,tr("recovery.trigger"),Rect2(28,74,744,36),20,UI.GOLD,true)
-    var result = UI.label(panel,tr("recovery.battery"),Rect2(28,334,744,48),17,UI.CYAN)
-    var continue_btn = UI.button(panel,tr("live.continue"),Rect2(516,394,256,42),func():
-        game._close_modal()
-        _complete()
-    ,true)
-    _recovery_continue = continue_btn
-    continue_btn.disabled = true
-    for i in 2:
-        var id: String = ["cadet","engineer"][i]
-        var card = UI.panel(panel,Rect2(28+i*382,124,362,194),Color("#15364d"),16)
-        UI.label(card,tr("recovery."+id+".title"),Rect2(16,12,330,34),22,UI.WHITE,true)
-        UI.label(card,tr("recovery."+id+".short"),Rect2(16,56,330,86),19,UI.WHITE)
-        var button = UI.button(card,tr("recovery."+id+".demo"),Rect2(16,148,330,36),func():
-            _recovery_demos[id] = true
-            result.text = tr("recovery."+id+".result")
-            voice.speak(result.text,language)
-            var tween = create_tween()
-            tween.tween_property(card,"modulate:a",0.3,0.2)
-            tween.tween_property(card,"modulate:a",1.0,0.3)
-            continue_btn.disabled = _recovery_demos.size() != 2
-        ,true)
-        _recovery_buttons[id] = button
-        button.name = "Recovery_"+id
-        button.add_theme_font_size_override("font_size",15)
 func _finish() -> void:
     if _transitioning: return
     _transitioning = true

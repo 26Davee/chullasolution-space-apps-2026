@@ -120,6 +120,12 @@ func _draw() -> void:
             draw_polyline(PackedVector2Array([Vector2(0,-16),Vector2(16,13),Vector2(-16,13),Vector2(0,-16)]), ink, 3, true)
             draw_line(Vector2(0,-5), Vector2(0,4), ink, 3, true)
             draw_circle(Vector2(0,9), 2, ink)
+        "radar":
+            draw_arc(Vector2.ZERO,16,0,TAU,32,ink,2.5,true)
+            draw_arc(Vector2.ZERO,8,0,TAU,24,ink,1.8,true)
+            draw_line(Vector2.ZERO,Vector2(10,-12),ink,2.8,true)
+            draw_circle(Vector2(-9,5),3,ink)
+            draw_circle(Vector2(8,7),2,ink)
         "target":
             draw_arc(Vector2.ZERO, 11, 0, TAU, 24, ink, 2.8, true)
             draw_circle(Vector2.ZERO, 3.2, ink)
