@@ -50,6 +50,11 @@ enum State { IDLE, PLACING }
 ## Si es true la pieza se inclina según la normal del terreno.
 @export var align_to_normal: bool = false
 
+@export_group("Domo")
+@export var restrict_to_dome: bool = true
+@export var dome_center: Vector3 = Vector3.ZERO
+@export var dome_inner_radius: float = 16.8
+
 # --- Aspecto del holograma -------------------------------------------------
 @export_group("Holograma")
 @export var valid_color: Color = Color(0.2, 0.95, 0.85, 0.45)
@@ -123,8 +128,25 @@ func cancel_placement() -> void:
 	placement_cancelled.emit(id)
 
 
+func confirm_current() -> void:
+	if state == State.PLACING:
+		_try_confirm(false)
+
+
 func is_placing() -> bool:
 	return state == State.PLACING
+
+
+func get_ghost_position() -> Vector3:
+	return _ghost.global_position if is_instance_valid(_ghost) else Vector3.ZERO
+
+
+func has_valid_target() -> bool:
+	return _has_target and _is_valid
+
+
+func get_reject_reason() -> String:
+	return _reject_reason
 
 
 func rotate_piece(steps: int = 1) -> void:
@@ -168,6 +190,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func _update_preview() -> void:
 	if camera == null or _ghost == null:
 		return
+	var vp := get_viewport()
+	if vp != null and vp.gui_get_hovered_control() != null:
+		return
 
 	var space := get_world_3d().direct_space_state
 	var mouse := get_viewport().get_mouse_position()
@@ -210,6 +235,9 @@ func _update_preview() -> void:
 	if slope > max_slope_deg:
 		valid = false
 		_reject_reason = "Pendiente demasiado pronunciada (%.0f°)" % slope
+	elif restrict_to_dome and not _ghost.fits_within_radius(dome_center, dome_inner_radius):
+		valid = false
+		_reject_reason = "outside_dome"
 	elif _ghost.overlaps(space, pieces_mask):
 		valid = false
 		_reject_reason = "Choca con otra pieza"

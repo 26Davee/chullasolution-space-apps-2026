@@ -124,53 +124,16 @@ script = ExtResource("2_acxx4")
 [node name="Capsula" type="Node3D" parent="." unique_id=2077990938 instance=ExtResource("4_timv7")]
 
 [node name="Domo" type="Node3D" parent="." unique_id=2058725208 instance=ExtResource("5_7vrhy")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 script = ExtResource("6_on222")
 
 [node name="TanqueAgua" type="Node3D" parent="." unique_id=185383570 instance=ExtResource("9_7ikn3")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 17.2, 0, 3.4)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 11.5, 0, 2.5)
 
 [node name="CraterHielo" type="Node3D" parent="." unique_id=358505797 instance=ExtResource("11_xqo0m")]
-transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -13.5, 0, 9.5)
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -21, 0, 14)
 
 [node name="RoverLunar" type="Node3D" parent="." unique_id=743341295 instance=ExtResource("12_4kc3d")]
 transform = Transform3D(-0.46947157, 0, 0.88294756, 0, 1, 0, -0.88294756, 0, -0.46947157, 5.2, 0.07, 8.1)
-
-[node name="Camino" type="Node3D" parent="." unique_id=456449411]
-
-[node name="Borde" type="MeshInstance3D" parent="Camino" unique_id=26867587]
-transform = Transform3D(1, 0, 0, 0, 0.045, 0, 0, 0, 1, 0, 0, 0)
-material_override = ExtResource("13_d4tp1")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_pfygf")
-
-[node name="Losa" type="MeshInstance3D" parent="Camino" unique_id=435919944]
-transform = Transform3D(1, 0, 0, 0, 0.06, 0, 0, 0, 1, 0, 0.02, 0)
-material_override = ExtResource("14_he6tx")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_bfvd5")
-
-[node name="Malla_ambar" type="MeshInstance3D" parent="Camino" unique_id=2064612511]
-material_override = ExtResource("15_v6v0w")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_npkiq")
-
-[node name="CaminoCrater" type="Node3D" parent="." unique_id=1951525656]
-
-[node name="Borde" type="MeshInstance3D" parent="CaminoCrater" unique_id=1821748231]
-transform = Transform3D(1, 0, 0, 0, 0.045, 0, 0, 0, 1, 0, 0, 0)
-material_override = ExtResource("13_d4tp1")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_0uqo8")
-
-[node name="Losa" type="MeshInstance3D" parent="CaminoCrater" unique_id=1693049639]
-transform = Transform3D(1, 0, 0, 0, 0.06, 0, 0, 0, 1, 0, 0.02, 0)
-material_override = ExtResource("14_he6tx")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_rldex")
-
-[node name="Malla_ambar" type="MeshInstance3D" parent="CaminoCrater" unique_id=552535057]
-material_override = ExtResource("15_v6v0w")
-cast_shadow = 0
-mesh = SubResource("ArrayMesh_l861m")
 
 

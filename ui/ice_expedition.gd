@@ -4,7 +4,7 @@ signal changed()
 const Planner = preload("res://interaction/route_planner.gd")
 const Binder = preload("res://interaction/station_bindings.gd")
 const ZONES := [
-	{"id":"crater","name":"zone_crater","position":Vector3(-13.5,0,9.5),"stock":18},
+	{"id":"crater","name":"zone_crater","position":Vector3(-21,0,14),"stock":18},
 	{"id":"ridge","name":"zone_ridge","position":Vector3(-22,0,-9),"stock":24},
 	{"id":"basin","name":"zone_basin","position":Vector3(19,0,17),"stock":30}]
 var game: Node3D
@@ -28,9 +28,15 @@ func setup(host: Node3D) -> void:
 	Binder.bind(_zones.crater,"expedition")
 func _gs() -> Node: return game.get_node("/root/GameState")
 func zone(id: String) -> Dictionary:
+	var factor := float(game._dome_factor()) if game != null and game.has_method("_dome_factor") else 1.0
 	for item in ZONES:
-		if str(item.id) == id: return item
-	return ZONES[0]
+		if str(item.id) == id:
+			var out: Dictionary = item.duplicate(true)
+			out["position"] = Vector3(item.position) * factor
+			return out
+	var fallback: Dictionary = ZONES[0].duplicate(true)
+	fallback["position"] = Vector3(ZONES[0].position) * factor
+	return fallback
 func discover() -> void:
 	for item in ZONES:
 		if not discovered.has(str(item.id)):
@@ -47,6 +53,11 @@ func _spawn_zone(id: String) -> void:
 	node.scale = Vector3.ONE * 0.72
 	Binder.bind(node,"expedition")
 	_zones[id] = node
+func sync_zone_positions() -> void:
+	for id in _zones:
+		var node := _zones[id] as Node3D
+		if is_instance_valid(node):
+			node.position = zone(str(id)).position
 func start(id: String) -> bool:
 	if phase != "idle":
 		game._show_toast(game.gx("trip_busy"))
@@ -106,7 +117,8 @@ func tick(delta: float) -> void:
 				changed.emit()
 func arrived(destination: Vector3) -> void:
 	if phase == "idle": return
-	if game._robot_distance_to_dome() <= game.DOME_RECHARGE_RADIUS and phase in ["returning","blocked"]:
+	var dome_radius := float(game._dome_recharge_radius()) if game != null and game.has_method("_dome_recharge_radius") else float(game.DOME_RECHARGE_RADIUS)
+	if game._robot_distance_to_dome() <= dome_radius and phase in ["returning","blocked"]:
 		_finish_return()
 		return
 	if phase not in ["going","returning"]: return

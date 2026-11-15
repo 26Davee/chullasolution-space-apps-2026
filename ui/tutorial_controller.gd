@@ -22,8 +22,6 @@ func record_action(action: String) -> void:
     completed_actions[action] = true
 
 func can_advance() -> bool:
-    if step_id == "age" and player.age_group.is_empty():
-        return false
     var required := target()
     return required.is_empty() or completed_actions.has(required)
 

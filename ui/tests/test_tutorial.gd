@@ -94,14 +94,24 @@ func run() -> void:
         {"age":"7_9", "mode":"cadete", "language":"en"},
         {"age":"10_12", "mode":"ingeniero", "language":"es"}
     ]:
+        await test_new_slot_setup(test_case)
         await run_flow(test_case)
+    await test_direct_tutorial_launch()
     check(completed_flows == 2, "Both full UI flows must finish without script exceptions")
     await test_bridge()
     await test_catalog_and_purchases()
-    var clock = load("res://ui/mission_clock.gd")
-    check(clock.display({"tiempo_juego": 240.0}) == {"year":1,"month":1,"day":1,"time":"18:00"}, "Sunset agrees with mission clock at 18:00")
-    check(clock.display({"tiempo_juego": 480.0}) == {"year":1,"month":1,"day":2,"time":"06:00"}, "Next sunrise agrees with 06:00")
-    check(clock.display({"tiempo_juego": 172680.0}) == {"year":2,"month":1,"day":1,"time":"00:00"}, "Calendar carries months and years")
+    var clock = preload("res://ui/mission_clock.gd")
+    check(clock.display({"tiempo_juego": 240.0}).get("time") == "18:00", "Sunset agrees with mission clock at 18:00")
+    check(clock.display({"tiempo_juego": 480.0}) == {"year":1,"month":1,"day":30,"time":"06:00"}, "Next sunrise reaches Earth day 30 at 06:00")
+    var after_30: Dictionary = clock.snapshot({"tiempo_juego": 490.0})
+    check(int(after_30.get("completed_months", 0)) == 1 and int(after_30.get("day", 0)) == 1, "Rollover after 30 days starts completed month 1, day 1")
+    TranslationServer.set_locale("es")
+    var cal_d1: String = clock.format_calendar(clock.snapshot({"tiempo_juego": 0.0}))
+    var cal_m1: String = clock.format_calendar(after_30)
+    var cal_m2: String = clock.format_calendar(clock.snapshot({"tiempo_juego": 980.0}))
+    check(cal_d1 == "Día 1" and not (":" in cal_d1), "Day-only clock hides hours before 30 days")
+    check(cal_m1 == "Mes 1 · Día 1" and cal_m2 == "Mes 2 · Día 1", "Month counter increments every 30 days starting at 1")
+    check(clock.display({"tiempo_juego": 5860.0}).get("year") == 2, "Calendar carries months into year 2")
     check(clock.display({"dia_mision": 6, "minutos_mision": 125}) == {"year":1,"month":1,"day":6,"time":"02:05"}, "Authoritative mission clock overrides projection")
     if failures.is_empty():
         print("PASS: both full tutorials, EN/ES, mouse/keyboard, age gates, HUD targets, panels, profile, providers, failure-zero edge, dynamic maximum and authoritative stars")
@@ -109,12 +119,54 @@ func run() -> void:
         print("FAIL: ", failures)
     quit(0 if failures.is_empty() else 1)
 
+func test_new_slot_setup(test_case: Dictionary) -> void:
+    root.size = Vector2i(1280, 720)
+    var setup: Control = preload("res://ui/new_slot_setup.gd").new()
+    setup.slot_id = 2
+    setup.language = test_case.language
+    var confirmed_profiles: Array[Dictionary] = []
+    setup.confirmed.connect(func(p: Dictionary): confirmed_profiles.append(p))
+    root.add_child(setup)
+    await process_frame
+    var avatar = setup.astronaut_preview
+    check(avatar.get_child(0).transparent_bg, "Setup astronaut viewport keeps a transparent background")
+    check(avatar._model.scene_file_path == "res://assets/3d/robot_humanoide.tscn", "Original P3 robot scene is reused")
+    var rotation_before: float = avatar._model.rotation.y
+    await create_timer(0.1).timeout
+    check(absf(avatar._model.rotation.y - rotation_before) > 0.05, "Astronaut spins visibly faster")
+    check(setup.start_button.disabled, "Difficulty/age must be selected explicitly before starting")
+    setup.name_field.text = "Alex"
+    setup.name_field.text_changed.emit("Alex")
+    click(setup.age_buttons[test_case.age])
+    check(not setup.start_button.disabled, "Selecting mode enables Start")
+    click(setup.start_button)
+    check(confirmed_profiles.size() == 1 and confirmed_profiles[0].mode == test_case.mode and confirmed_profiles[0].nickname == "Alex", "NewSlotSetup emits canonical profile")
+    setup.queue_free()
+    await process_frame
+
+func test_direct_tutorial_launch() -> void:
+    var step_data := preload("res://ui/tutorial_steps.gd")
+    check(step_data.IDS.size() == 18 and not step_data.IDS.has("name") and not step_data.IDS.has("age"), "Tutorial removed name/age steps and renumbered to 18 steps")
+    var intro: Control = load("res://ui/intro.tscn").instantiate()
+    intro.launch_direct_to_game = true
+    intro.auto_start_tutorial = true
+    intro.apply_profile_dict({"nickname":"Alex", "age_group":"7_9", "language":"en"})
+    var emitted: Array[Dictionary] = []
+    intro.mission_requested.connect(func(p: Dictionary): emitted.append(p))
+    root.add_child(intro)
+    await process_frame
+    intro._skip_tutorial()
+    check(emitted.size() == 1 and bool(emitted[0].get("tutorial_completed", false)), "First-time tutorial emits mission_requested directly without second home menu")
+    intro.queue_free()
+    await process_frame
+
 func run_flow(test_case: Dictionary) -> void:
     root.size = Vector2i(1280, 720)
     var starts_before := starts.size()
     var pauses: Array[bool] = []
     var resumes: Array[Dictionary] = []
     var intro: Control = load("res://ui/intro.tscn").instantiate()
+    intro.apply_profile_dict({"nickname":"Alex", "age_group":test_case.age, "language":test_case.language})
     root.add_child(intro)
     await process_frame
     var original: Node = intro.voice
@@ -135,26 +187,6 @@ func run_flow(test_case: Dictionary) -> void:
         attempts += 1
         intro._finish_reveal()
         var before: String = intro.step
-        if before == "name":
-            var avatar = intro.body.find_children("*", "SubViewportContainer", true, false)[0]
-            check(avatar.get_child(0).transparent_bg, "Astronaut viewport keeps a transparent background")
-            check(avatar._model.scene_file_path == "res://assets/3d/robot_humanoide.tscn", "Original P3 robot scene is reused")
-            var rotation_before: float = avatar._model.rotation.y
-            await create_timer(0.1).timeout
-            check(absf(avatar._model.rotation.y - rotation_before) > 0.05, "Astronaut spins visibly faster")
-            intro.name_field.text = "Alex"
-            intro.name_field.text_changed.emit("Alex")
-            check(root.gui_get_focus_owner() == intro.name_field, "Name input receives focus")
-            key(KEY_ENTER)
-            check(intro.step == "age", "Enter advances exactly once")
-            continue
-        if before == "age":
-            check(intro.primary_button.disabled, "Age must be selected explicitly")
-            click(intro.primary_button)
-            check(intro.step == "age", "Disabled Continue cannot bypass age")
-            click(intro._age_buttons[test_case.age])
-            check(intro.tutorial.player.mode_id() == test_case.mode, "Mode follows the selected age")
-            check(not intro.primary_button.disabled, "Age selection enables Continue")
         var target: String = intro.tutorial.target()
         if not target.is_empty():
             check(intro.primary_button.disabled, "Required tutorial action gates Continue: " + target)

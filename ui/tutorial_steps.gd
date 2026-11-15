@@ -1,7 +1,7 @@
 extends RefCounted
 ## One shared flow; mode-specific copy is resolved from the profile.
 const IDS := [
-    "arrival", "introduce", "name", "age", "base", "energy", "water",
+    "arrival", "introduce", "base", "energy", "water",
     "oxygen", "shield", "robot", "construction", "expedition",
     "processing", "repair", "missions", "upgrades", "science",
     "cycle", "recovery", "ready"
@@ -9,8 +9,6 @@ const IDS := [
 const DEFINITIONS := {
     "arrival": {"text": "v2.arrival", "typewriter": true},
     "introduce": {"text": "v2.introduce", "typewriter": true},
-    "name": {"text": "v2.name", "input": "nickname"},
-    "age": {"text": "tutorial.age", "input": "age"},
     "base": {"text": "tutorial.base", "hud": true},
     "energy": {"text": "tutorial.energy", "hud": true, "target": "resource:energia"},
     "water": {"text": "tutorial.water", "hud": true, "target": "resource:agua"},

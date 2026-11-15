@@ -50,6 +50,13 @@ func set_save_manager(manager: Node) -> void:
 
 
 func _on_progreso_cargado(_datos: Dictionary) -> void:
+	_triggers_cumplidos_actual.clear()
+	_eventos_registrados.clear()
+	_tiempo_en_noche_s = 0.0
+	_tiempo_riego_jardin_s = 0.0
+	_energia_min_noche = 100.0
+	_viajes_hielo_m11 = 0
+	_nubes_superadas_total = 0
 	if not _misiones.is_empty():
 		_seleccionar_primera_mision_pendiente()
 

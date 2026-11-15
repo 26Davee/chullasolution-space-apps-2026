@@ -109,6 +109,25 @@ func _draw() -> void:
             draw_rect(Rect2(-4,-2,8,9),ink)
             draw_line(Vector2(0,-8),Vector2(0,-18),ink,2,true)
             draw_line(Vector2(0,-18),Vector2(10,-13),ink,2,true)
+        "more":
+            for x in [-11.0, 0.0, 11.0]:
+                draw_circle(Vector2(x, 0), 3.4, ink)
+        "audio":
+            draw_colored_polygon(PackedVector2Array([Vector2(-15,-6),Vector2(-8,-6),Vector2(0,-13),Vector2(0,13),Vector2(-8,6),Vector2(-15,6)]), ink)
+            draw_arc(Vector2(2,0), 7, -0.75, 0.75, 16, ink, 2.8, true)
+            draw_arc(Vector2(2,0), 13, -0.8, 0.8, 16, ink, 2.8, true)
+        "warning":
+            draw_polyline(PackedVector2Array([Vector2(0,-16),Vector2(16,13),Vector2(-16,13),Vector2(0,-16)]), ink, 3, true)
+            draw_line(Vector2(0,-5), Vector2(0,4), ink, 3, true)
+            draw_circle(Vector2(0,9), 2, ink)
+        "target":
+            draw_arc(Vector2.ZERO, 11, 0, TAU, 24, ink, 2.8, true)
+            draw_circle(Vector2.ZERO, 3.2, ink)
+            for d in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
+                draw_line(d * 11, d * 17, ink, 2.6, true)
+        "close":
+            draw_line(Vector2(-10,-10), Vector2(10,10), ink, 3.2, true)
+            draw_line(Vector2(10,-10), Vector2(-10,10), ink, 3.2, true)
     draw_set_transform(Vector2.ZERO)
 
 func _box(color: Color, radius: int) -> StyleBoxFlat:

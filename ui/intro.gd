@@ -82,6 +82,9 @@ var audio_toggle: Button
 var _voice_signature := ""
 var _voice_state := "disabled"
 var _talking := false
+var launch_direct_to_game := false
+var auto_start_tutorial := false
+var preconfigured_profile: Dictionary = {}
 
 func _ready() -> void:
     UI.register_translations()
@@ -102,10 +105,14 @@ func _ready() -> void:
     bridge.content_changed.connect(_refresh_progression_view)
     bridge.state_changed.connect(_on_game_state_changed)
     bridge.recovery_requested.connect(_on_recovery_requested)
+    if not preconfigured_profile.is_empty():
+        apply_profile_dict(preconfigured_profile)
     _build()
     resized.connect(_resize_canvas)
     _resize_canvas()
     _render(false)
+    if auto_start_tutorial:
+        call_deferred("_start_landing")
     var timer := Timer.new()
     timer.wait_time = 0.5
     timer.timeout.connect(_update_audio_ui)
@@ -287,22 +294,7 @@ func _render_landing() -> void:
     primary_button.grab_focus()
 
 func _render_dialogue() -> void:
-    if step == "age":
-        _label(body, _t("profile.age_title"), Rect2(360, 164, 850, 56), 34, WHITE, true)
-        _age_card("7_9", Rect2(360, 246, 402, 176))
-        _age_card("10_12", Rect2(784, 246, 402, 176))
-    elif step == "name":
-        _panel(body, Rect2(948, 166, 250, 44), Color(0, 0, 0, 0.9), 12)
-        var astronaut_title := _label(body, _t("profile.astronaut"), Rect2(958, 171, 230, 34), 20, WHITE, true)
-        astronaut_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        astronaut_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-        var preview := preload("res://ui/astronaut_preview.gd").new()
-        preview.model_path = astronaut_model_path
-        preview.model_scale = astronaut_model_scale
-        preview.position = Vector2(958, 212)
-        preview.size = Vector2(230, 220)
-        body.add_child(preview)
-    elif step == "ready" or step == "done":
+    if step == "ready" or step == "done":
         _panel(body, Rect2(700, 346, 382, 70), Color(0.035, 0.1, 0.18, 0.94))
         _label(body, _display_name() + " · " + tr("mode." + tutorial.player.mode_id()), Rect2(722, 362, 340, 44), 24, GOLD, true)
     var bubble := _panel(body, Rect2(270, 474, 828, 214), Color(0.025, 0.075, 0.145, 0.97), 24)
@@ -317,20 +309,6 @@ func _render_dialogue() -> void:
     var key: String = tutorial.dialogue_key() if step != "done" else "tutorial.done"
     spoken_text = _t(key)
     dialogue_label = _label(body, spoken_text, Rect2(306, 508, 744, 82), 23, WHITE)
-    if step == "name":
-        dialogue_label.size.y = 42
-        name_field = LineEdit.new()
-        name_field.position = Vector2(306, 556)
-        name_field.size = Vector2(350, 48)
-        name_field.max_length = 18
-        name_field.text = nickname
-        name_field.placeholder_text = _t("v2.name_placeholder")
-        name_field.add_theme_stylebox_override("normal", _style(Color("#16354f"), Color("#7b9fb9"), 1))
-        name_field.add_theme_stylebox_override("focus", _style(Color("#16354f"), CYAN, 3))
-        body.add_child(name_field)
-        name_field.text_changed.connect(func(value: String): nickname = value)
-        name_field.text_submitted.connect(_submit_name)
-        _label(body, _t("v2.name_hint"), Rect2(680, 558, 380, 48), 17, Color("#c2d8e9"))
     var next_text := "tutorial.yes" if step == "ready" else "v2.next"
     if step == "done":
         next_text = "tutorial.review"
@@ -371,14 +349,14 @@ func _start_landing() -> void:
 
 func _skip_tutorial() -> void:
     if _transitioning: return
-    # Skipping explanations still asks for a name and age; it never silently picks a mode.
     if tutorial.player.age_group.is_empty():
-        tutorial.step_id = "name" if tutorial.player.nickname.strip_edges().is_empty() else "age"
-        _render()
-        return
+        tutorial.player.choose_age("7_9")
     tutorial.completed = true
     bridge.training = false
-    _transition_to("home")
+    if launch_direct_to_game:
+        mission_requested.emit(get_profile())
+    else:
+        _transition_to("home")
 
 func _set_landing(value: float) -> void:
     art.set("landing_progress", value)
@@ -409,6 +387,10 @@ func _advance() -> void:
         return
     if not tutorial.advance():
         return
+    if tutorial.completed and launch_direct_to_game:
+        voice.stop()
+        mission_requested.emit(get_profile())
+        return
     _render()
     if tutorial.completed:
         _transition_to("home")
@@ -427,6 +409,22 @@ func _submit_name(_value: String) -> void:
 
 func _display_name() -> String:
     return tutorial.player.display_name()
+
+func apply_profile_dict(profile: Dictionary) -> void:
+    var nick := str(profile.get("nickname", "")).strip_edges()
+    if not nick.is_empty():
+        tutorial.player.nickname = nick
+    var ag := str(profile.get("age_group", ""))
+    if ag.is_empty():
+        var m := str(profile.get("mode", "cadete"))
+        ag = "10_12" if (m == "engineer" or m == "ingeniero") else "7_9"
+    tutorial.player.locked = false
+    tutorial.player.choose_age(ag)
+    var lang := str(profile.get("language", ""))
+    if not lang.is_empty():
+        language = "es" if lang.to_lower().begins_with("es") else "en"
+        TranslationServer.set_locale(language)
+
 
 func get_profile() -> Dictionary:
     var profile: Dictionary = tutorial.player.export_profile(language, not voice.muted, tutorial.completed)
@@ -674,19 +672,13 @@ func _refresh_tutorial_controls(move_focus := true) -> void:
         return
     primary_button.disabled = not tutorial.can_advance()
     if is_instance_valid(_gate_hint):
-        if step == "age" and tutorial.player.age_group.is_empty():
-            _gate_hint.text = _t("tutorial.choose_age")
-        elif not tutorial.target().is_empty():
+        if not tutorial.target().is_empty():
             _gate_hint.text = _t("tutorial.action_done" if tutorial.can_advance() else "tutorial.try_control")
         else:
             _gate_hint.text = _t("ui.controls")
     if not move_focus or is_instance_valid(modal):
         return
-    if step == "name":
-        name_field.grab_focus()
-    elif step == "age" and tutorial.player.age_group.is_empty():
-        _age_buttons["7_9"].grab_focus()
-    elif primary_button.disabled and hud.visible:
+    if primary_button.disabled and hud.visible:
         if tutorial.target().begins_with("section:"): menu_button.grab_focus()
         else: hud.focus_target()
     else:

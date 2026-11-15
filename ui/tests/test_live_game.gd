@@ -23,19 +23,26 @@ func run() -> void:
 	game.set_process(false)
 	gs.set_process(false)
 	check(game._session_ready,"Live session initialized")
-	check(not game._mission_title.text.is_empty() and not game._mission_desc.text.is_empty(),"Real mission title and objective visible")
-	var last_x = -1.0
+	check(not game._hud._mission_label.text.is_empty() and not game._hud._clock.text.is_empty(),"Real mission pill and top telemetry visible")
+	var last_y = -1.0
 	for id in game._hud.IDS:
 		var card: Control = game._hud.resource_buttons[id]
-		check(card.position.y == 48 and card.position.x > last_x,"All five bars share a single ordered row: "+id)
-		last_x = card.position.x
+		check(card.position.x == 8 and card.position.y > last_y,"All five bars share a stacked column: "+id)
+		last_y = card.position.y
 	game._open_section_menu()
 	var before = gs.tiempo_juego
 	gs._process(2)
 	game._tick_expedition(2)
-	check(not gs.en_partida and gs.tiempo_juego == before,"Modal truly pauses world and clock")
-	check(not game.click_to_move.is_physics_processing(),"Movement pauses behind modal")
-	game._close_modal()
+	check(not gs.en_partida and gs.tiempo_juego == before,"Settings drawer truly pauses world and clock")
+	check(not game.click_to_move.is_physics_processing(),"Movement pauses behind pausing drawer")
+	game._close_drawer()
+	game._open_section_drawer("construction")
+	check(game._drawer.kind == "construction" and gs.en_partida and game.click_to_move.is_physics_processing(),"Construction drawer keeps world live")
+	game._close_drawer()
+	for sec in ["more", "expedition", "processing", "missions", "upgrades", "science", "messages", "timmy", "settings", "settings:language", "settings:audio", "settings:controls", "settings:exit"]:
+		game._open_section_drawer(sec)
+	check(game._drawer.kind == "settings:exit", "All new HUD drawers open cleanly")
+	game._close_drawer()
 	gs._process(1)
 	game._tick_fallback_simulation(1)
 	check(is_equal_approx(gs.tiempo_juego-before,1),"Clock advances exactly once")
@@ -151,6 +158,39 @@ func run() -> void:
 	main.iniciar_juego("cadete")
 	await frames()
 	check(main._juego.get_instance_id() == instance_id and gs.agua == 37,"Tutorial review preserves the expedition")
+	# Storm badge recovery reset: stale storm alert/active flags and badge must clear on recover()
+	gs.alerta_nube = true
+	gs.nube_activa = true
+	gs.tiempo_para_nube = 10.0
+	if is_instance_valid(main._juego._storm_badge):
+		main._juego._storm_badge.visible = true
+	main._juego.session.recover()
+	await frames()
+	check(not gs.alerta_nube and not gs.nube_activa and (main._juego._storm_badge == null or not main._juego._storm_badge.visible), "Storm badge and alert flags reset cleanly on checkpoint recovery")
+	# Multi-slot save isolation & delete
+	var slot_sm = preload("res://progression/save_manager.gd").new()
+	slot_sm.save_path = slot_sm.ruta_slot(1)
+	root.add_child(slot_sm)
+	slot_sm.borrar_slot(1)
+	slot_sm.borrar_slot(2)
+	slot_sm.seleccionar_slot(1)
+	slot_sm.guardar_expedicion({"current": {"state": {"tiempo_juego": 500.0}}}, {"nickname": "SlotUno", "mode": "cadet", "tutorial_completed": true})
+	slot_sm.seleccionar_slot(2)
+	slot_sm.guardar_expedicion({"current": {"state": {"tiempo_juego": 120.0}}}, {"nickname": "SlotDos", "mode": "engineer", "tutorial_completed": true})
+	var slots_list: Array = slot_sm.listar_slots()
+	check(slots_list.size() == 3 and slots_list[0].occupied and slots_list[1].occupied and not slots_list[2].occupied, "Three save slots report occupied/empty accurately")
+	slot_sm.seleccionar_slot(1)
+	check(str(slot_sm.obtener_datos_completos().get("perfil", {}).get("nickname", "")) == "SlotUno", "Switching slots restores slot 1 data without overwrite")
+	var slots_panel = preload("res://ui/save_slots_panel.gd").new()
+	slots_panel.save_manager = slot_sm
+	root.add_child(slots_panel)
+	await frames()
+	check(slots_panel.is_inside_tree(), "Save slots panel renders cleanly with 3 slots")
+	slots_panel.queue_free()
+	slot_sm.borrar_slot(2)
+	check(not slot_sm.leer_slot_resumen(2).occupied and slot_sm.leer_slot_resumen(1).occupied, "Deleting slot 2 clears only slot 2")
+	slot_sm.borrar_slot(1)
+	slot_sm.queue_free()
 	main.queue_free()
 	await frames()
 	print("LIVE FAILURES: ",failures)

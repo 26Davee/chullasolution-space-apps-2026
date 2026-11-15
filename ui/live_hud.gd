@@ -81,13 +81,13 @@ func refresh() -> void:
 		resource_buttons[id].add_theme_stylebox_override("normal", UI.style(Color("#102b46ee"), Color("#ff927a") if ratio <= 0.2 else Color("#536e87"), 2 if ratio <= 0.2 else 1))
 		if _target == "resource:"+id:
 			resource_buttons[id].add_theme_stylebox_override("normal", UI.style(Color("#22475d"),UI.GOLD,3))
-	var clock = Clock.display(_state)
-	_clock.text = tr("live.hours").format(clock)+" · "+tr("guide.dayphase" if Clock.is_day(_state) else "guide.nightphase")
+	var clock = Clock.snapshot(_state)
+	_clock.text = Clock.format_calendar(clock) + " · " + tr("guide.dayphase" if Clock.is_day(_state) else "guide.nightphase")
 	_phase_icon.kind = "sun" if Clock.is_day(_state) else "moon"
 	_phase_icon.tint = UI.GOLD if Clock.is_day(_state) else UI.CYAN
 	_phase_icon.queue_redraw()
 	_clock.add_theme_font_size_override("font_size",16)
-	_clock.tooltip_text = "%d / %d / %d" % [int(clock.day), int(clock.month), int(clock.year)]
+	_clock.tooltip_text = "%d / %d / %d" % [int(clock.day), int(clock.completed_months), int(clock.year)]
 	_cargo.text = "%s %d / 10      %s %d      %s" % [tr("live.ice"), int(_state.get("hielo", 0)), tr("live.stars"), int(_state.get("estrellas", 0)), tr("mode." + _mode)]
 
 func set_target(target: String) -> void:
