@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-14",
+  "tool": "Built-in image_gen",
+  "purpose": "Fictional low-poly game illustrations; not NASA photography or measured lunar maps",
+  "assets": [
+    {
+      "file": "solar-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: square illustration for a children's Godot Moon-base building card. Primary request: a charming low-poly solar-panel module on a small patch of faceted lunar ground, three rich blue solar panels with gold frames, small white and teal battery cabinet, clean readable silhouette. Style: polished playful low-poly 3D game art matching a cozy white-and-teal Moon outpost for ages 7–12, navy space background, warm golden sunlight, cool cyan rim light, no humans. Composition: centered whole module, generous margin, three-quarter isometric camera, square 1024x1024. No UI, no words, no letters, no watermark, no labels. This is a game illustration, not a scientific photograph."
+    },
+    {
+      "file": "processor-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Square 1024x1024 centered isometric module on a small patch of lunar ground: an adorable ice processing machine, transparent cyan ice hopper on its left with chunky ice cubes, enclosed white heater at center, transparent clean blue water reservoir on its right, connected short pipes. Show ice becomes stored liquid water inside machinery, not an outdoor pond. Whole object with generous margins."
+    },
+    {
+      "file": "oxygen-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Square 1024x1024 centered isometric oxygen generator module on a small patch of lunar ground: white rounded rectangular machine, two turquoise oxygen tanks, small blue water inlet tank, connected energy cable, gently glowing air pipe, clean simple child-friendly science-fiction life-support device. Whole object with generous margins."
+    },
+    {
+      "file": "garden-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Square 1024x1024 centered isometric lunar greenhouse module on a small patch of lunar ground: cozy transparent closed geodesic dome containing lush green plants and a few little orange vegetables in neat raised beds, white and teal sealed entrance and gold rim, Earth small in distant navy sky. Whole greenhouse with generous margins."
+    },
+    {
+      "file": "ice_map-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Landscape 1536x1024 almost top-down adventure map illustration, clear areas for UI markers. Gray-purple lunar plain, safe white teal dome outpost on the left at 15 percent width 65 percent height; winding clear trail leads to middle small crater at 52 percent width 46 percent height; branches to a deep dark icy crater at 80 percent width 28 percent height with subtle cyan ice flecks on its shadowed floor, and a rocky overlook at 80 percent width 78 percent height. Wide open spaces between landmarks for interactive map pins. No drawn route lines or text. No astronaut characters. Not a real Moon map."
+    },
+    {
+      "file": "repair-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Landscape 1536x1024 illustration centered on a white teal Moon habitat dome. One side has visibly broken protective outer hexagonal plates, with three clear gold mounting points and a nearby friendly little robotic repair arm holding a replacement plate, a small energy battery nearby. Warm light inside dome, broken area clearly visible but non-frightening and repairable. Large central dome fills 75 percent width. No people. This is a fictional protective shield."
+    },
+    {
+      "file": "playfield-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: illustration for a children's Godot Moon outpost game, ages 7–12. Polished charming low-poly 3D art, faceted lunar rocks, white and teal machinery, cyan glow and gold accents, navy space. Clear simple forms, vivid but cohesive. No words, no letters, no labels, no UI, no watermarks. Illustration not a scientific photograph. Wide 16:9 1536x864 gameplay background seen from a high three-quarter camera: Moon outpost in upper right with cozy transparent greenhouse dome, small white teal habitat and blue solar panels, a lander resting upper left, and winding path toward icy shadowed crater far right. Leave the central and lower-middle 55 percent lunar ground fairly empty, open and readable for a player character and interactive map buttons. Earth in far sky, rich navy stars, attractive purple low-poly mountain horizon, cinematic warm cyan/gold lights. No characters, no HUD, no interface or text."
+    }
+  ]
+}
