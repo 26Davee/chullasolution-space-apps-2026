@@ -246,12 +246,14 @@ func run() -> void:
 		var rcard: Control = lg._hud.resource_buttons[id]
 		var rrect: Rect2 = rcard.get_global_rect()
 		check(rrect.position.x >= 0.0 and rrect.end.x <= 1280.0 and rrect.end.y <= 720.0, "HUD resource card inside viewport: " + id)
-	for sec in ["construction", "missions", "upgrades", "messages", "settings:audio"]:
+	for sec in ["construction", "missions", "upgrades", "messages", "settings", "settings:language", "settings:audio", "settings:controls", "timmy"]:
 		lg._open_section_drawer(sec)
+		var immediate_rect: Rect2 = lg._drawer.get_global_rect()
+		var immediate_overflow: bool = lg._drawer._content.size.x > immediate_rect.size.x
 		await frames()
 		var drect: Rect2 = lg._drawer.get_global_rect()
 		check(drect.position.x >= 0.0 and drect.end.x <= 1280.0 and drect.end.y <= 720.0, "Drawer stays inside 1280x720: " + sec)
-		var overflow := false
+		var overflow: bool = immediate_overflow
 		for child in lg._drawer._content.get_children():
 			if child is Control and child.get_global_rect().end.x > drect.end.x + 1.0:
 				overflow = true

@@ -47,40 +47,75 @@ func cargar_progreso() -> Dictionary:
 	_datos = _crear_estructura_por_defecto()
 
 	if not FileAccess.file_exists(save_path):
-		if not _es_ruta_slots():
+		if _restaurar_desde_respaldo():
+			ultimo_error = "corrupt"
+			push_warning("SaveManager: Archivo principal ausente; se recuperó desde respaldo.")
+			guardar_progreso()
+		elif not _es_ruta_slots():
 			guardar_progreso()
 		progreso_cargado.emit(_datos.duplicate(true))
 		estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
 		return _datos.duplicate(true)
 
-	var archivo := FileAccess.open(save_path, FileAccess.READ)
-	if archivo == null:
-		ultimo_error = "read"
-		push_warning("SaveManager: No se pudo abrir %s. Usando valores por defecto." % save_path)
-		progreso_cargado.emit(_datos.duplicate(true))
-		return _datos.duplicate(true)
-
-	var texto := archivo.get_as_text()
-	archivo.close()
-
-	var json := JSON.new()
-	var err := json.parse(texto)
-	if err != OK or typeof(json.data) != TYPE_DICTIONARY:
+	var leido := _leer_json_diccionario(save_path)
+	if leido.is_empty() or not _es_estructura_valida(leido):
 		ultimo_error = "corrupt"
 		# Preserve the unreadable file; a valid backup is preferred to a fresh run.
 		DirAccess.copy_absolute(save_path, save_path + ".invalid")
-		var backup := JSON.new()
-		if FileAccess.file_exists(save_path + ".bak") and backup.parse(FileAccess.get_file_as_string(save_path + ".bak")) == OK and backup.data is Dictionary:
-			_combinar_con_defecto(backup.data)
-			respaldo_recuperado = true
+		if _restaurar_desde_respaldo():
+			guardar_progreso()
 		push_warning("SaveManager: Archivo inválido preservado; se usó el respaldo si estaba disponible.")
 		progreso_cargado.emit(_datos.duplicate(true))
+		estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
 		return _datos.duplicate(true)
 
-	_combinar_con_defecto(json.data)
+	_combinar_con_defecto(leido)
 	progreso_cargado.emit(_datos.duplicate(true))
 	estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
 	return _datos.duplicate(true)
+
+
+func _leer_json_diccionario(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var archivo := FileAccess.open(path, FileAccess.READ)
+	if archivo == null:
+		return {}
+	var texto := archivo.get_as_text()
+	archivo.close()
+	if texto.strip_edges().is_empty():
+		return {}
+	var json := JSON.new()
+	if json.parse(texto) != OK or typeof(json.data) != TYPE_DICTIONARY:
+		return {}
+	return json.data as Dictionary
+
+
+static func _es_estructura_valida(data: Variant) -> bool:
+	if not (data is Dictionary):
+		return false
+	var dict := data as Dictionary
+	var exp: Variant = dict.get("expedicion", {})
+	if not (exp is Dictionary):
+		return false
+	var exp_dict := exp as Dictionary
+	if exp_dict.is_empty():
+		return true
+	var cur: Variant = exp_dict.get("current", {})
+	var cur_ok := cur is Dictionary and (cur as Dictionary).get("state") is Dictionary
+	var cp: Variant = exp_dict.get("checkpoint", {})
+	var cp_ok := cp is Dictionary and (cp as Dictionary).get("state") is Dictionary
+	return cur_ok or cp_ok
+
+
+func _restaurar_desde_respaldo() -> bool:
+	for candidate in [save_path + ".bak", save_path + ".tmp"]:
+		var parsed := _leer_json_diccionario(candidate)
+		if not parsed.is_empty() and _es_estructura_valida(parsed) and (_datos_ocupados(parsed) or not _es_ruta_slots()):
+			_combinar_con_defecto(parsed)
+			respaldo_recuperado = true
+			return true
+	return false
 
 
 ## Escribe el estado actual del progreso en disco en formato JSON.
@@ -98,14 +133,15 @@ func guardar_progreso() -> bool:
 	archivo.flush()
 	var result := archivo.get_error()
 	archivo.close()
-	if result != OK:
+	if result != OK or not _es_estructura_valida(_leer_json_diccionario(temporary)):
 		ultimo_error = "write"
 		progreso_guardado.emit(false)
 		return false
-	if FileAccess.file_exists(save_path):
-		var existing := JSON.new()
-		if existing.parse(FileAccess.get_file_as_string(save_path)) == OK and existing.data is Dictionary:
-			DirAccess.copy_absolute(save_path, save_path + ".bak")
+	var current_valid := _leer_json_diccionario(save_path)
+	if not current_valid.is_empty() and _es_estructura_valida(current_valid):
+		var bak_tmp := save_path + ".bak.tmp"
+		if DirAccess.copy_absolute(save_path, bak_tmp) == OK:
+			DirAccess.rename_absolute(bak_tmp, save_path + ".bak")
 	var success := DirAccess.rename_absolute(temporary, save_path) == OK
 	if not success: ultimo_error = "write"
 	progreso_guardado.emit(success)
@@ -279,7 +315,7 @@ func seleccionar_slot(slot_id: int) -> Dictionary:
 func borrar_slot(slot_id: int) -> bool:
 	var id := clampi(slot_id, 1, MAX_SLOTS)
 	var target := ruta_slot(id)
-	for suffix in ["", ".bak", ".tmp", ".invalid"]:
+	for suffix in ["", ".bak", ".bak.tmp", ".tmp", ".invalid"]:
 		var fpath: String = target + str(suffix)
 		if FileAccess.file_exists(fpath):
 			DirAccess.remove_absolute(fpath)
@@ -319,10 +355,14 @@ func leer_slot_resumen(slot_id: int) -> Dictionary:
 	var target := ruta_slot(id)
 	if id == active_slot and save_path == target and _datos_ocupados(_datos):
 		data = _datos
-	elif FileAccess.file_exists(target):
-		var json := JSON.new()
-		if json.parse(FileAccess.get_file_as_string(target)) == OK and json.data is Dictionary:
-			data = json.data
+	else:
+		var primary := _leer_json_diccionario(target)
+		if not primary.is_empty() and _es_estructura_valida(primary):
+			data = primary
+		else:
+			var backup := _leer_json_diccionario(target + ".bak")
+			if not backup.is_empty() and _es_estructura_valida(backup):
+				data = backup
 	if data.is_empty() or not _datos_ocupados(data):
 		return {
 			"slot": id,
@@ -428,7 +468,13 @@ func marcar_tutorial_visto(visto: bool = true) -> void:
 
 
 func restaurar_progreso(datos: Dictionary) -> void:
+	var prev_exp: Variant = _datos.get("expedicion", {})
+	var prev_profile: Variant = _datos.get("perfil", {})
 	_datos = _crear_estructura_por_defecto()
+	if prev_exp is Dictionary and not (prev_exp as Dictionary).is_empty():
+		_datos["expedicion"] = (prev_exp as Dictionary).duplicate(true)
+	if prev_profile is Dictionary and not (prev_profile as Dictionary).is_empty():
+		_datos["perfil"] = (prev_profile as Dictionary).duplicate(true)
 	_combinar_con_defecto(datos)
 	progreso_cargado.emit(_datos.duplicate(true))
 	estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())

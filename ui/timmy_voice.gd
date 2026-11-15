@@ -52,11 +52,13 @@ static func pick_voice(voices: Array[Dictionary], language: String, chosen := ""
     return str(voices[0].get("id", ""))
 
 func speak(text: String, language: String) -> bool:
-    stop()
+    _pending_text = ""
     if muted or text.is_empty():
+        stop()
         return false
-    var status := status_code(language)
-    if status == "disabled" or status == "unsupported":
+    if not ProjectSettings.get_setting("audio/general/text_to_speech", false):
+        return false
+    if not DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
         return false
     var id := voice_id(language)
     if id.is_empty():
@@ -65,18 +67,25 @@ func speak(text: String, language: String) -> bool:
         _wait_time = 0.0
         _probe_time = 0.0
         return false
+    var is_windows := OS.get_name() == "Windows"
+    if not is_windows:
+        stop()
     _owner_id = get_instance_id()
-    DisplayServer.tts_speak(text, id, volume, 1.03, rate, int(get_instance_id() % 2147483647), true)
+    # Windows SAPI/OneCore can deadlock the main thread when interrupting or stopping an active utterance.
+    DisplayServer.tts_speak(text, id, volume, 1.03, rate, int(get_instance_id() % 2147483647), not is_windows)
     return true
 
 func stop() -> void:
     _pending_text = ""
     if ProjectSettings.get_setting("audio/general/text_to_speech", false):
         if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH) and _owner_id == get_instance_id():
-            DisplayServer.tts_stop()
+            if OS.get_name() != "Windows":
+                DisplayServer.tts_stop()
             _owner_id = 0
 
 func is_speaking() -> bool:
+    if _owner_id != get_instance_id():
+        return false
     if not ProjectSettings.get_setting("audio/general/text_to_speech", false):
         return false
     if not DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):

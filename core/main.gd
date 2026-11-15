@@ -12,15 +12,20 @@ var _slot_setup: Control
 var _transitioning = false
 var _fade_layer: CanvasLayer
 var _fade_token: int = 0
+var _quit_layer: CanvasLayer
+var _quit_prev_paused := false
+var _quitting := false
+var _saved_on_exit := false
 
 func _gs() -> Node:
 	return get_node("/root/GameState")
 func _ready() -> void:
+	get_tree().set_auto_accept_quit(false)
 	preload("res://ui/ui_kit.gd").register_translations()
 	var sm: Node = _gs().obtener_save_manager()
 	var data: Dictionary = sm.obtener_datos_completos()
 	var profile: Dictionary = data.get("perfil", {})
-	if profile.is_empty() and sm.hay_algun_slot_ocupado():
+	if sm._es_ruta_slots() and profile.is_empty() and sm.hay_algun_slot_ocupado():
 		for info in sm.listar_slots():
 			if bool(info.get("occupied", false)):
 				sm.seleccionar_slot(int(info.get("slot", 1)))
@@ -242,6 +247,8 @@ func cargar_slot(slot_id: int) -> void:
 	else:
 		_gs().modo_juego = str(sm.obtener_modo_preferido())
 	_play_with_fade()
+	if not sm.ultimo_error.is_empty() or sm.respaldo_recuperado:
+		call_deferred("_show_load_notice")
 
 func _play_with_fade() -> void:
 	_fade_token += 1
@@ -297,9 +304,75 @@ func _menu_options() -> void:
 func mostrar_menu_modo() -> void:
 	nueva_partida_en_slot(_gs().obtener_save_manager().active_slot)
 
+func _can_save_live_session() -> bool:
+	return is_instance_valid(_juego) and not _juego.is_queued_for_deletion() and bool(_juego.get("_session_ready")) and _juego.get("session") != null and not _juego.session.loading and is_instance_valid(_juego.get("estructuras_colocadas"))
+
+func _quit_cleanly() -> void:
+	if _quitting:
+		return
+	_quitting = true
+	if is_instance_valid(_juego) and is_instance_valid(_juego.get("_voice")):
+		_juego._voice.stop()
+	if is_instance_valid(_intro) and is_instance_valid(_intro.get("voice")):
+		_intro.voice.stop()
+	get_tree().quit()
+
+func _close_quit_confirm() -> void:
+	if is_instance_valid(_quit_layer):
+		_quit_layer.queue_free()
+		_quit_layer = null
+	if is_instance_valid(_juego):
+		_juego.set_paused(_quit_prev_paused)
+
+func _show_quit_confirm() -> void:
+	if is_instance_valid(_quit_layer) or _quitting:
+		return
+	_quit_prev_paused = bool(_juego.home_paused) if is_instance_valid(_juego) else false
+	if is_instance_valid(_juego):
+		_juego.set_paused(true)
+	var layer := CanvasLayer.new()
+	layer.layer = 95
+	add_child(layer)
+	_quit_layer = layer
+	var ui := preload("res://ui/ui_kit.gd")
+	var shade := ColorRect.new()
+	shade.size = Vector2(1280, 720)
+	shade.color = Color(0.01, 0.03, 0.06, 0.82)
+	layer.add_child(shade)
+	var panel := ui.panel(layer, Rect2(310, 210, 660, 290), ui.INK)
+	ui.label(panel, tr("live.quit_title"), Rect2(32, 26, 596, 42), 26, ui.GOLD, true)
+	var body := ui.label(panel, tr("live.quit_body"), Rect2(32, 82, 596, 110), 19, ui.WHITE)
+	var cancel_btn := ui.button(panel, tr("live.quit_cancel"), Rect2(32, 214, 286, 50), _close_quit_confirm)
+	var save_failed_once := [false]
+	ui.button(panel, tr("live.quit_confirm"), Rect2(342, 214, 286, 50), func():
+		if _can_save_live_session() and not save_failed_once[0]:
+			if not _juego.session.save_run():
+				save_failed_once[0] = true
+				body.text = tr("live.save_error")
+				return
+		_saved_on_exit = true
+		_quit_layer = null
+		layer.queue_free()
+		_quit_cleanly()
+	, true)
+	cancel_btn.grab_focus()
+
 func _notification(what: int) -> void:
-	if (what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_EXIT_TREE) and is_instance_valid(_juego) and _juego.get("session") != null and not _juego.session.loading:
-		_juego.session.save_run()
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		if DisplayServer.get_name() == "headless" or _quitting:
+			_quit_cleanly()
+			return
+		if _can_save_live_session() and _juego.visible:
+			_show_quit_confirm()
+			return
+		if _can_save_live_session() and not _saved_on_exit:
+			_saved_on_exit = true
+			_juego.session.save_run()
+		_quit_cleanly()
+	elif what == NOTIFICATION_EXIT_TREE:
+		if not _quitting and not _saved_on_exit and _can_save_live_session():
+			_saved_on_exit = true
+			_juego.session.save_run()
 
 func _show_load_notice() -> void:
 	var layer = CanvasLayer.new()

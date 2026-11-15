@@ -35,9 +35,17 @@ func setup(host: Node) -> void:
 func begin() -> void:
 	loading = true
 	var stored: Dictionary = sm.obtener_datos_completos().get("expedicion", {})
-	if not stored.is_empty() and stored.get("current") is Dictionary and stored.current.has("state"):
-		restore(stored.current)
-		checkpoint = stored.get("checkpoint", {}).duplicate(true)
+	var cur: Variant = stored.get("current", {})
+	var cp: Variant = stored.get("checkpoint", {})
+	var cur_ok := not stored.is_empty() and cur is Dictionary and (cur as Dictionary).get("state") is Dictionary
+	var cp_ok := not stored.is_empty() and cp is Dictionary and (cp as Dictionary).get("state") is Dictionary
+	if cur_ok:
+		restore(cur as Dictionary)
+		checkpoint = (cp as Dictionary).duplicate(true) if cp_ok else capture()
+		restored = true
+	elif cp_ok:
+		restore(cp as Dictionary)
+		checkpoint = (cp as Dictionary).duplicate(true)
 		restored = true
 	else:
 		inventory = _supplies.get("starter", {}).duplicate(true)
@@ -130,7 +138,9 @@ func restore(snapshot: Dictionary) -> void:
 	loading = true
 	gs.en_partida = false
 	gs.reiniciar()
-	sm.restaurar_progreso(snapshot.get("legacy", {}))
+	var legacy: Variant = snapshot.get("legacy", {})
+	if legacy is Dictionary and not (legacy as Dictionary).is_empty():
+		sm.restaurar_progreso(legacy as Dictionary)
 	for field in STATE_FIELDS:
 		if snapshot.get("state", {}).has(field): gs.set(field, snapshot.state[field])
 	mm.restaurar_estado(snapshot.get("missions", {}))
