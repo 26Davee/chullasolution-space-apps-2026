@@ -1,127 +1,159 @@
 extends Node
-## Main — flujo de pantallas: título → elección de modo → juego. Dueño: puesto 1.
-##
-## Las pantallas de título y de modo son PROVISIONALES (texto fijo, sin i18n):
-## el puesto 6 las reemplaza por las suyas. Mientras tanto dejan el recorrido
-## completo de F5 funcionando. Para cambiarlas basta con sustituir
-## _crear_titulo() y _crear_menu_modo(); el resto del flujo no se toca.
-
+## Keeps the real world alive while menus/tutorial review are open.
 const ESCENA_INTRO := "res://ui/intro.tscn"
 const ESCENA_JUEGO := "res://scenes/juego.tscn"
-
-var _pantalla: Node = null
-
+var _pantalla: Node
+var _juego: Node3D
+var _intro: Control
+var _menu: Control
+var _menu_layer: CanvasLayer
+var _transitioning = false
 
 func _gs() -> Node:
-	return get_node_or_null("/root/GameState")
-
-
+	return get_node("/root/GameState")
 func _ready() -> void:
-	mostrar_titulo()
+	preload("res://ui/ui_kit.gd").register_translations()
+	var data: Dictionary = _gs().obtener_save_manager().obtener_datos_completos()
+	var profile: Dictionary = data.get("perfil",{})
+	if bool(profile.get("tutorial_completed",false)):
+		_gs().modo_juego = _gs().aplicar_perfil(profile)
+		mostrar_titulo()
+	else:
+		_show_intro(false)
+	if not _gs().obtener_save_manager().ultimo_error.is_empty(): call_deferred("_show_load_notice")
 
+func _show_intro(review: bool) -> void:
+	if is_instance_valid(_juego):
+		_juego.set_paused(true)
+		_show_world(false)
+	if is_instance_valid(_menu): _menu.hide()
+	if is_instance_valid(_intro): _intro.queue_free()
+	_intro = load(ESCENA_INTRO).instantiate()
+	_intro.language = _gs().idioma
+	if review:
+		_intro.tutorial.player.nickname = _gs().nombre_astronauta
+		_intro.tutorial.player.choose_age("7_9" if _gs().modo_juego == "cadete" else "10_12")
+	_intro.mission_requested.connect(func(profile):
+		if review:
+			_intro.hide()
+			mostrar_titulo()
+		else: _al_solicitar_mision_desde_intro(profile)
+	)
+	if review:
+		_intro.home_entered.connect(func():
+			_intro.hide()
+			mostrar_titulo()
+		)
+	add_child(_intro)
+	_pantalla = _intro
+
+func _al_solicitar_mision_desde_intro(profile: Dictionary) -> void:
+	var mode = _gs().aplicar_perfil(profile)
+	iniciar_juego(mode)
+
+func iniciar_juego(mode: String) -> void:
+	if is_instance_valid(_intro):
+		_intro.queue_free()
+		_intro = null
+	if is_instance_valid(_menu_layer): _menu_layer.hide()
+	if is_instance_valid(_juego):
+		_show_world(true)
+		_juego.set_paused(false)
+	else:
+		_gs().iniciar_partida(mode)
+		_gs().aplicar_legado()
+		_juego = load(ESCENA_JUEGO).instantiate()
+		_juego.salir_al_menu.connect(mostrar_titulo)
+		add_child(_juego)
+	_pantalla = _juego
+	_juego.call_deferred("_maybe_show_reward")
+	_juego.call_deferred("check_recovery")
 
 func mostrar_titulo() -> void:
-	var gs := _gs()
-	if gs:
-		gs.reiniciar()
-	if ResourceLoader.exists(ESCENA_INTRO):
-		var intro_escena: PackedScene = load(ESCENA_INTRO)
-		var intro := intro_escena.instantiate()
-		if intro.has_signal("mission_requested"):
-			intro.mission_requested.connect(_al_solicitar_mision_desde_intro)
-		_cambiar_pantalla(intro)
-		return
-	_cambiar_pantalla(_crear_titulo())
+	if is_instance_valid(_juego):
+		_juego.set_paused(true)
+		_show_world(false)
+	_gs().en_partida = false
+	if is_instance_valid(_intro): _intro.hide()
+	if is_instance_valid(_menu_layer): _menu_layer.queue_free()
+	_menu_layer = CanvasLayer.new()
+	_menu_layer.layer = 20
+	add_child(_menu_layer)
+	_menu = preload("res://ui/home_menu.gd").new()
+	_menu.size = Vector2(1280,720)
+	_menu.nickname = _gs().nombre_astronauta
+	var saved: Dictionary = _gs().obtener_save_manager().obtener_datos_completos().get("expedicion",{})
+	_menu.resume_available = is_instance_valid(_juego) or not saved.is_empty()
+	_menu_layer.add_child(_menu)
+	_menu.play_requested.connect(_play_with_fade)
+	_menu.options_requested.connect(_menu_options)
+	_menu.tutorial_requested.connect(func(): _menu_layer.hide(); _show_intro(true))
+	_pantalla = _menu
+	_menu.play_button.grab_focus()
 
+func _play_with_fade() -> void:
+	if _transitioning: return
+	_transitioning = true
+	var fade_layer = CanvasLayer.new()
+	fade_layer.layer = 100
+	add_child(fade_layer)
+	var fade = ColorRect.new()
+	fade.color = Color.BLACK
+	fade.size = Vector2(1280,720)
+	fade.modulate.a = 0
+	fade_layer.add_child(fade)
+	var tween = create_tween()
+	tween.tween_property(fade,"modulate:a",1.0,0.45)
+	await tween.finished
+	var mode = str(_gs().preferencias.get("mode",_gs().modo_juego))
+	iniciar_juego(mode)
+	await get_tree().process_frame
+	tween = create_tween()
+	tween.tween_property(fade,"modulate:a",0.0,0.45)
+	await tween.finished
+	fade_layer.queue_free()
+	_transitioning = false
 
-func _al_solicitar_mision_desde_intro(perfil: Dictionary) -> void:
-	var gs := _gs()
-	var modo := String(gs.aplicar_perfil(perfil)) if gs else "cadete"
-	iniciar_juego(modo)
-	if gs:
-		gs.aplicar_legado()
-
+func _menu_options() -> void:
+	if not is_instance_valid(_juego):
+		_gs().iniciar_partida(str(_gs().preferencias.get("mode","cadete")))
+		_juego = load(ESCENA_JUEGO).instantiate()
+		_juego.home_paused = true
+		_juego.salir_al_menu.connect(mostrar_titulo)
+		add_child(_juego)
+		await get_tree().process_frame
+		await get_tree().process_frame
+	_show_world(true)
+	_juego.set_paused(true)
+	_menu_layer.hide()
+	_juego.options_from_home = true
+	if not _juego.options_closed.is_connected(mostrar_titulo): _juego.options_closed.connect(mostrar_titulo)
+	_juego._open_audio_modal()
 
 func mostrar_menu_modo() -> void:
-	_cambiar_pantalla(_crear_menu_modo())
+	_show_intro(false)
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and is_instance_valid(_juego) and _juego.session != null:
+		_juego.session.save_run()
 
-func iniciar_juego(modo: String) -> void:
-	var escena: PackedScene = load(ESCENA_JUEGO)
-	var juego := escena.instantiate()
-	if juego.has_signal("salir_al_menu"):
-		juego.salir_al_menu.connect(mostrar_titulo)
-	_cambiar_pantalla(juego)
-	var gs := _gs()
-	if gs:
-		gs.iniciar_partida(modo)
+func _show_load_notice() -> void:
+	var layer = CanvasLayer.new()
+	layer.layer = 80
+	add_child(layer)
+	var ui = preload("res://ui/ui_kit.gd")
+	var shade = ColorRect.new()
+	shade.size = Vector2(1280,720)
+	shade.color = Color(0.01,0.03,0.06,0.85)
+	layer.add_child(shade)
+	var panel = ui.panel(layer,Rect2(280,210,720,300),ui.INK)
+	var key = "live.load_backup" if _gs().obtener_save_manager().respaldo_recuperado else "live.load_fresh"
+	ui.label(panel,tr(key),Rect2(32,34,656,160),25,ui.WHITE)
+	var button = ui.button(panel,tr("live.continue"),Rect2(32,220,656,50),func(): layer.queue_free(),true)
+	button.grab_focus()
 
-
-func _cambiar_pantalla(nueva: Node) -> void:
-	if _pantalla != null:
-		_pantalla.queue_free()
-	_pantalla = nueva
-	add_child(nueva)
-
-
-# ───────────────────────── Pantallas provisionales ─────────────────────────
-
-func _fondo_con_columna() -> Array:
-	var capa := Control.new()
-	capa.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var fondo := ColorRect.new()
-	fondo.color = Color(0.027, 0.082, 0.188)
-	fondo.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.add_child(fondo)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	capa.add_child(centro)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 14)
-	centro.add_child(col)
-	return [capa, col]
-
-
-func _etiqueta(texto: String, tamano: int, color: Color) -> Label:
-	var l := Label.new()
-	l.text = texto
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.add_theme_font_size_override("font_size", tamano)
-	l.add_theme_color_override("font_color", color)
-	return l
-
-
-func _boton(texto: String, accion: Callable) -> Button:
-	var b := Button.new()
-	b.text = texto
-	b.custom_minimum_size = Vector2(320, 52)
-	b.add_theme_font_size_override("font_size", 22)
-	b.pressed.connect(accion)
-	return b
-
-
-func _crear_titulo() -> Node:
-	var partes := _fondo_con_columna()
-	var col: VBoxContainer = partes[1]
-	col.add_child(_etiqueta("KILLAWASI", 72, Color(0.949, 0.710, 0.267)))
-	col.add_child(_etiqueta("Casa de la Luna", 26, Color(0.957, 0.937, 0.902)))
-	var espacio := Control.new()
-	espacio.custom_minimum_size = Vector2(0, 30)
-	col.add_child(espacio)
-	var jugar := _boton("Jugar", mostrar_menu_modo)
-	col.add_child(jugar)
-	col.add_child(_etiqueta("ChullaSolution · ESPOCH · NASA Space Apps 2026", 14, Color(0.2, 0.78, 0.84)))
-	jugar.call_deferred("grab_focus")
-	return partes[0]
-
-
-func _crear_menu_modo() -> Node:
-	var partes := _fondo_con_columna()
-	var col: VBoxContainer = partes[1]
-	col.add_child(_etiqueta("Elige tu modo", 44, Color(0.957, 0.937, 0.902)))
-	var cadete := _boton("Cadete · más tranquilo", func(): iniciar_juego(GameState.MODO_CADETE))
-	col.add_child(cadete)
-	col.add_child(_boton("Ingeniero · más exigente", func(): iniciar_juego(GameState.MODO_INGENIERO)))
-	col.add_child(_boton("Volver", mostrar_titulo))
-	cadete.call_deferred("grab_focus")
-	return partes[0]
+func _show_world(value: bool) -> void:
+	if not is_instance_valid(_juego): return
+	_juego.visible = value
+	if is_instance_valid(_juego.interfaz): _juego.interfaz.visible = value
+	if not value and is_instance_valid(_juego._voice): _juego._voice.stop()

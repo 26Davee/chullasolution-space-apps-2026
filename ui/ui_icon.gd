@@ -16,6 +16,16 @@ func _draw() -> void:
     var scale_factor := radius / 24.0
     draw_set_transform(c, 0, Vector2.ONE * scale_factor)
     match kind:
+        "sun":
+            draw_circle(Vector2.ZERO,8,ink)
+            for i in 8:
+                var d := Vector2(cos(i*TAU/8),sin(i*TAU/8))
+                draw_line(d*12,d*19,ink,3,true)
+        "moon":
+            draw_arc(Vector2.ZERO,15,PI*0.2,PI*1.8,32,ink,6,true)
+            draw_line(Vector2(11,-9),Vector2(3,-4),ink,3,true)
+            draw_line(Vector2(3,-4),Vector2(3,5),ink,3,true)
+            draw_line(Vector2(3,5),Vector2(11,9),ink,3,true)
         "energia":
             draw_colored_polygon(PackedVector2Array([Vector2(2,-17),Vector2(-11,2),Vector2(-2,2),Vector2(-6,17),Vector2(12,-5),Vector2(3,-5)]), ink)
         "robot_battery":
@@ -57,6 +67,42 @@ func _draw() -> void:
             draw_line(Vector2(-7,-5),Vector2(7,-5),ink,2,true)
             draw_line(Vector2(-7,3),Vector2(7,3),ink,2,true)
             draw_circle(Vector2(0,-16),4,ink)
+        "construction":
+            draw_line(Vector2(-12, 13), Vector2(8, -7), ink, 6, true)
+            draw_rect(Rect2(0, -15, 18, 9), ink)
+        "camera":
+            draw_rect(Rect2(-16, -10, 32, 24), ink, false, 3)
+            draw_arc(Vector2.ZERO, 7, 0, TAU, 24, ink, 3, true)
+            draw_rect(Rect2(-8, -16, 16, 6), ink)
+        "messages":
+            draw_rect(Rect2(-17, -12, 34, 25), ink, false, 3)
+            draw_polyline(PackedVector2Array([Vector2(-16,-10),Vector2(0,2),Vector2(16,-10)]), ink, 3, true)
+        "settings":
+            for i in 3:
+                var y := -11.0 + i * 11.0
+                draw_line(Vector2(-16,y), Vector2(16,y), ink, 3, true)
+                draw_circle(Vector2(-7 if i % 2 == 0 else 7,y), 5, ink)
+        "missions":
+            draw_rect(Rect2(-14,-16,28,32), ink, false, 3)
+            for y in [-8, 1, 10]:
+                draw_circle(Vector2(-7,y), 2, ink)
+                draw_line(Vector2(-1,y), Vector2(8,y), ink, 2, true)
+        "upgrades":
+            draw_polyline(PackedVector2Array([Vector2(-14,13),Vector2(0,-10),Vector2(14,13)]), ink, 3, true)
+            for p in [Vector2(-14,13), Vector2(0,-10), Vector2(14,13)]: draw_circle(p, 5, ink)
+        "help", "timmy":
+            draw_arc(Vector2(0,-4), 9, PI, TAU + 0.6, 24, ink, 3, true)
+            draw_line(Vector2(6,3),Vector2(0,9),ink,3,true)
+            draw_circle(Vector2(0,16),2,ink)
+        "home":
+            draw_polyline(PackedVector2Array([Vector2(-17,-1),Vector2(0,-16),Vector2(17,-1)]),ink,3,true)
+            draw_rect(Rect2(-12,-2,24,18),ink,false,3)
+        "star":
+            var points := PackedVector2Array()
+            for i in 10:
+                var a := -PI/2 + i * TAU/10
+                points.append(Vector2(cos(a),sin(a)) * (18 if i % 2 == 0 else 8))
+            draw_colored_polygon(points, ink)
         "base":
             draw_arc(Vector2(0,7),15,PI,TAU,24,ink,3,true)
             draw_line(Vector2(-15,7),Vector2(15,7),ink,3,true)

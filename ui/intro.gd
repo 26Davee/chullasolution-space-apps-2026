@@ -39,6 +39,8 @@ var nickname: String:
 var selected_mode: String:
     get: return "engineer" if tutorial.player.mode_id() == "ingeniero" else "cadet"
 var catalog = preload("res://ui/progression_catalog.gd").new()
+var station_rail: Control
+var world_view: Control
 var _progression_view: Control
 var bridge: Node
 var hud: Control
@@ -111,13 +113,8 @@ func _ready() -> void:
     timer.start()
 
 func _build() -> void:
-    var background := TextureRect.new()
-    background.texture = BG
-    background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-    background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-    background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    add_child(background)
-    background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    world_view = preload("res://ui/world_backdrop.gd").new()
+    add_child(world_view)
     canvas = Control.new()
     canvas.size = DESIGN
     add_child(canvas)
@@ -136,9 +133,9 @@ func _build() -> void:
     portrait.size = Vector2(330, 425)
     portrait.visible = false
     canvas.add_child(portrait)
-    _panel(canvas, Rect2(24, 20, 1232, 64), Color(0.025, 0.075, 0.14, 0.82), 18)
-    _label(canvas, "KILLAWASI", Rect2(44, 34, 200, 40), 27, WHITE, true)
-    menu_button = _button(canvas, "", Rect2(1180, 30, 56, 44), _open_menu)
+    _panel(canvas, Rect2(16, 8, 1248, 40), Color(0.025, 0.075, 0.14, 0.82), 18)
+    _label(canvas, "KILLAWASI", Rect2(30, 8, 200, 34), 27, WHITE, true)
+    menu_button = _button(canvas, "", Rect2(1208, 8, 56, 40), _open_menu)
     var menu_icon := preload("res://ui/ui_icon.gd").new()
     menu_icon.kind = "menu"
     menu_icon.disc = false
@@ -148,22 +145,31 @@ func _build() -> void:
     menu_button.tooltip_text = tr("menu.open")
     for i in range(2):
         var locale: String = ["en", "es"][i]
-        var button := _button(canvas, locale.to_upper(), Rect2(680 + i * 66, 30, 56, 44), _change_language.bind(locale))
+        var button := _button(canvas, locale.to_upper(), Rect2(680 + i * 66, 10, 56, 36), _change_language.bind(locale))
         button.toggle_mode = true
         button.autowrap_mode = TextServer.AUTOWRAP_OFF
         button.add_theme_font_size_override("font_size", 18)
         button.tooltip_text = "English" if locale == "en" else "Español"
         language_buttons[locale] = button
-    audio_button = _button(canvas, "", Rect2(820, 30, 132, 44), _open_audio)
-    _button(canvas, "", Rect2(964, 30, 192, 44), _open_help).name = "HelpButton"
+    audio_button = _button(canvas, "", Rect2(820, 10, 132, 36), _open_audio)
+    _button(canvas, "", Rect2(964, 10, 192, 36), _open_help).name = "HelpButton"
     _panel(canvas, Rect2(24, 694, 208, 24), Color(0, 0, 0, 0.8), 8)
     _label(canvas, "", Rect2(36, 696, 184, 20), 13, Color("#d8e5ef")).name = "TeamCredit"
     _label(canvas, "", Rect2(942, 698, 302, 20), 13, Color("#b9c9dc")).name = "ArtCredit"
-    hud = preload("res://ui/hud.tscn").instantiate()
-    hud.position = Vector2(30, 104)
+    hud = preload("res://ui/live_hud.gd").new()
+    hud.tutorial_layout = true
+    hud.position = Vector2(16, 8)
     canvas.add_child(hud)
     hud.resource_pressed.connect(_on_resource_pressed)
     hud.visible = false
+    station_rail = preload("res://ui/station_rail.gd").new()
+    station_rail.position = Vector2(1116,146)
+    canvas.add_child(station_rail)
+    station_rail.hide()
+    station_rail.section_requested.connect(func(section):
+        if section in ["rest","messages"]: _open_help()
+        else: _open_section(section)
+    )
 
 func _resize_canvas() -> void:
     if not is_instance_valid(canvas):
@@ -225,7 +231,7 @@ func _render(speak_now := true) -> void:
         portrait.position.y = 325
         portrait_tween = create_tween()
         portrait_tween.tween_property(portrait, "position:y", 295.0, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-    art.set("show_ship", step != "start")
+    art.set("show_ship", step == "landing")
     art.queue_redraw()
     if step == "start":
         _render_start()
@@ -235,6 +241,8 @@ func _render(speak_now := true) -> void:
         _render_dialogue()
     hud.visible = tutorial.needs_hud() or step == "done"
     menu_button.visible = hud.visible
+    station_rail.visible = hud.visible and not _in_home
+    station_rail.set_attention(tutorial.target().get_slice(":",1) if tutorial.target().begins_with("section:") else "")
     hud.set_state(bridge.get_state())
     hud.set_mode(tutorial.player.mode_id())
     hud.set_target(tutorial.target())
@@ -249,6 +257,16 @@ func _render(speak_now := true) -> void:
         _speak_current()
 
 func _render_start() -> void:
+    var hero = TextureRect.new()
+    hero.texture = TIMMY
+    hero.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    hero.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    hero.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    hero.position = Vector2(940,244)
+    hero.size = Vector2(290,420)
+    body.add_child(hero)
+    _panel(body,Rect2(838,136,372,100),Color("#071b32ee"),20)
+    _label(body,tr("guide.entry_invite"),Rect2(862,152,324,76),27,GOLD,true)
     _label(body, _t("v2.hero_badge"), Rect2(66, 194, 600, 32), 17, CYAN, true)
     _label(body, "KILLAWASI", Rect2(62, 238, 650, 104), 78, WHITE, true)
     _label(body, _t("v2.hero_title"), Rect2(66, 352, 560, 116), 40, WHITE, true)
@@ -285,25 +303,25 @@ func _render_dialogue() -> void:
         preview.size = Vector2(230, 220)
         body.add_child(preview)
     elif step == "ready" or step == "done":
-        _panel(body, Rect2(804, 346, 382, 70), Color(0.035, 0.1, 0.18, 0.94))
-        _label(body, _display_name() + " · " + tr("mode." + tutorial.player.mode_id()), Rect2(826, 362, 340, 44), 24, GOLD, true)
-    var bubble := _panel(body, Rect2(270, 474, 974, 214), Color(0.025, 0.075, 0.145, 0.97), 24)
+        _panel(body, Rect2(700, 346, 382, 70), Color(0.035, 0.1, 0.18, 0.94))
+        _label(body, _display_name() + " · " + tr("mode." + tutorial.player.mode_id()), Rect2(722, 362, 340, 44), 24, GOLD, true)
+    var bubble := _panel(body, Rect2(270, 474, 828, 214), Color(0.025, 0.075, 0.145, 0.97), 24)
     bubble.mouse_filter = Control.MOUSE_FILTER_STOP
     bubble.gui_input.connect(_bubble_input)
     _panel(body, Rect2(294, 444, 138, 44), GOLD, 12)
     _label(body, "Timmy", Rect2(318, 449, 100, 34), 24, INK, true)
     _label(body, _t("v2.guide"), Rect2(450, 447, 530, 28), 15, CYAN, true)
     if step in STEPS:
-        var progress := _label(body, _t("v2.step"), Rect2(1120, 482, 94, 26), 16, Color("#bcd3e4"))
+        var progress := _label(body, _t("v2.step"), Rect2(976, 482, 94, 26), 16, Color("#bcd3e4"))
         progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
     var key: String = tutorial.dialogue_key() if step != "done" else "tutorial.done"
     spoken_text = _t(key)
-    dialogue_label = _label(body, spoken_text, Rect2(306, 508, 890, 82), 26, WHITE)
+    dialogue_label = _label(body, spoken_text, Rect2(306, 508, 744, 82), 23, WHITE)
     if step == "name":
         dialogue_label.size.y = 42
         name_field = LineEdit.new()
         name_field.position = Vector2(306, 556)
-        name_field.size = Vector2(420, 48)
+        name_field.size = Vector2(350, 48)
         name_field.max_length = 18
         name_field.text = nickname
         name_field.placeholder_text = _t("v2.name_placeholder")
@@ -312,16 +330,16 @@ func _render_dialogue() -> void:
         body.add_child(name_field)
         name_field.text_changed.connect(func(value: String): nickname = value)
         name_field.text_submitted.connect(_submit_name)
-        _label(body, _t("v2.name_hint"), Rect2(748, 558, 440, 48), 17, Color("#c2d8e9"))
+        _label(body, _t("v2.name_hint"), Rect2(680, 558, 380, 48), 17, Color("#c2d8e9"))
     var next_text := "tutorial.yes" if step == "ready" else "v2.next"
     if step == "done":
         next_text = "tutorial.review"
-    primary_button = _button(body, _t(next_text), Rect2(1054, 618, 158, 50), _advance, true)
+    primary_button = _button(body, _t(next_text), Rect2(924, 618, 150, 50), _advance, true)
     if step != "arrival" and step != "done":
         var review := step == "ready"
         _button(body, _t("tutorial.review" if review else "v2.back"), Rect2(306, 618, 126, 50), _review_tutorial if review else _back)
     _button(body, _t("v2.repeat"), Rect2(448, 618, 116, 50), _speak_current)
-    _gate_hint = _label(body, "", Rect2(584, 622, 452, 46), 15, Color("#bcd3e4"))
+    _gate_hint = _label(body, "", Rect2(584, 622, 320, 46), 15, Color("#bcd3e4"))
     if bool(tutorial.definition().get("typewriter", false)):
         dialogue_label.visible_characters = 0
         reveal_tween = create_tween()
@@ -352,13 +370,15 @@ func _start_landing() -> void:
     landing_tween.tween_callback(_finish_landing)
 
 func _skip_tutorial() -> void:
-    if _transitioning:
-        return
+    if _transitioning: return
+    # Skipping explanations still asks for a name and age; it never silently picks a mode.
     if tutorial.player.age_group.is_empty():
-        tutorial.player.choose_age("7_9")
+        tutorial.step_id = "name" if tutorial.player.nickname.strip_edges().is_empty() else "age"
+        _render()
+        return
     tutorial.completed = true
     bridge.training = false
-    _transition_to("expedition")
+    _transition_to("home")
 
 func _set_landing(value: float) -> void:
     art.set("landing_progress", value)
@@ -409,7 +429,9 @@ func _display_name() -> String:
     return tutorial.player.display_name()
 
 func get_profile() -> Dictionary:
-    return tutorial.player.export_profile(language, not voice.muted, tutorial.completed)
+    var profile: Dictionary = tutorial.player.export_profile(language, not voice.muted, tutorial.completed)
+    profile.merge({"voice_volume": voice.volume, "voice_rate": voice.rate, "voices": voice.selected_voices.duplicate(true)})
+    return profile
 
 func _change_language(locale: String) -> void:
     if locale == language:
@@ -417,6 +439,8 @@ func _change_language(locale: String) -> void:
         return
     language = locale
     TranslationServer.set_locale(language)
+    await get_tree().process_frame
+    if is_instance_valid(station_rail): station_rail.refresh()
     _render(step != "start")
 
 func _update_nav() -> void:
@@ -500,12 +524,14 @@ func _open_modal(kind: String, title: String, wide := false) -> void:
 func _open_menu() -> void:
     if _transitioning: return
     _open_modal("menu", tr("menu.title"))
-    _menu_view = preload("res://ui/section_menu.gd").new()
-    _menu_view.position = _modal_rect.position + Vector2(20, 92)
-    _menu_view.size = Vector2(384, 478)
-    _menu_view.target = tutorial.target() if not _in_expedition else ""
+    _menu_view = preload("res://ui/station_rail.gd").new()
+    _menu_view.position = _modal_rect.position + Vector2(44,84)
     modal.add_child(_menu_view)
-    _menu_view.section_requested.connect(_open_section)
+    _menu_view.set_attention(tutorial.target().get_slice(":",1))
+    _menu_view.section_requested.connect(func(section):
+        if section in ["rest","messages"]: _open_help()
+        else: _open_section(section)
+    )
     for button in _menu_view.buttons.values(): modal_focus.append(button)
     _trap_modal_focus()
 
@@ -823,6 +849,7 @@ func _show_home_screen() -> void:
     portrait.hide()
     art.hide()
     hud.hide()
+    station_rail.hide()
     menu_button.hide()
     if is_instance_valid(play_screen): play_screen.hide()
     if not is_instance_valid(home_screen):
@@ -837,6 +864,7 @@ func _show_home_screen() -> void:
     home_screen.nickname = _display_name()
     home_screen.resume_available = _start_emitted
     home_screen.refresh_texts()
+    station_rail.hide()
     home_screen.show()
     _update_nav()
     if was_playing: pause_requested.emit(true)
@@ -849,6 +877,7 @@ func _show_play_screen() -> void:
     art.hide()
     if is_instance_valid(home_screen): home_screen.hide()
     hud.show()
+    station_rail.show()
     menu_button.show()
     hud.set_target("")
     hud.set_practice(false)

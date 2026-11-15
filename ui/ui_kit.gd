@@ -77,6 +77,10 @@ static func register_translations() -> void:
     for locale in catalogs:
         var translation := Translation.new()
         translation.locale = locale
+        for live_key in preload("res://i18n/live.gd").MESSAGES[locale]:
+            translation.add_message(live_key, preload("res://i18n/live.gd").MESSAGES[locale][live_key])
+        for guide_key in preload("res://i18n/interaction.gd").MESSAGES[locale]:
+            translation.add_message(guide_key, preload("res://i18n/interaction.gd").MESSAGES[locale][guide_key])
         for key in catalogs[locale]:
             translation.add_message(key, catalogs[locale][key])
         TranslationServer.add_translation(translation)

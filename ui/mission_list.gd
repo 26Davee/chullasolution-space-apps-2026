@@ -54,7 +54,8 @@ func _build() -> void:
     _objectives = UI.label(self, "", Rect2(312, 198, 564, 196), 22, UI.WHITE)
     _status = UI.label(self, "", Rect2(312, 410, 564, 32), 18, UI.CYAN)
     if _selected.is_empty() and not _items.is_empty():
-        _selected = str(_items[0].id)
+        _selected = str(_progress.get("current_mission", "")) if not _training else str(_items[0].id)
+        if _selected.is_empty(): _selected = str(_items[0].id)
     _select(_selected)
 
 func _select(id: String) -> void:
@@ -75,6 +76,8 @@ func _select(id: String) -> void:
             _status.text = tr("mission.completed")
         else:
             _status.text = tr("mission.current" if id == _progress.get("current_mission", "") else "mission.upcoming")
+            if id == _progress.get("current_mission", "") and _progress.has("objective_total"):
+                _status.text += " · " + tr("live.progress").format({"done": _progress.get("objective_done", 0), "total": _progress.objective_total})
 
 func set_progression_state(state: Dictionary) -> void:
     _progress = state.duplicate(true)

@@ -220,6 +220,8 @@ func _mapear_evento_a_triggers(nombre_evento: String, datos: Dictionary) -> void
 					_marcar_trigger_si_aplica("jardin_construido")
 		"viaje_hielo_iniciado":
 			_marcar_trigger_si_aplica("salida_domo_detectada")
+		"hielo_extraido_crater":
+			_marcar_trigger_si_aplica("hielo_extraido_crater")
 		"viaje_hielo_completado":
 			_marcar_trigger_si_aplica("hielo_extraido_crater")
 			_marcar_trigger_si_aplica("retorno_domo_completado")
@@ -277,7 +279,7 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 				_marcar_trigger_si_aplica("salida_domo_detectada")
 			if hielo >= 2:
 				_marcar_trigger_si_aplica("hielo_extraido_crater")
-			if not en_viaje and _triggers_cumplidos_actual.has("hielo_extraido_crater"):
+			if not en_viaje and bool(estado.get("robot_en_domo",false)) and _triggers_cumplidos_actual.has("hielo_extraido_crater"):
 				_marcar_trigger_si_aplica("retorno_domo_completado")
 		"mision_03":
 			if bool(estado.get("procesador_instalado", false)):
@@ -292,11 +294,11 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 			if oxigeno > 85.0:
 				_marcar_trigger_si_aplica("oxigeno_mayor_85")
 		"mision_05":
-			if not en_viaje:
+			if bool(estado.get("robot_en_domo",false)):
 				_marcar_trigger_si_aplica("robot_dentro_domo")
-				if (es_dia and paneles >= 1) or energia >= 90.0:
-					_marcar_trigger_si_aplica("recarga_bateria_activa")
-			if energia >= 90.0:
+			if bool(estado.get("descansando_en_domo",false)):
+				_marcar_trigger_si_aplica("recarga_bateria_activa")
+			if float(estado.get("energia_robot",0)) >= 90.0 and _triggers_cumplidos_actual.has("recarga_bateria_activa"):
 				_marcar_trigger_si_aplica("energia_alcanzada_90")
 		"mision_06":
 			if paneles >= 2:
@@ -449,7 +451,8 @@ func _completar_mision_activa(mision: Dictionary) -> void:
 	var id_carta := "carta_%s" % id_mision
 
 	_asegurar_save_manager()
-	save_manager.registrar_mision_completada(id_mision, estrellas, id_carta)
+	if not save_manager.registrar_mision_completada(id_mision, estrellas, id_carta):
+		return
 
 	mision_cumplida.emit(id_mision, estrellas)
 	mision_completada.emit(id_mision, estrellas, carta_nasa)
@@ -496,3 +499,21 @@ func _asegurar_save_manager() -> void:
 	add_child(nuevo_sm)
 	nuevo_sm.cargar_progreso()
 	set_save_manager(nuevo_sm)
+
+
+func capturar_estado() -> Dictionary:
+	return {"active": _mision_activa_id, "mode": _modo_juego, "triggers": _triggers_cumplidos_actual.duplicate(true), "events": _eventos_registrados.duplicate(true), "night": _tiempo_en_noche_s, "garden": _tiempo_riego_jardin_s, "min_energy": _energia_min_noche, "trips": _viajes_hielo_m11, "storms": _nubes_superadas_total}
+
+
+func restaurar_estado(state: Dictionary) -> void:
+	_modo_juego = str(state.get("mode", "cadete"))
+	_mision_activa_id = str(state.get("active", ""))
+	_triggers_cumplidos_actual = state.get("triggers", {}).duplicate(true)
+	_eventos_registrados = state.get("events", {}).duplicate(true)
+	_tiempo_en_noche_s = float(state.get("night", 0))
+	_tiempo_riego_jardin_s = float(state.get("garden", 0))
+	_energia_min_noche = float(state.get("min_energy", 100))
+	_viajes_hielo_m11 = int(state.get("trips", 0))
+	_nubes_superadas_total = int(state.get("storms", 0))
+	_ultimo_fallo_timestamp = -999.0
+	mision_activa_cambiada.emit(obtener_mision_activa())

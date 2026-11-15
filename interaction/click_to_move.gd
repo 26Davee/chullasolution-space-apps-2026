@@ -11,6 +11,8 @@
 class_name ClickToMove
 extends Node3D
 
+signal station_clicked(section: String, station: Node3D)
+
 signal destino_fijado(posicion: Vector3)
 signal destino_alcanzado(posicion: Vector3)
 
@@ -157,11 +159,18 @@ func _procesar_clic() -> void:
 
 	var origen := camara.project_ray_origin(_pos_clic)
 	var fin := origen + camara.project_ray_normal(_pos_clic) * largo_rayo
-	var consulta := PhysicsRayQueryParameters3D.create(origen, fin, mascara_suelo)
+	var consulta := PhysicsRayQueryParameters3D.create(origen, fin, mascara_suelo | 16)
+	consulta.collide_with_areas = true
 	consulta.exclude = _rids_de(astronauta)
 	var hit := get_world_3d().direct_space_state.intersect_ray(consulta)
 	if hit.is_empty():
 		return
+	var target: Node = hit.collider
+	while target != null:
+		if target.has_meta("station_section"):
+			station_clicked.emit(str(target.get_meta("station_section")),target as Node3D)
+			return
+		target = target.get_parent()
 	if suelo and hit.collider != suelo:
 		return
 
@@ -390,3 +399,12 @@ func _ocultar_indicador() -> void:
 	_tween = create_tween()
 	_tween.tween_property(_mat_indicador, "albedo_color:a", 0.0, 0.2)
 	_tween.tween_callback(func(): _indicador.visible = false)
+
+
+func ordenar_destino(position: Vector3) -> void:
+	_destino = position
+	_moviendo = true
+	_tiempo_atascado = 0.0
+	_mostrar_indicador(position,Vector3.UP)
+	_reproducir(_anim_caminar)
+	destino_fijado.emit(position)

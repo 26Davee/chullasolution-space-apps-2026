@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3]
 
-[ext_resource type="Script" path="res://core/juego.gd" id="1_juego"]
+[ext_resource type="Script" path="res://ui/live_game.gd" id="1_juego"]
 [ext_resource type="PackedScene" path="res://world/moon_world.tscn" id="2_mundo"]
 [ext_resource type="PackedScene" path="res://assets/3d/robot_humanoide.tscn" id="3_robot"]
 [ext_resource type="PackedScene" path="res://assets/3d/vicuna.tscn" id="4_vicuna"]

@@ -1,5 +1,6 @@
 extends Node
 
+static var _owner_id: int = 0
 var muted := false
 var volume := 85
 var rate := 0.95
@@ -64,14 +65,16 @@ func speak(text: String, language: String) -> bool:
         _wait_time = 0.0
         _probe_time = 0.0
         return false
-    DisplayServer.tts_speak(text, id, volume, 1.03, rate, 0, true)
+    _owner_id = get_instance_id()
+    DisplayServer.tts_speak(text, id, volume, 1.03, rate, int(get_instance_id() % 2147483647), true)
     return true
 
 func stop() -> void:
     _pending_text = ""
     if ProjectSettings.get_setting("audio/general/text_to_speech", false):
-        if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
+        if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH) and _owner_id == get_instance_id():
             DisplayServer.tts_stop()
+            _owner_id = 0
 
 func is_speaking() -> bool:
     if not ProjectSettings.get_setting("audio/general/text_to_speech", false):

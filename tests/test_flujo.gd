@@ -6,6 +6,10 @@ func ok(c: bool, m: String) -> void:
 func _initialize() -> void:
 	var gs = root.get_node("GameState")
 	ok(gs != null, "autoload GameState existe")
+	await process_frame
+	var sm = gs.obtener_save_manager()
+	sm.save_path = "user://killawasi_flow_test.json"
+	sm.reiniciar_legado()
 	var main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	await process_frame
@@ -39,8 +43,11 @@ func _initialize() -> void:
 	for i in 120: await process_frame
 	ok(gs.tiempo_juego > t0, "el tiempo corre (%.2f s)" % (gs.tiempo_juego - t0))
 	# salir
-	main._pantalla.salir_al_menu.emit(); await process_frame
-	ok(not gs.en_partida or true, "volver al título sin errores")
-	ok(gs.energia == 60.0 and gs.modo_juego == "cadete", "reiniciar deja valores iniciales")
+	var world_id = main._juego.get_instance_id()
+	var saved_energy = gs.energia
+	main._pantalla._return_home(); await process_frame
+	ok(not gs.en_partida and main._menu.resume_available, "menú pausa y ofrece reanudar")
+	main.iniciar_juego("ingeniero"); await process_frame
+	ok(main._juego.get_instance_id() == world_id and gs.energia == saved_energy and gs.modo_juego == "ingeniero", "reanudar conserva mundo, modo y recursos")
 	print("FALLOS: ", fallos)
 	quit(fallos)

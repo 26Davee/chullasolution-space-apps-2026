@@ -5,6 +5,7 @@ const Profile = preload("res://ui/player_profile.gd")
 const Bridge = preload("res://ui/game_bridge.gd")
 
 class FakeVoice extends Node:
+    var selected_voices: Dictionary = {}
     var muted := false
     var volume := 85
     var rate := 0.95
@@ -98,9 +99,9 @@ func run() -> void:
     await test_bridge()
     await test_catalog_and_purchases()
     var clock = load("res://ui/mission_clock.gd")
-    check(clock.display({"tiempo_juego": 240.0}) == {"year":1,"month":1,"day":15,"time":"18:21"}, "4 min real reaches ~14.77 Earth days (day 15)")
-    check(clock.display({"tiempo_juego": 490.0}) == {"year":1,"month":2,"day":1,"time":"03:29"}, "30 elapsed days roll over to Month 2 Day 1")
-    check(clock.display({"tiempo_juego": 5860.0}) == {"year":2,"month":1,"day":1,"time":"12:17"}, "12 elapsed months roll over to Year 2 Month 1")
+    check(clock.display({"tiempo_juego": 240.0}) == {"year":1,"month":1,"day":1,"time":"18:00"}, "Sunset agrees with mission clock at 18:00")
+    check(clock.display({"tiempo_juego": 480.0}) == {"year":1,"month":1,"day":2,"time":"06:00"}, "Next sunrise agrees with 06:00")
+    check(clock.display({"tiempo_juego": 172680.0}) == {"year":2,"month":1,"day":1,"time":"00:00"}, "Calendar carries months and years")
     check(clock.display({"dia_mision": 6, "minutos_mision": 125}) == {"year":1,"month":1,"day":6,"time":"02:05"}, "Authoritative mission clock overrides projection")
     if failures.is_empty():
         print("PASS: both full tutorials, EN/ES, mouse/keyboard, age gates, HUD targets, panels, profile, providers, failure-zero edge, dynamic maximum and authoritative stars")
@@ -228,7 +229,7 @@ func run_flow(test_case: Dictionary) -> void:
         check(intro.dialogue_label.position.y + intro.dialogue_label.size.y <= intro.primary_button.position.y - 10, "Dialogue stays above navigation buttons: " + before)
         if before == "base":
             check(intro.hud.visible, "Four-resource HUD appears")
-            check(intro.hud.resource_buttons.size() == 4, "HUD exposes all four resources")
+            check(intro.hud.resource_buttons.size() == 5, "HUD exposes the same five bars as live play")
             check(intro.menu_button.visible, "Base menu becomes available with the HUD")
             intro.hud.set_state({"energia":{"value":120.0,"max":150.0}})
             check(intro.hud.values.energia.text == "80 %", "Bar percentage respects upgraded capacity")

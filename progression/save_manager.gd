@@ -14,6 +14,8 @@ const DEFAULT_SAVE_PATH := "user://save_data.json"
 @export var save_path: String = DEFAULT_SAVE_PATH
 
 var _datos: Dictionary = {}
+var ultimo_error := ""
+var respaldo_recuperado := false
 
 
 func _ready() -> void:
@@ -22,6 +24,8 @@ func _ready() -> void:
 
 ## Carga el archivo de guardado desde disco o inicializa una partida limpia.
 func cargar_progreso() -> Dictionary:
+	ultimo_error = ""
+	respaldo_recuperado = false
 	_datos = _crear_estructura_por_defecto()
 
 	if not FileAccess.file_exists(save_path):
@@ -31,6 +35,7 @@ func cargar_progreso() -> Dictionary:
 
 	var archivo := FileAccess.open(save_path, FileAccess.READ)
 	if archivo == null:
+		ultimo_error = "read"
 		push_warning("SaveManager: No se pudo abrir %s. Usando valores por defecto." % save_path)
 		progreso_cargado.emit(_datos.duplicate(true))
 		return _datos.duplicate(true)
@@ -41,8 +46,14 @@ func cargar_progreso() -> Dictionary:
 	var json := JSON.new()
 	var err := json.parse(texto)
 	if err != OK or typeof(json.data) != TYPE_DICTIONARY:
-		push_warning("SaveManager: JSON corrupto en %s. Reiniciando estructura." % save_path)
-		guardar_progreso()
+		ultimo_error = "corrupt"
+		# Preserve the unreadable file; a valid backup is preferred to a fresh run.
+		DirAccess.copy_absolute(save_path, save_path + ".invalid")
+		var backup := JSON.new()
+		if FileAccess.file_exists(save_path + ".bak") and backup.parse(FileAccess.get_file_as_string(save_path + ".bak")) == OK and backup.data is Dictionary:
+			_combinar_con_defecto(backup.data)
+			respaldo_recuperado = true
+		push_warning("SaveManager: Archivo inválido preservado; se usó el respaldo si estaba disponible.")
 		progreso_cargado.emit(_datos.duplicate(true))
 		return _datos.duplicate(true)
 
@@ -54,19 +65,29 @@ func cargar_progreso() -> Dictionary:
 
 ## Escribe el estado actual del progreso en disco en formato JSON.
 func guardar_progreso() -> bool:
-	var archivo := FileAccess.open(save_path, FileAccess.WRITE)
+	var temporary := save_path + ".tmp"
+	var archivo := FileAccess.open(temporary, FileAccess.WRITE)
 	if archivo == null:
-		push_error("SaveManager: Error al escribir en %s (código %d)." % [save_path, FileAccess.get_open_error()])
+		ultimo_error = "write"
 		progreso_guardado.emit(false)
 		return false
-
 	archivo.store_string(JSON.stringify(_datos, "\t"))
+	archivo.flush()
+	var result := archivo.get_error()
 	archivo.close()
-	progreso_guardado.emit(true)
-	return true
+	if result != OK:
+		ultimo_error = "write"
+		progreso_guardado.emit(false)
+		return false
+	if FileAccess.file_exists(save_path):
+		var existing := JSON.new()
+		if existing.parse(FileAccess.get_file_as_string(save_path)) == OK and existing.data is Dictionary:
+			DirAccess.copy_absolute(save_path, save_path + ".bak")
+	var success := DirAccess.rename_absolute(temporary, save_path) == OK
+	if not success: ultimo_error = "write"
+	progreso_guardado.emit(success)
+	return success
 
-
-## Registra una misión completada y suma las estrellas si es la primera vez.
 func registrar_mision_completada(id_mision: String, puntos: int, id_carta: String = "") -> bool:
 	if id_mision.is_empty():
 		return false
@@ -111,6 +132,8 @@ func registrar_mejora_comprada(id_mejora: String, costo: int, id_carta: String =
 
 ## Reinicia por completo el progreso guardado (útil para pruebas o nueva partida).
 func reiniciar_legado() -> void:
+	ultimo_error = ""
+	respaldo_recuperado = false
 	_datos = _crear_estructura_por_defecto()
 	guardar_progreso()
 	estrellas_cambiadas.emit(0, 0)
@@ -168,7 +191,9 @@ func _registrar_carta_interna(id_carta: String) -> void:
 
 func _crear_estructura_por_defecto() -> Dictionary:
 	return {
-		"version": 1,
+		"version": 2,
+		"expedicion": {},
+		"perfil": {},
 		"estrellas_totales": 0,
 		"estrellas_disponibles": 0,
 		"misiones_completadas": [],
@@ -179,6 +204,9 @@ func _crear_estructura_por_defecto() -> Dictionary:
 
 
 func _combinar_con_defecto(leido: Dictionary) -> void:
+	for key in ["expedicion", "perfil"]:
+		if leido.get(key) is Dictionary:
+			_datos[key] = leido[key].duplicate(true)
 	_datos["estrellas_totales"] = int(leido.get("estrellas_totales", 0))
 	_datos["estrellas_disponibles"] = int(leido.get("estrellas_disponibles", 0))
 	_datos["misiones_completadas"] = _convertir_a_array_string(leido.get("misiones_completadas", []))
@@ -197,3 +225,16 @@ func _convertir_a_array_string(origen: Variant) -> Array[String]:
 		if not texto.is_empty() and not resultado.has(texto):
 			resultado.append(texto)
 	return resultado
+
+
+func guardar_expedicion(datos: Dictionary, perfil: Dictionary) -> bool:
+	_datos["expedicion"] = datos.duplicate(true)
+	_datos["perfil"] = perfil.duplicate(true)
+	return guardar_progreso()
+
+
+func restaurar_progreso(datos: Dictionary) -> void:
+	_datos = _crear_estructura_por_defecto()
+	_combinar_con_defecto(datos)
+	progreso_cargado.emit(_datos.duplicate(true))
+	estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())

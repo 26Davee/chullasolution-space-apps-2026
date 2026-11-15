@@ -1,0 +1,31 @@
+{
+  "description": "Propuesta inicial editable por el equipo. Cantidades de módulos; no cambia los objetivos de missions.json.",
+  "starter": {
+    "panel_solar": 1,
+    "procesador_hielo": 1,
+    "generador_oxigeno": 1
+  },
+  "missions": {
+    "mision_01": {
+      "tanque_agua": 1
+    },
+    "mision_02": {
+      "procesador_hielo": 1
+    },
+    "mision_04": {
+      "panel_solar": 1
+    },
+    "mision_07": {
+      "tanque_agua": 1
+    },
+    "mision_10": {
+      "panel_solar": 1
+    },
+    "mision_12": {
+      "procesador_hielo": 1
+    },
+    "mision_14": {
+      "jardin": 1
+    }
+  }
+}

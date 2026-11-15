@@ -1,0 +1,38 @@
+{
+  "en": {
+    "mision_01": "Build 1 solar panel near the dome.",
+    "mision_02": "Travel to the ice crater and collect ice.",
+    "mision_03": "Build a processor and turn ice into water.",
+    "mision_04": "Build an oxygen generator.",
+    "mision_05": "Recharge the robot at the dome.",
+    "mision_06": "Build a second panel. Save energy for night.",
+    "mision_07": "Keep the crew safe until sunrise.",
+    "mision_08": "Watch the alert and shelter in the dome.",
+    "mision_09": "Repair the shield until it reaches 100%.",
+    "mision_10": "Return to the dome before the storm.",
+    "mision_11": "Make 2 ice trips and refill the water.",
+    "mision_12": "Repair between the two storms.",
+    "mision_13": "Process ice during the night.",
+    "mision_14": "Repair the dome and restore oxygen.",
+    "mision_15": "Build the garden and keep it watered.",
+    "mision_16": "Keep all resources steady for a lunar day."
+  },
+  "es": {
+    "mision_01": "Construye 1 panel solar cerca del domo.",
+    "mision_02": "Viaja al cráter y recoge hielo.",
+    "mision_03": "Instala un procesador y convierte hielo en agua.",
+    "mision_04": "Construye un generador de oxígeno.",
+    "mision_05": "Recarga el robot dentro del domo.",
+    "mision_06": "Construye otro panel. Guarda energía para la noche.",
+    "mision_07": "Cuida a la tripulación hasta el amanecer.",
+    "mision_08": "Atiende la alerta y refúgiate en el domo.",
+    "mision_09": "Repara el escudo hasta llegar al 100%.",
+    "mision_10": "Vuelve al domo antes de la tormenta.",
+    "mision_11": "Haz 2 viajes por hielo y repón el agua.",
+    "mision_12": "Repara el domo entre las dos tormentas.",
+    "mision_13": "Procesa hielo durante la noche.",
+    "mision_14": "Repara el domo y recupera el oxígeno.",
+    "mision_15": "Construye el jardín y mantenlo regado.",
+    "mision_16": "Mantén estables los recursos todo un día lunar."
+  }
+}

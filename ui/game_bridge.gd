@@ -14,7 +14,7 @@ const INITIAL := {
     "energia": {"value": 60.0, "max": 100.0},
     "energia_robot": {"value": 100.0, "max": 100.0},
     "agua": {"value": 20.0, "max": 100.0},
-    "oxigeno": {"value": 60.0, "max": 100.0},
+    "oxigeno": {"value": 45.0, "max": 100.0},
     "escudo": {"value": 100.0, "max": 100.0},
     "hielo": 0, "estrellas": 0, "herramienta_nivel": 1, "es_dia": true, "tiempo_juego": 0.0,
     "descansando_en_domo": false, "nube_activa": false, "alerta_nube": false, "modo_juego": "cadete"

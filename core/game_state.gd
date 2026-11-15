@@ -92,6 +92,8 @@ var nube_activa: bool = false
 var en_viaje_hielo: bool = false
 var herramienta_nivel: int = 1
 var paneles_instalados: int = 0
+var generador_pausado: bool = false
+var robot_en_domo: bool = false
 var procesador_instalado: bool = false
 var generador_instalado: bool = false
 var jardin_instalado: bool = false
@@ -106,6 +108,7 @@ var idioma: String = "en"
 var voz_activa: bool = true
 
 ## true mientras hay una partida en curso (el tiempo solo corre entonces).
+var preferencias: Dictionary = {}
 var en_partida: bool = false
 
 var _sim = null          # instancia de Simulacion (RefCounted) si está disponible
@@ -163,6 +166,7 @@ func normalizar_modo(modo: String) -> String:
 
 
 func aplicar_perfil(perfil: Dictionary) -> String:
+	preferencias = perfil.duplicate(true)
 	var nombre := str(perfil.get("nickname", "")).strip_edges()
 	nombre_astronauta = nombre if not nombre.is_empty() else tr("v2.default_name")
 	var lang := str(perfil.get("language", "en"))
@@ -182,6 +186,8 @@ func iniciar_partida(modo: String = MODO_CADETE) -> void:
 	en_partida = true
 	_emitir_todos_los_recursos(true)
 	_emitir_energia_robot(true)
+	if _save_manager != null:
+		estrellas = _save_manager.obtener_estrellas_disponibles()
 	estrellas_actualizadas.emit(estrellas)
 	if _mission_manager != null:
 		_mission_manager.establecer_modo_juego(modo_juego)
@@ -223,6 +229,8 @@ func reiniciar() -> void:
 	en_viaje_hielo = false
 	herramienta_nivel = 1
 	paneles_instalados = 0
+	generador_pausado = false
+	robot_en_domo = false
 	procesador_instalado = false
 	generador_instalado = false
 	jardin_instalado = false
@@ -368,6 +376,8 @@ func obtener_estado_diccionario() -> Dictionary:
 		"en_viaje_hielo": en_viaje_hielo,
 		"herramienta_nivel": herramienta_nivel,
 		"paneles_instalados": paneles_instalados,
+		"generador_pausado": generador_pausado,
+		"robot_en_domo": robot_en_domo,
 		"procesador_instalado": procesador_instalado,
 		"generador_instalado": generador_instalado,
 		"jardin_instalado": jardin_instalado,
@@ -434,12 +444,14 @@ func _inicializar_progresion() -> void:
 	add_child(_tech_tree)
 
 	_mission_manager.mision_completada.connect(func(id_m: String, pts: int, carta: Dictionary):
-		agregar_estrellas(pts)
+		_sincronizar_estrellas(_save_manager.obtener_estrellas_disponibles(), _save_manager.obtener_estrellas_totales())
 		mision_completada.emit(id_m, pts, carta)
 	)
 	_tech_tree.mejora_desbloqueada.connect(func(id_u: String, rama: String, nivel: int):
 		mejora_desbloqueada.emit(id_u, rama, nivel)
 	)
+	_save_manager.estrellas_cambiadas.connect(_sincronizar_estrellas)
+	_sincronizar_estrellas(_save_manager.obtener_estrellas_disponibles(), _save_manager.obtener_estrellas_totales())
 	_tech_tree.efecto_simulacion_aplicado.connect(_al_aplicar_efecto_mejora)
 
 	advertencia_nube_iniciada.connect(func(_t: float): notificar_evento_mision("advertencia_nube_iniciada", {"en_viaje_hielo": en_viaje_hielo}))
@@ -533,3 +545,8 @@ func _emitir_energia_robot(forzar: bool = false) -> void:
 		return
 	_ultimo_emitido["energia_robot"] = [energia_robot, ROBOT_ENERGIA_MAX]
 	robot_energia_actualizada.emit(energia_robot, ROBOT_ENERGIA_MAX)
+
+
+func _sincronizar_estrellas(disponibles: int, _totales: int) -> void:
+	estrellas = disponibles
+	estrellas_actualizadas.emit(estrellas)

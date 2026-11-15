@@ -483,7 +483,6 @@ func _tick_fallback_simulation(delta: float) -> void:
 	if float(gs.tiempo_juego) < 0.05 and float(gs.tiempo_para_nube) <= 0.0 and not gs.nube_activa:
 		gs.tiempo_para_nube = SPE_FIRST_STORM_S
 
-	gs.tiempo_juego += delta
 	var prev_day := bool(gs.es_dia)
 	var phase := fmod(gs.tiempo_juego, DAY_CYCLE_SECONDS)
 	gs.tiempo_ciclo_solar = phase
@@ -643,36 +642,10 @@ func _tick_fallback_simulation(delta: float) -> void:
 			gs.nube_impacto.emit(fuerza, float(gs.escudo))
 			_sync_bridge_telemetry(gs)
 
-	_eval_accumulator += delta
-	if _eval_accumulator >= 1.0:
-		_eval_accumulator = 0.0
-		var mm: Node = gs.obtener_mission_manager() if gs.has_method("obtener_mission_manager") else null
-		if mm != null and mm.has_method("evaluar_estado_simulacion"):
-			mm.call("evaluar_estado_simulacion", {
-				"energia": gs.energia,
-				"energia_robot": gs.energia_robot,
-				"descansando_en_domo": gs.descansando_en_domo,
-				"hielo": gs.hielo,
-				"agua": gs.agua,
-				"oxigeno": gs.oxigeno,
-				"escudo": gs.escudo,
-				"es_dia": gs.es_dia,
-				"tiempo_juego": gs.tiempo_juego,
-				"tiempo_ciclo_solar": phase,
-				"en_viaje_hielo": gs.en_viaje_hielo,
-				"nube_activa": gs.nube_activa,
-				"alerta_nube": gs.alerta_nube,
-				"tiempo_para_nube": gs.tiempo_para_nube,
-				"generador_pausado": _gen_overload_timer > 0.0,
-				"paneles_instalados": gs.paneles_instalados,
-				"procesador_instalado": gs.procesador_instalado,
-				"generador_instalado": gs.generador_instalado,
-				"jardin_instalado": gs.jardin_instalado,
-			}, 1.0)
 
 
 func _tick_expedition(delta: float) -> void:
-	if not _expedition_pending:
+	if not _expedition_pending or _gs() == null or not _gs().en_partida:
 		return
 	_expedition_timer -= delta
 	if _expedition_timer > 0.0:
@@ -1023,7 +996,11 @@ func _run_processing() -> void:
 	if int(gs.hielo) <= 0:
 		_show_toast(_msg("No hay hielo. Ve de Expedición primero.", "No ice available. Start an Expedition first."), 2.8)
 		return
-	var blocks := mini(int(gs.hielo), 3)
+	var free_blocks := floori((float(gs.agua_max) - float(gs.agua)) / 5.0)
+	if free_blocks <= 0:
+		_show_toast(_msg("El tanque está lleno. Usa agua antes de procesar más hielo.", "The tank is full. Use some water before processing more ice."), 3.0)
+		return
+	var blocks := mini(mini(int(gs.hielo), _processor_capacity()), free_blocks)
 	var base_cost := float(blocks) * 0.5
 	if not gs.pagar("energia", base_cost):
 		_show_toast(_msg(
@@ -1481,3 +1458,7 @@ func _actualizar_debug() -> void:
 		gs.agua, int(round(gs.agua * 2.0)),
 		gs.oxigeno, gs.escudo, gs.estrellas
 	]
+
+
+func _processor_capacity() -> int:
+	return 3

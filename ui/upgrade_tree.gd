@@ -122,7 +122,12 @@ func _can_buy(item: Dictionary) -> bool:
 
 func _item_status(item: Dictionary) -> String:
     if _owned(str(item.id)): return tr("tree.owned")
-    return tr("tree.available" if _can_buy(item) else "tree.locked")
+    if _can_buy(item): return tr("tree.available")
+    var req: Variant = item.get("requisito")
+    if req != null and not _owned(str(req)):
+        return tr("live.required").format({"name": Catalog.text("upgrades." + str(req) + ".nombre", str(req))})
+    var missing := maxi(0, int(item.get("costo", 0)) - int(_progress.get("stars", 0)))
+    return tr("live.need_stars").format({"n": missing})
 
 func _select(id: String) -> void:
     _selected = id

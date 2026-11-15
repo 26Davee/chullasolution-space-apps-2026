@@ -49,6 +49,7 @@ func _ready() -> void:
     _robot_bar.add_theme_stylebox_override("background", UI.style(Color("#34445d"), Color.TRANSPARENT, 0, 7))
     _robot_bar.add_theme_stylebox_override("fill", UI.style(Color("#74e8ff"), Color.TRANSPARENT, 0, 7))
     _robot_panel.add_child(_robot_bar)
+    _robot_bar.size = Vector2(182, 14)
     _robot_value = UI.label(_robot_panel, "100 %", Rect2(236, 13, 76, 28), 16, UI.WHITE, true)
     _robot_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
