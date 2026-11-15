@@ -1,6 +1,6 @@
 # Registro del puesto 1 · Integración y coordinación
 
-Persona: <!-- nombre -->  ·  Usuario de GitHub: <!-- usuario -->
+Persona: Ángel David Espinoza Ureta  ·  Usuario de GitHub: 26Davee
 
 Este archivo es **solo tuyo**: nadie más lo edita, así que no hay choques. Anota al momento, no al final. El puesto 1 junta los seis registros antes del envío.
 
@@ -15,7 +15,7 @@ NASA pide reconocer todo lo hecho con ayuda de IA.
 
 | Fecha y hora | Qué hice con IA (código, texto, imagen, sonido) | Herramienta | Dónde quedó (archivo) | Qué revisé o cambié yo |
 |---|---|---|---|---|
-| | | | | |
+| Sáb 14/11 | Código de GameState, flujo de pantallas, escena de juego, HUD provisional y pruebas; unión de las ramas de todos los puestos; skills de arte para Carlos | Claude (Anthropic) | `core/`, `scenes/`, `tests/`, `.claude/skills/` | Pendiente: probar con F5 y revisar cada archivo |
 
 ## 2. Material de terceros
 

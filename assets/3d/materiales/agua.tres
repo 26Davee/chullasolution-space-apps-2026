@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "agua"
+transparency = 1
+cull_mode = 2
+albedo_color = Color(0.23529412, 0.7764706, 0.93333334, 0.86)
+roughness = 0.12
+emission_enabled = true
+emission = Color(0.13333334, 0.70980394, 0.9019608, 1)
+emission_energy_multiplier = 0.75

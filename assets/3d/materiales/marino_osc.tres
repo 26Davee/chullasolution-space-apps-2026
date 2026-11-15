@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "marino_osc"
+albedo_color = Color(0.078431375, 0.13725491, 0.23921569, 1)
+roughness = 0.6
+rim_enabled = true
+rim = 0.08
+rim_tint = 0.6

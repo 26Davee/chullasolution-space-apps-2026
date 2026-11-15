@@ -5,18 +5,24 @@
 ; Format:
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
-;
-; DUEÑO: puesto 1. Los demás no editan este archivo (si necesitas un cambio, pídelo en el grupo).
 
 config_version=5
 
 [application]
 
-config/name="ChullaSolution Mission Trainer"
+config/name="Killawasi"
 config/description="Entrenador de misiones para jóvenes astronautas. Equipo ChullaSolution · NASA Space Apps Challenge 2026 · Riobamba."
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameState="*res://core/game_state.gd"
+
+[audio]
+
+general/text_to_speech=true
 
 [display]
 
