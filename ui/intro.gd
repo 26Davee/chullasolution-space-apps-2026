@@ -11,13 +11,13 @@ const UI = preload("res://ui/ui_kit.gd")
 const Tutorial = preload("res://ui/tutorial_controller.gd")
 const StepData = preload("res://ui/tutorial_steps.gd")
 
-@export_file("*.json") var upgrades_json_path := "res://data/missions/arbol_habilidades.json"
-@export_file("*.json") var missions_json_path := "res://data/missions/misiones_listas.json"
+@export_file("*.json") var upgrades_json_path := "res://data/missions/upgrades.json"
+@export_file("*.json") var missions_json_path := "res://data/missions/missions.json"
 @export var upgrades_panel_scene: PackedScene
 @export var missions_panel_scene: PackedScene
 @export var science_panel_scene: PackedScene
 @export var game_state_path := NodePath("/root/GameState")
-@export_file("*.tscn", "*.glb", "*.gltf") var astronaut_model_path := "res://assets/3d/astronauta.tscn"
+@export_file("*.tscn", "*.glb", "*.gltf") var astronaut_model_path := "res://assets/3d/robot_humanoide.tscn"
 @export_range(0.01, 5.0) var astronaut_model_scale := 1.0
 
 const DESIGN := Vector2(1280, 720)
@@ -253,8 +253,10 @@ func _render_start() -> void:
     _label(body, "KILLAWASI", Rect2(62, 238, 650, 104), 78, WHITE, true)
     _label(body, _t("v2.hero_title"), Rect2(66, 352, 560, 116), 40, WHITE, true)
     _label(body, _t("v2.hero_body"), Rect2(68, 480, 500, 68), 22, Color("#d9e8f5"))
-    primary_button = _button(body, _t("v2.start"), Rect2(66, 564, 310, 64), _start_landing, true)
-    _button(body, _t("v2.help"), Rect2(392, 564, 180, 64), _open_help)
+    primary_button = _button(body, _t("v2.start"), Rect2(66, 564, 270, 64), _start_landing, true)
+    var skip_btn := _button(body, _t("v2.skip_tutorial"), Rect2(350, 564, 210, 64), _skip_tutorial)
+    skip_btn.name = "SkipTutorialButton"
+    _button(body, _t("v2.help"), Rect2(574, 564, 176, 64), _open_help)
     _label(body, _t("ui.controls"), Rect2(68, 646, 580, 30), 16, Color("#d4e4f1"))
     primary_button.grab_focus()
 
@@ -348,6 +350,15 @@ func _start_landing() -> void:
     landing_tween = create_tween()
     landing_tween.tween_method(_set_landing, 0.0, 1.0, 3.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
     landing_tween.tween_callback(_finish_landing)
+
+func _skip_tutorial() -> void:
+    if _transitioning:
+        return
+    if tutorial.player.age_group.is_empty():
+        tutorial.player.choose_age("7_9")
+    tutorial.completed = true
+    bridge.training = false
+    _transition_to("expedition")
 
 func _set_landing(value: float) -> void:
     art.set("landing_progress", value)

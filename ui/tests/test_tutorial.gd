@@ -32,7 +32,7 @@ class FakeBus extends Node:
     signal mejora_desbloqueada(id: String, branch: String, level: int)
     signal vicuna_mensaje_mostrado(index: int, key: String)
     var energia := 60.0
-    var vida := 100.0
+    var oxigeno := 100.0
     var estrellas := 0
     var hielo := 0
     var es_dia := true
@@ -98,10 +98,12 @@ func run() -> void:
     await test_bridge()
     await test_catalog_and_purchases()
     var clock = load("res://ui/mission_clock.gd")
-    check(clock.display({"tiempo_juego": 1322.5}) == {"day":3,"time":"22:10"}, "Clock shows mission day and accelerated game hour")
-    check(clock.display({"dia_mision": 6, "minutos_mision": 125}) == {"day":6,"time":"02:05"}, "Authoritative mission clock overrides projection")
+    check(clock.display({"tiempo_juego": 240.0}) == {"year":1,"month":1,"day":15,"time":"18:21"}, "4 min real reaches ~14.77 Earth days (day 15)")
+    check(clock.display({"tiempo_juego": 490.0}) == {"year":1,"month":2,"day":1,"time":"03:29"}, "30 elapsed days roll over to Month 2 Day 1")
+    check(clock.display({"tiempo_juego": 5860.0}) == {"year":2,"month":1,"day":1,"time":"12:17"}, "12 elapsed months roll over to Year 2 Month 1")
+    check(clock.display({"dia_mision": 6, "minutos_mision": 125}) == {"year":1,"month":1,"day":6,"time":"02:05"}, "Authoritative mission clock overrides projection")
     if failures.is_empty():
-        print("PASS: both full tutorials, EN/ES, mouse/keyboard, age gates, HUD targets, panels, profile, providers, life-zero edge, dynamic maximum and authoritative stars")
+        print("PASS: both full tutorials, EN/ES, mouse/keyboard, age gates, HUD targets, panels, profile, providers, failure-zero edge, dynamic maximum and authoritative stars")
     else:
         print("FAIL: ", failures)
     quit(0 if failures.is_empty() else 1)
@@ -135,7 +137,7 @@ func run_flow(test_case: Dictionary) -> void:
         if before == "name":
             var avatar = intro.body.find_children("*", "SubViewportContainer", true, false)[0]
             check(avatar.get_child(0).transparent_bg, "Astronaut viewport keeps a transparent background")
-            check(avatar._model.scene_file_path == "res://assets/3d/astronauta.tscn", "Original P3 astronaut scene is reused")
+            check(avatar._model.scene_file_path == "res://assets/3d/robot_humanoide.tscn", "Original P3 robot scene is reused")
             var rotation_before: float = avatar._model.rotation.y
             await create_timer(0.1).timeout
             check(absf(avatar._model.rotation.y - rotation_before) > 0.05, "Astronaut spins visibly faster")
@@ -225,14 +227,14 @@ func run_flow(test_case: Dictionary) -> void:
         check(not intro.spoken_text.contains("{name}"), "Narration resolves placeholders")
         check(intro.dialogue_label.position.y + intro.dialogue_label.size.y <= intro.primary_button.position.y - 10, "Dialogue stays above navigation buttons: " + before)
         if before == "base":
-            check(intro.hud.visible, "Five-resource HUD appears")
-            check(intro.hud.resource_buttons.size() == 5, "HUD exposes all five resources")
+            check(intro.hud.visible, "Four-resource HUD appears")
+            check(intro.hud.resource_buttons.size() == 4, "HUD exposes all four resources")
             check(intro.menu_button.visible, "Base menu becomes available with the HUD")
             intro.hud.set_state({"energia":{"value":120.0,"max":150.0}})
             check(intro.hud.values.energia.text == "80 %", "Bar percentage respects upgraded capacity")
             var first_y: float = intro.hud.resource_buttons.energia.position.y
             for resource_id in intro.hud.bars:
-                check(intro.hud.resource_buttons[resource_id].position.y == first_y, "All five resource bars share one row")
+                check(intro.hud.resource_buttons[resource_id].position.y == first_y, "All four resource bars share one row")
                 var bar: ProgressBar = intro.hud.bars[resource_id]
                 check(bar.position.y + bar.size.y <= intro.hud.resource_buttons[resource_id].size.y, "Resource bar fits inside its card")
             intro.hud.set_state(intro.bridge.get_state())
@@ -295,19 +297,19 @@ func test_bridge() -> void:
     root.add_child(bus)
     bridge.bind_state(bus)
     bridge.recovery_requested.connect(func(policy: String, _data: Dictionary): recoveries.append(policy))
-    bus.recurso_actualizado.emit("vida", 0.0, 100.0)
+    bus.recurso_actualizado.emit("energia", 0.0, 100.0)
     check(recoveries.is_empty(), "Training cannot trigger live recovery")
-    check(bridge.get_state().vida.value == 100.0, "Practice snapshot is isolated from live state")
-    bus.recurso_actualizado.emit("vida", 100.0, 100.0)
+    check(bridge.get_state().energia.value == 60.0, "Practice snapshot is isolated from live state")
+    bus.recurso_actualizado.emit("energia", 60.0, 100.0)
     bridge.begin_live({"mode":"cadete", "nickname":"Alex"})
-    bus.recurso_actualizado.emit("vida", 0.0, 100.0)
-    bus.recurso_actualizado.emit("vida", 0.0, 100.0)
-    check(recoveries == ["checkpoint"], "Life zero requests checkpoint only once")
-    bus.recurso_actualizado.emit("vida", 100.0, 100.0)
+    bus.recurso_actualizado.emit("energia", 0.0, 100.0)
+    bus.recurso_actualizado.emit("energia", 0.0, 100.0)
+    check(recoveries == ["checkpoint"], "Energy zero requests checkpoint only once")
+    bus.recurso_actualizado.emit("energia", 100.0, 100.0)
     bridge.configure_profile({"mode":"ingeniero", "nickname":"Alex"})
-    bus.recurso_actualizado.emit("vida", 0.0, 100.0)
-    check(recoveries == ["checkpoint", "restart"], "Engineer life zero requests full restart")
-    check(bus.vida == 100.0 and bus.energia == 60.0, "UI never writes simulation state")
+    bus.recurso_actualizado.emit("oxigeno", 0.0, 100.0)
+    check(recoveries == ["checkpoint", "restart"], "Engineer crew oxygen zero requests full restart")
+    check(bus.oxigeno == 100.0 and bus.energia == 60.0, "UI never writes simulation state")
     bus.recurso_actualizado.emit("energia", 120.0, 150.0)
     check(bridge.get_state().energia.max == 150.0, "Energy maximum is dynamic")
     bus.mision_completada.emit("mision_01", 1, {})

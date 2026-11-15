@@ -10,7 +10,7 @@
 | Archivo | Ruta en Godot | Contenido |
 |---|---|---|
 | [`missions.json`](missions.json) | `res://data/missions/missions.json` | Campaña oficial de **16 misiones** (`mision_01` a `mision_16`, 24★ totales). |
-| [`upgrades.json`](upgrades.json) | `res://data/missions/upgrades.json` | Árbol de **4 ramas** (`energia`, `vida`, `escudo`, `herramientas`) y **12 mejoras** (costos `1★`, `2★`, `3★`). |
+| [`upgrades.json`](upgrades.json) | `res://data/missions/upgrades.json` | Árbol de **4 ramas** (`energia`, `soporte_vital`, `escudo`, `herramientas`) y **12 mejoras** (costos `1★`, `2★`, `3★`). |
 
 > [!TIP]
 > **Para UI (`ui/`) y Core (`core/`):** No necesitas abrir ni parsear estos JSON manualmente. Los scripts de [`progression/`](../progression/README.md) ya los cargan al iniciar y entregan todos los datos listos como `Dictionary` y `Array` mediante sus funciones y señales.
@@ -30,23 +30,23 @@ Cuando la UI llama a `mission_manager.obtener_mision_activa()` o recibe la seña
   "puntos": { "cadete": 1, "ingeniero": 1 },
   "trigger": ["partida_iniciada", "panel_solar_construido", "energia_mayor_70"],
   "objetivo": [
-    "Elegir una casilla libre cerca del domo y construir 1 panel solar",
+	"Elegir una casilla libre cerca del domo y construir 1 panel solar",
     "Aprovechar la luz del día para subir la energía por encima de 70 puntos"
   ],
   "condicion_fallo": ["energia_cero", "inaccion_prolongada_amanecer"],
   "reporte_fallo": "Texto amable de la Vicuña explicando qué pasó...",
   "desbloquea": { "mision_siguiente": "mision_02" },
   "carta_nasa": {
-    "titulo": "Energía Solar en la Luna",
-    "dato": "Explicación científica adaptada para niños...",
-    "fuente": "NASA Glenn Research Center / Sistemas de Energía Espacial"
+	"titulo": "Energía Solar en la Luna",
+	"dato": "Explicación científica adaptada para niños...",
+	"fuente": "NASA Glenn Research Center / Sistemas de Energía Espacial"
   }
 }
 ```
 
 ### 2. Estructura del árbol en `upgrades.json`
 Cuando la UI llama a `tech_tree.obtener_ramas()`, recibe un `Array` de 4 ramas. Cada rama contiene:
-* `id`: `"energia"`, `"vida"`, `"escudo"`, `"herramientas"`
+* `id`: `"energia"`, `"soporte_vital"`, `"escudo"`, `"herramientas"`
 * `nombre`: título visible de la rama (ej. `"Rama Energía ⚡"`)
 * `descripcion`: explicación breve
 * `mejoras`: `Array` de 3 niveles (`1`, `2`, `3`), cada uno con:

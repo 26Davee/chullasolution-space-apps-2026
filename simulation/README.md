@@ -4,7 +4,7 @@
 **Pareja de revisión:** puesto 5.
 
 ## Qué es
-El modelo de la base: energía, vida (aire y agua) y escudo.
+El modelo de la base: energía, soporte vital (agua y oxígeno) y escudo.
 
 ## Qué va aquí
 - Funciones que reciben el estado y una acción y devuelven el estado nuevo.
@@ -18,7 +18,7 @@ El modelo de la base: energía, vida (aire y agua) y escudo.
 Puesto 5 (pareja de revisión), puesto 4 (acciones) y puesto 6 (qué números se muestran).
 
 ## Tu primera tarea
-Sáb 10:15 contrato del estado de la base; 10:45 descargas y reduces los datos de RadLab y DONKI; 11:45 primer modelo de energía, vida y escudo con sus primeras pruebas.
+Sáb 10:15 contrato del estado de la base; 10:45 descargas y reduces los datos de RadLab y DONKI; 11:45 primer modelo de energía, soporte vital y escudo con sus primeras pruebas.
 
 ## Antes de pedir un Pull Request
 - El juego abre con F5.

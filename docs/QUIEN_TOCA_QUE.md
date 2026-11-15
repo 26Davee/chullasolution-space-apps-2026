@@ -14,7 +14,7 @@ Regla: **cada carpeta tiene un solo dueño.** Solo el dueño cambia sus archivos
 | `export/` | **Puesto 1** | Ajustes de exportación a la web (`export_presets.cfg`) y notas de publicación. |
 | `docs/` (menos `docs/registro/`) | **Puesto 1** | Documentación del equipo. |
 | `.github/`, `README.md`, `CONTRIBUTING.md`, `.gitignore`, `.gitattributes` | **Puesto 1** | Organización del repositorio. |
-| `simulation/` | **Puesto 2** | El modelo de la base: energía, vida, escudo. Incluye `simulation/tests/`. |
+| `simulation/` | **Puesto 2** | El modelo de la base: energía, soporte vital (agua y oxígeno) y escudo. Incluye `simulation/tests/`. |
 | `data/nasa/` | **Puesto 2** | Instantáneas reducidas de datos de NASA, con su etiqueta. |
 | `world/` | **Puesto 3** | La Luna, el domo, la luz y los módulos (`world/moon_world.tscn`). |
 | `assets/3d/` | **Puesto 3** | Modelos, texturas y arte del mundo. |
@@ -66,16 +66,16 @@ Si dudas dónde poner algo, busca aquí primero.
 
 ## Quién es quién
 
-Se llena el sábado cuando cada uno confirme su puesto.
+Puestos confirmados el sábado 14 de noviembre. Falta el usuario de GitHub de cada persona: el puesto 1 lo anota y activa el `CODEOWNERS`.
 
 | Puesto | Persona | Usuario de GitHub |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
-| 6 | | |
+| 1 | Ángel David Espinoza Ureta | `26Davee` |
+| 2 | Anahi | (pendiente) |
+| 3 | Carlos Valladares | (pendiente) |
+| 4 | Nicolas Ladino | (pendiente) |
+| 5 | Gael | (pendiente) |
+| 6 | Andrea | (pendiente) |
 
 ## Lo que nunca va en el repositorio
 

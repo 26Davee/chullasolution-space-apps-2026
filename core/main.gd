@@ -6,9 +6,14 @@ extends Node
 ## completo de F5 funcionando. Para cambiarlas basta con sustituir
 ## _crear_titulo() y _crear_menu_modo(); el resto del flujo no se toca.
 
+const ESCENA_INTRO := "res://ui/intro.tscn"
 const ESCENA_JUEGO := "res://scenes/juego.tscn"
 
 var _pantalla: Node = null
+
+
+func _gs() -> Node:
+	return get_node_or_null("/root/GameState")
 
 
 func _ready() -> void:
@@ -16,8 +21,25 @@ func _ready() -> void:
 
 
 func mostrar_titulo() -> void:
-	GameState.reiniciar()
+	var gs := _gs()
+	if gs:
+		gs.reiniciar()
+	if ResourceLoader.exists(ESCENA_INTRO):
+		var intro_escena: PackedScene = load(ESCENA_INTRO)
+		var intro := intro_escena.instantiate()
+		if intro.has_signal("mission_requested"):
+			intro.mission_requested.connect(_al_solicitar_mision_desde_intro)
+		_cambiar_pantalla(intro)
+		return
 	_cambiar_pantalla(_crear_titulo())
+
+
+func _al_solicitar_mision_desde_intro(perfil: Dictionary) -> void:
+	var gs := _gs()
+	var modo := String(gs.aplicar_perfil(perfil)) if gs else "cadete"
+	iniciar_juego(modo)
+	if gs:
+		gs.aplicar_legado()
 
 
 func mostrar_menu_modo() -> void:
@@ -30,7 +52,9 @@ func iniciar_juego(modo: String) -> void:
 	if juego.has_signal("salir_al_menu"):
 		juego.salir_al_menu.connect(mostrar_titulo)
 	_cambiar_pantalla(juego)
-	GameState.iniciar_partida(modo)
+	var gs := _gs()
+	if gs:
+		gs.iniciar_partida(modo)
 
 
 func _cambiar_pantalla(nueva: Node) -> void:

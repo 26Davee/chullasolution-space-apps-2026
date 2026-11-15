@@ -18,6 +18,10 @@ func _draw() -> void:
     match kind:
         "energia":
             draw_colored_polygon(PackedVector2Array([Vector2(2,-17),Vector2(-11,2),Vector2(-2,2),Vector2(-6,17),Vector2(12,-5),Vector2(3,-5)]), ink)
+        "robot_battery":
+            draw_rect(Rect2(-12,-10,22,20), ink, false, 3)
+            draw_rect(Rect2(10,-5,4,10), ink)
+            draw_rect(Rect2(-8,-6,13,12), ink)
         "vida":
             draw_circle(Vector2(-6,-5),8,ink)
             draw_circle(Vector2(6,-5),8,ink)

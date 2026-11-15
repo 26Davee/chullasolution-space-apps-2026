@@ -9,14 +9,15 @@ signal content_changed()
 signal upgrade_requested(id: String)
 
 const Profile = preload("res://ui/player_profile.gd")
-const RESOURCE_IDS := ["energia", "agua", "oxigeno", "vida", "escudo"]
+const RESOURCE_IDS := ["energia", "agua", "oxigeno", "escudo"]
 const INITIAL := {
     "energia": {"value": 60.0, "max": 100.0},
+    "energia_robot": {"value": 100.0, "max": 100.0},
     "agua": {"value": 20.0, "max": 100.0},
     "oxigeno": {"value": 60.0, "max": 100.0},
-    "vida": {"value": 100.0, "max": 100.0},
     "escudo": {"value": 100.0, "max": 100.0},
-    "hielo": 0, "estrellas": 0, "herramienta_nivel": 1, "es_dia": true, "tiempo_juego": 0.0
+    "hielo": 0, "estrellas": 0, "herramienta_nivel": 1, "es_dia": true, "tiempo_juego": 0.0,
+    "descansando_en_domo": false, "nube_activa": false, "alerta_nube": false, "modo_juego": "cadete"
 }
 @export var state_path := NodePath("/root/GameState")
 var training := true
@@ -46,7 +47,7 @@ func begin_live(profile: Dictionary) -> void:
     configure_profile(profile)
     training = false
     state_changed.emit(get_state())
-    _check_life()
+    _check_failure()
 
 func bind_state(bus: Node) -> void:
     if bus == _bus:
@@ -65,6 +66,7 @@ func bind_state(bus: Node) -> void:
 func _bindings() -> Dictionary:
     return {
         "recurso_actualizado": receive_resource,
+        "robot_energia_actualizada": receive_robot_energy,
         "estrellas_actualizadas": receive_stars,
         "ciclo_solar_cambiado": receive_day,
         "mision_completada": _mission_completed,
@@ -85,6 +87,10 @@ func _try_bind() -> void:
             receive_clock(float(_bus.get("tiempo_juego")))
         if not training and "dia_mision" in _bus and "minutos_mision" in _bus:
             receive_mission_clock(int(_bus.get("dia_mision")), int(_bus.get("minutos_mision")))
+        if not training:
+            for k in ["descansando_en_domo", "nube_activa", "alerta_nube", "modo_juego"]:
+                if k in _bus:
+                    _live[k] = _bus.get(k)
         return
     var candidate := get_node_or_null(state_path)
     if candidate == null and state_path == NodePath("/root/GameState"):
@@ -99,9 +105,18 @@ func _read_snapshot() -> void:
             if id == "energia" and "bateria_instalada" in _bus and _bus.get("bateria_instalada"):
                 maximum = 150.0
             receive_resource(id, float(_bus.get(id)), maximum)
-    for key in ["hielo", "herramienta_nivel", "estrellas", "es_dia", "tiempo_juego", "dia_mision", "minutos_mision"]:
+    if "energia_robot" in _bus:
+        receive_robot_energy(float(_bus.get("energia_robot")), 100.0)
+    for key in ["hielo", "herramienta_nivel", "estrellas", "es_dia", "tiempo_juego", "dia_mision", "minutos_mision", "descansando_en_domo", "nube_activa", "alerta_nube", "modo_juego"]:
         if key in _bus:
             _live[key] = _bus.get(key)
+    if not training:
+        state_changed.emit(get_state())
+
+func receive_robot_energy(value: float, maximum: float = 100.0) -> void:
+    if not is_finite(value) or not is_finite(maximum) or maximum <= 0:
+        return
+    _live["energia_robot"] = {"value": clampf(value, 0.0, maximum), "max": maximum}
     if not training:
         state_changed.emit(get_state())
 
@@ -116,8 +131,8 @@ func receive_resource(id: String, value: float, maximum: float) -> void:
         return
     if not training:
         state_changed.emit(get_state())
-        if id == "vida":
-            _check_life()
+        if id == "energia" or id == "oxigeno":
+            _check_failure()
 
 func receive_stars(total: int) -> void:
     _live.estrellas = maxi(total, 0)
@@ -141,9 +156,10 @@ func receive_mission_clock(day: int, minutes: int) -> void:
         _live.minutos_mision = posmod(minutes, 1440)
         if not training: state_changed.emit(get_state())
 
-func _check_life() -> void:
-    var life := float(_live.vida.value)
-    if life > 0:
+func _check_failure() -> void:
+    var energy := float(_live.energia.value)
+    var oxygen := float(_live.oxigeno.value)
+    if energy > 0.0 and oxygen > 0.0:
         _zero_handled = false
         return
     var policy := Profile.recovery_for(str(_profile.get("mode", "")))

@@ -4,10 +4,10 @@
 
 Abrir `ui/intro.tscn` en Godot 4 y ejecutar **F6**. F5 sigue usando la escena principal que administra P1. El proyecto ya tiene TTS habilitado; el botón Audio permite escoger una voz instalada, probarla, ajustar volumen/velocidad y silenciar. Inglés inicia seleccionado; español es opcional. No hace falta instalar una biblioteca adicional para la versión de escritorio: se reutiliza `ui/timmy_voice.gd` y el TTS del sistema. La disponibilidad de voces depende del equipo. La exportación web necesita su propia comprobación de voz en el navegador.
 
-El recorrido es compartido: aterrizaje → Timmy → alias → grupo de edad → cinco recursos → acciones de la base → misiones → mejoras → ciencia → día/noche → recuperación → «Sí, iniciar». Los pasos interactivos requieren tocar el control resaltado antes de continuar. Tab/Mayús+Tab mueven el foco; Enter o Espacio activa el botón enfocado; Esc cierra la ventana abierta o abre Audio.
+El recorrido es compartido: aterrizaje → Timmy → alias → grupo de edad → cuatro recursos → acciones de la base → misiones → mejoras → ciencia → día/noche → recuperación → «Sí, iniciar». Los pasos interactivos requieren tocar el control resaltado antes de continuar. Tab/Mayús+Tab mueven el foco; Enter o Espacio activa el botón enfocado; Esc cierra la ventana abierta o abre Audio.
 
-- **7–9 años:** perfil `mode = "cadete"`; al llegar Vida a 0 se solicita `checkpoint`.
-- **10–12 años:** perfil `mode = "ingeniero"`; al llegar Vida a 0 se solicita `restart`.
+- **7–9 años:** perfil `mode = "cadete"`; al llegar Energía o Oxígeno de la tripulación a 0 se solicita `checkpoint`.
+- **10–12 años:** perfil `mode = "ingeniero"`; al llegar Energía o Oxígeno de la tripulación a 0 se solicita `restart`.
 - El perfil confirmado conserva el alias y grupo de edad durante el repaso. No hay cuenta, contraseña ni fecha de nacimiento.
 - El tutorial usa una instantánea de práctica: no consume recursos, concede estrellas, desbloquea mejoras ni cambia partidas reales.
 
@@ -18,9 +18,9 @@ El recorrido es compartido: aterrizaje → Timmy → alias → grupo de edad →
 | `intro.gd` / `intro.tscn` | Presentación, diálogo, navegación, transiciones y ventanas |
 | `home_menu.gd` | Menú con Jugar/Reanudar, Opciones y repetición del tutorial |
 | `player_profile.gd` | Única correspondencia edad/modo/recuperación |
-| `tutorial_steps.gd` / `tutorial_controller.gd` | Un recorrido de 20 pasos para ambos modos, con objetivos interactivos |
+| `tutorial_steps.gd` / `tutorial_controller.gd` | Un recorrido de 19 pasos para ambos modos, con objetivos interactivos |
 | `ui_kit.gd` / `ui_icon.gd` | Colores, botones, foco, textos e iconos compartidos |
-| `hud.gd` / `hud.tscn` | Cinco barras en una fila, porcentajes, contadores y reloj |
+| `hud.gd` / `hud.tscn` | Cuatro barras en una fila, porcentajes, contadores y reloj |
 | `mission_clock.gd` | Presentación del reloj; no ejecuta la simulación |
 | `section_menu.gd` | Menú de icono en la esquina superior derecha, con siete accesos |
 | `visual_activity.gd` | Demostraciones visuales de construcción, mapa, procesamiento, reparación y tablero científico |
@@ -30,10 +30,10 @@ El recorrido es compartido: aterrizaje → Timmy → alias → grupo de edad →
 | `upgrade_tree.gd` | Árbol visual de cuatro ramas, selección, coste y solicitud de compra |
 | `mission_list.gd` | Lista desplazable, objetivo, recompensa y estado de misión |
 | `game_bridge.gd` | Adaptador de lectura y señales entre UI y P1/P2/P5 |
-| `astronaut_preview.gd` | Instancia el modelo existente `assets/3d/astronauta.tscn` con cámara y luces |
+| `astronaut_preview.gd` | Instancia el modelo existente `assets/3d/robot_humanoide.tscn` con cámara y luces |
 | `../i18n/en.gd`, `../i18n/es.gd` | Textos de la interfaz y del tutorial |
 
-Se mantienen las imágenes actuales de fondo, Timmy y nave de `assets/ui/`. No se reconstruye ni edita el astronauta de P3. Los iconos pequeños se dibujan en Godot y se reutilizan.
+Se mantienen las imágenes actuales de fondo, Timmy y nave de `assets/ui/`. No se reconstruye ni edita el robot de P3. Los iconos pequeños se dibujan en Godot y se reutilizan.
 
 ## P5: conectar misiones y árbol
 
@@ -41,8 +41,8 @@ P6 entrega **la parte gráfica**. P5 conserva la evaluación de objetivos, dific
 
 Publicar los archivos suministrados en estas rutas, o cambiar las propiedades exportadas de la escena de inicio:
 
-- `res://data/missions/arbol_habilidades.json`: objeto `arbol_habilidades.ramas[]`, cada rama con `id` y `mejoras[]`. Cada mejora conserva `id`, `nivel`, `costo`, `requisito`, `nombre` y `efecto.descripcion`.
-- `res://data/missions/misiones_listas.json`: objeto `misiones[]`, con `id`, `mision`, `objetivo` y `puntos.cadete/ingeniero`.
+- `res://data/missions/upgrades.json`: objeto `arbol_habilidades.ramas[]`, cada rama con `id` y `mejoras[]`. Cada mejora conserva `id`, `nivel`, `costo`, `requisito`, `nombre` y `efecto.descripcion`.
+- `res://data/missions/missions.json`: objeto `misiones[]`, con `id`, `mision`, `objetivo` y `puntos.cadete/ingeniero`.
 - Si P5 ya los carga, puede entregar los dos diccionarios mediante `intro.set_progression_catalogs(upgrades, missions)`.
 - Incluir `*.json` en los archivos de la exportación si se leen mediante FileAccess.
 
@@ -76,7 +76,7 @@ mision_completada(id: String, reward: int, card: Dictionary)
 mejora_desbloqueada(id: String, branch: String, level: int)
 ```
 
-IDs de barras: `energia`, `agua`, `oxigeno`, `vida`, `escudo`. Hielo es un contador. Cada porcentaje respeta el máximo recibido: 120/150 de energía muestra 80 %. Los números son **unidades de juego**.
+IDs de barras: `energia`, `agua`, `oxigeno`, `escudo`. Hielo es un contador. Cada porcentaje respeta el máximo recibido: 120/150 de energía muestra 80 %. Los números son **unidades de juego**.
 
 El reloj acepta el tiempo acumulado `tiempo_juego`. Para la presentación se proyectan los 300 segundos de día y 180 de noche del material a un reloj 06:00–18:00–06:00 y se incrementa el día cada ciclo. No es una duración lunar real ni modifica el reloj de P2. Si P2 dispone de un reloj propio, proporcionar `dia_mision` y `minutos_mision` (minutos desde medianoche), o llamar `bridge.receive_mission_clock(day, minutes)`: esos valores tienen prioridad.
 
@@ -91,25 +91,25 @@ Al confirmar el final del tutorial se muestra el menú de inicio con imagen y Ju
 
 La UI de la expedición puede reutilizar `hud.tscn`, `section_menu.gd` y un `GameBridge` nuevo: conectar `state_changed` a `hud.set_state`, `section_menu.section_requested` a las acciones/ventanas de P4/P5, y llamar `bridge.begin_live(profile)`. El entrenamiento no inicia ni pausa por su cuenta la simulación.
 
-Al llegar Vida a 0 en juego real, `bridge.recovery_requested(policy, profile)` se emite una vez hasta que Vida vuelva a ser positiva. P1/P2/P5 deben implementar la recuperación y publicar el nuevo estado:
+Al llegar Energía del robot o Oxígeno de la tripulación a 0 en juego real, `bridge.recovery_requested(policy, profile)` se emite una vez hasta que ambos vuelvan a ser positivos. P1/P2/P5 deben implementar la recuperación y publicar el nuevo estado:
 
 - `checkpoint`: restaurar el último checkpoint del cadete.
 - `restart`: reiniciar toda la expedición del ingeniero, incluidas misiones, recursos, estrellas y mejoras; conservar perfil, idioma y ajustes de voz.
 
-**P2 debe emitir Vida = 0.** El mínimo 10 de una versión del diccionario contradice la regla final de la usuaria y no debe impedir detectar la derrota. Este módulo no borra guardados ni aplica reinicios por su cuenta.
+**P2 debe emitir `energia = 0` u `oxigeno = 0`.** Este módulo no borra guardados ni aplica reinicios por su cuenta.
 
 ## Validación de esta fase
 
 Pruebas automatizadas: `Godot --headless --path . --script res://ui/tests/test_tutorial.gd`. Se debe comprobar el código de salida y la ausencia de SCRIPT ERROR, además del mensaje PASS.
 
-Se probaron ambos recorridos completos en inglés/español, clic y teclado, selección obligatoria de edad, acciones guiadas, cinco barras alineadas, máximo dinámico, catálogos e intención de compra, recompensas sin duplicar y recuperación al llegar a cero. Se revisaron capturas nativas a 1280×720 y una ventana de 960×540. La voz nativa cuenta con controles y selección de voces del sistema; debe probarse también en el equipo y plataforma finales.
+Se probaron ambos recorridos completos en inglés/español, clic y teclado, selección obligatoria de edad, acciones guiadas, cuatro barras alineadas, máximo dinámico, catálogos e intención de compra, recompensas sin duplicar y recuperación al llegar a cero. Se revisaron capturas nativas a 1280×720 y una ventana de 960×540. La voz nativa cuenta con controles y selección de voces del sistema; debe probarse también en el equipo y plataforma finales.
 
 La simulación de acciones, la persistencia/checkpoints, la dificultad real y el cambio a la expedición siguen en los módulos de sus responsables. El tablero científico incluye cuatro ejemplos con enlaces oficiales; las tarjetas adicionales de P5 deben conservar sus fuentes verificadas.
 
 ## Actualización visual · 14 de noviembre de 2026
 
-- El astronauta conserva el modelo de P3, sin panel detrás, con rotación continua de 55 grados por segundo.
-- Los accesos están en el botón de menú, solo con icono, arriba a la derecha. Su borde amarillo señala los pasos guiados. El HUD mantiene las cinco barras juntas.
+- El robot conserva el modelo de P3 (`robot_humanoide.tscn`), sin panel detrás, con rotación continua de 55 grados por segundo.
+- Los accesos están en el botón de menú, solo con icono, arriba a la derecha. Su borde amarillo señala los pasos guiados. El HUD mantiene las cuatro barras juntas.
 - Construcción: seleccionar una de cuatro ilustraciones y mostrarla en una única vista de práctica; otro módulo reemplaza el anterior.
 - Expedición: mapa ilustrado con tres zonas seleccionables, trazado de ruta y exploración de posibles depósitos de hielo. El mapa y los resultados son ficticios para entrenar.
 - Procesamiento: secuencia interactiva de hielo, energía y agua, con iconos de salida y repetición.

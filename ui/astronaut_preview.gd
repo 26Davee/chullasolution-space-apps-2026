@@ -1,6 +1,6 @@
 extends SubViewportContainer
 ## UI preview only: instances P3's scene without editing it or adding gameplay.
-@export_file("*.tscn", "*.glb", "*.gltf") var model_path := "res://assets/3d/astronauta.tscn"
+@export_file("*.tscn", "*.glb", "*.gltf") var model_path := "res://assets/3d/robot_humanoide.tscn"
 @export_range(0.01, 5.0) var model_scale := 1.0
 var _model: Node3D
 @export_range(0.0, 180.0) var rotation_speed := 55.0

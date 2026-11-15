@@ -26,7 +26,7 @@ const PREVIEW = {
             ]
         },
         {
-            "id": "vida",
+            "id": "soporte_vital",
             "upgrades": [
                 {
                     "id": "procesar_rapido",
@@ -210,8 +210,8 @@ const PREVIEW = {
         }
     ]
 }
-var upgrades_path := "res://data/missions/arbol_habilidades.json"
-var missions_path := "res://data/missions/misiones_listas.json"
+var upgrades_path := "res://data/missions/upgrades.json"
+var missions_path := "res://data/missions/missions.json"
 var _upgrades: Dictionary = {}
 var _missions: Dictionary = {}
 

@@ -17,10 +17,10 @@ func _initialize() -> void:
 	main.iniciar_juego("ingeniero"); await process_frame; await process_frame
 	ok(gs.modo_juego == "ingeniero" and gs.en_partida, "partida en modo ingeniero")
 	ok(main._pantalla.get_node_or_null("Astronauta") != null, "astronauta en la escena de juego")
-	ok(hits.size() >= 6, "recurso_actualizado emitido para los 6 recursos (%d)" % hits.size())
+	ok(hits.size() >= 5, "recurso_actualizado emitido para los 5 recursos (%d)" % hits.size())
 	print("simulación conectada: ", gs.hay_simulacion(), "  energía ", gs.energia, "  agua ", gs.agua)
 	# límites
-	gs.fijar_recurso("vida", 0); ok(gs.vida == 10.0, "vida nunca baja de 10")
+	ok(gs.RECURSOS.size() == 5 and not ("vida" in gs.RECURSOS), "barra de vida eliminada de RECURSOS")
 	gs.fijar_recurso("energia", 999); ok(gs.energia == 100.0, "energía tope 100 sin batería")
 	gs.bateria_instalada = true; gs.fijar_recurso("energia", 999); ok(gs.energia == 150.0, "energía tope 150 con batería")
 	gs.fijar_recurso("hielo", 99); ok(gs.hielo == 40, "hielo tope 40")

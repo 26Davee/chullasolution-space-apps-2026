@@ -42,17 +42,22 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		KEY_N:
 			var ambiente := mundo.get_node("Ambiente")
 			ambiente.set_noche(not ambiente.noche)
-			mundo.get_node("PanelSolar/Indicador").visible = not ambiente.noche
+			var ind := mundo.get_node_or_null("PanelSolar/Indicador") as Node3D
+			if ind != null:
+				ind.visible = not ambiente.noche
 		KEY_D:
 			escudo = (escudo + 1) % ESCUDOS.size()
 			mundo.get_node("Domo").set_escudo(ESCUDOS[escudo])
 		KEY_A:
 			agua = (agua + 1) % 3
-			var nivel := mundo.get_node("TanqueAgua/NivelAgua") as Node3D
-			nivel.visible = agua > 0
-			nivel.scale.y = [1.0, 1.0, 1.85][agua]
+			var nivel := mundo.get_node_or_null("TanqueAgua/NivelAgua") as Node3D
+			if nivel != null:
+				nivel.visible = agua > 0
+				nivel.scale.y = [1.0, 1.0, 1.85][agua]
 		KEY_P:
-			mundo.get_node("ProcesadorHielo/AnimationPlayer").play("procesar")
+			var anim := mundo.get_node_or_null("ProcesadorHielo/AnimationPlayer") as AnimationPlayer
+			if anim != null:
+				anim.play("procesar")
 		KEY_L:
 			acceso_abierto = not acceso_abierto
 			mundo.get_node("Capsula/Acceso").play("abrir" if acceso_abierto else "cerrar")
