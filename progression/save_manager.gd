@@ -20,6 +20,7 @@ const META_PATH := "user://saves_meta.json"
 
 var active_slot: int = 1
 var tutorial_seen: bool = false
+var idioma_preferido: String = ""
 var _datos: Dictionary = {}
 var ultimo_error := ""
 var respaldo_recuperado := false
@@ -400,14 +401,23 @@ func _cargar_meta() -> void:
 	if json.parse(FileAccess.get_file_as_string(_metadata_path())) == OK and json.data is Dictionary:
 		active_slot = clampi(int(json.data.get("active_slot", 1)), 1, MAX_SLOTS)
 		tutorial_seen = bool(json.data.get("tutorial_seen", false))
+		var lang := str(json.data.get("language", ""))
+		idioma_preferido = lang if lang in ["en", "es"] else ""
 
 
 func _guardar_meta() -> void:
 	var f := FileAccess.open(_metadata_path(), FileAccess.WRITE)
 	if f == null:
 		return
-	f.store_string(JSON.stringify({"active_slot": active_slot, "tutorial_seen": tutorial_seen}, "\t"))
+	f.store_string(JSON.stringify({"active_slot": active_slot, "tutorial_seen": tutorial_seen, "language": idioma_preferido}, "\t"))
 	f.close()
+
+
+## Interface preference lives outside expedition slots; switching language never
+## creates a new expedition or overwrites its resources.
+func guardar_idioma(lang: String) -> void:
+	idioma_preferido = "es" if lang.to_lower().begins_with("es") else "en"
+	_guardar_meta()
 
 
 func fue_tutorial_visto() -> bool:

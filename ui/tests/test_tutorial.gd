@@ -85,6 +85,11 @@ func run() -> void:
                 actions += 1
             await create_timer(0.12).timeout
             await frames(2)
+            if lesson.game._drawer.visible and lesson.game._drawer._footer.visible:
+                for button in lesson.game._drawer._footer.get_children():
+                    if button is Button:
+                        check(button.size.y <= 48.0,"Action completion keeps a compact button: "+lang+" "+last_step)
+                        check(button.get_global_rect().end.y <= lesson.game._drawer.get_global_rect().end.y-2,"Action footer stays inside the panel")
             wait += 1
             if wait > 400:
                 check(false,"Lesson stalled: "+lang+" "+last_step+" stage "+str(lesson.stage)+" drawer "+lesson.game._drawer.kind+" ice "+lesson.game.ice.phase+" playing "+str(lesson.state.en_partida)+" remaining "+str(lesson.game.ice._mining))

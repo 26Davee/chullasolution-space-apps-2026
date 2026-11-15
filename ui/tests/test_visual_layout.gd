@@ -28,6 +28,7 @@ func check_drawer(drawer: Panel, locale: String) -> void:
         if button is Button:
             var rect: Rect2 = button.get_global_rect()
             check(rect.position.x >= drawer.global_position.x+8 and rect.end.x <= edge-8,"Footer button is fully inside: "+locale+" "+button.text)
+            check(rect.size.y <= 48.0,"Footer button never grows after refresh: "+locale+" "+button.text)
             check(rect.end.y <= drawer.get_global_rect().end.y-2,"Footer button fits vertically: "+locale+" "+button.text)
     for node in drawer._content.find_children("*","Control",true,false):
         if not node.is_visible_in_tree(): continue
@@ -71,6 +72,14 @@ func run() -> void:
         # Wide-to-narrow and long-to-short transitions previously retained old minimum widths.
         for section in ["construction","messages","processing","expedition","more","upgrades","settings:language","settings:audio","missions","science","timmy","settings:controls","settings:exit","expedition","processing"]:
             lesson.game._open_section_drawer(section)
+            await frames()
+            check_drawer(lesson.game._drawer,locale)
+        # Finishing processing rebuilds the footer while it is hidden. This used
+        # to retain a 300 px (EN) / 400 px (ES) HBox minimum even after relayout.
+        for i in range(3):
+            lesson.game._drawer.open_section("processing",{"running":true})
+            await frames()
+            lesson.game._drawer.open_section("processing",{"running":false,"ice":0})
             await frames()
             check_drawer(lesson.game._drawer,locale)
         lesson.game._close_drawer()

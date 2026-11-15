@@ -78,7 +78,6 @@ func _build_frame() -> void:
 
 	_content = VBoxContainer.new()
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_content.add_theme_constant_override("separation", 10)
 	_scroll.add_child(_content)
 
@@ -912,13 +911,39 @@ func _wrap_label(lbl: Label) -> Label:
 	return lbl
 
 func _fit_button(btn: Button) -> void:
-	# Allow long EN/ES captions to wrap inside the available column width.
-	btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Native autowrap can inflate a hidden HBox to hundreds of pixels before
+	# its children have a width. Explicit lines keep its minimum height bounded.
+	btn.autowrap_mode = TextServer.AUTOWRAP_OFF
 	btn.clip_text = true
-	btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	btn.tooltip_text = btn.text
 	for state_name in ["normal","hover","pressed","focus","disabled"]:
 		var box := btn.get_theme_stylebox(state_name).duplicate()
 		box.content_margin_left = 8
 		box.content_margin_right = 8
 		btn.add_theme_stylebox_override(state_name,box)
+	btn.resized.connect(func(): _wrap_button_caption(btn))
+
+
+func _wrap_button_caption(btn: Button) -> void:
+	if btn.size.x <= 24: return
+	var caption := btn.tooltip_text
+	var font := btn.get_theme_font("font")
+	var font_size := btn.get_theme_font_size("font_size")
+	var available := btn.size.x - 20.0
+	var lines := PackedStringArray()
+	var line := ""
+	for word in caption.split(" ", false):
+		var candidate := word if line.is_empty() else line + " " + word
+		if not line.is_empty() and font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > available:
+			lines.append(line)
+			line = word
+		else:
+			line = candidate
+	if not line.is_empty(): lines.append(line)
+	# Two lines fit the 44/48 px buttons. Keep the full caption in the tooltip.
+	if lines.size() > 2:
+		lines = PackedStringArray([caption])
+	var wrapped := "\n".join(lines)
+	if btn.text != wrapped: btn.text = wrapped

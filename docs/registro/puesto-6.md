@@ -57,3 +57,7 @@ Incluye cambios de conexión en core/game_state.gd, core/juego.gd, core/main.gd,
 Codex asistió en el ajuste de altura del diálogo de Timmy, contención y ajuste de texto de botones, contraste de selección de Upgrades y presentación de avisos traducidos. Se comparó `provicional_V1` en `2771313` y se reutilizaron únicamente sus ajustes visuales del cajón. La tarjeta Place/Cancel se oculta solo en el tutorial y se separan sus avisos breves del diálogo. Se añadió una prueba de límites visuales EN/ES y se revisaron capturas nativas. Esta revisión no modifica balance, misiones, inventarios ni reglas de guardado. No se generaron imágenes ni se consultaron nuevas fuentes NASA.
 
 Validación final de este pulido: ocho pruebas aprobadas y revisión de catorce capturas nativas EN/ES.
+
+### 2026-11-15 · tamaños estables y error EN/ES
+
+Codex asistió en la reproducción y corrección del botón que crecía al reconstruir un panel oculto, separación del texto y las acciones en las tarjetas de partidas, y conexión faltante de `guardar_idioma`. Incluye ajustes de interfaz en core/main.gd y preferencia de idioma en progression/save_manager.gd, además de los controles compartidos y pruebas de regresión. Se verificaron cinco grupos de pruebas y ocho capturas nativas EN/ES; los datos de prueba se aislaron de las partidas reales. Sin nuevas imágenes, fuentes externas, datos NASA ni cambios de balance.

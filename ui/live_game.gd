@@ -1163,6 +1163,8 @@ func _save_preferences() -> void:
 
 
 func _set_language(language: String) -> void:
+	var sm: Node = _gs().obtener_save_manager()
+	if sm.has_method("guardar_idioma"): sm.guardar_idioma(language)
 	_gs().idioma = language
 	TranslationServer.set_locale(language)
 	await get_tree().process_frame

@@ -21,6 +21,19 @@ func run() -> void:
     var main = load("res://scenes/main.tscn").instantiate()
     root.add_child(main)
     await frames()
+    # Exercise the actual menu signal: it previously called a nonexistent API.
+    for lang in ["es","en","es","en"]:
+        var panel = main._slots_panel
+        panel._lang_buttons[lang].pressed.emit()
+        check(gs.idioma == lang and TranslationServer.get_locale().begins_with(lang),"Menu language changes without an invalid call: "+lang)
+        check(panel._cards_box.get_child_count() == 3,"Language refresh replaces cards immediately, never stacking slots")
+        var metadata = load("res://progression/save_manager.gd").new()
+        metadata.storage_directory = sm.storage_directory
+        metadata._cargar_meta()
+        check(metadata.idioma_preferido == lang,"Language survives a metadata reload: "+lang)
+        metadata.free()
+        await frames()
+    check(not sm.hay_algun_slot_ocupado(),"Changing language does not create an expedition")
     main.nueva_partida_en_slot(1)
     await frames(6)
     check(is_instance_valid(main._intro) and not is_instance_valid(main._slot_setup),"New expedition teaches before asking for name and age")
@@ -56,6 +69,7 @@ func run() -> void:
     main.cargar_slot(1)
     await create_timer(1.0).timeout
     check(gs.agua == 37,"Resume keeps the saved water reserve")
+    check(gs.idioma == sm.idioma_preferido,"Resume keeps the selected interface language")
     main.mostrar_titulo()
     main.nueva_partida_en_slot(2)
     await frames(5)
@@ -66,10 +80,24 @@ func run() -> void:
     setup.name_field.text_changed.emit("Sam")
     setup.start_button.pressed.emit()
     await frames()
+    for lang in ["en","es"]:
+        var panel = main._slots_panel
+        panel._lang_buttons[lang].pressed.emit()
+        await frames()
+        for card in panel._cards_box.get_children():
+            var buttons: Array[Rect2] = []
+            for child in card.get_children():
+                if child is Button: buttons.append(child.get_rect())
+            for child in card.get_children():
+                if not child is Label: continue
+                for rect in buttons:
+                    check(not child.get_rect().intersects(rect),"Slot text has a separate column from actions: "+lang+" "+child.name)
+                check(child.get_rect().end.y <= card.size.y-8,"Slot caption stays in its card: "+lang+" "+child.name)
     check(gs.modo_juego == "ingeniero" and sm.leer_slot_resumen(2).nickname == "Sam","Age 10–12 selects Engineer after training")
     check(sm.leer_slot_resumen(1).nickname == "Alex","A second profile preserves the first slot")
     main.cargar_slot(2)
     await create_timer(1.0).timeout
+    check(gs.idioma == "es" and TranslationServer.get_locale().begins_with("es"),"Loading an older profile keeps the language selected in the menu")
     var game = main._juego
     game.set_process(false)
     game.session.learned["tour"] = true

@@ -108,6 +108,7 @@ func refresh() -> void:
 	options_button.text = tr("live.main_options")
 
 	for child in _cards_box.get_children():
+		_cards_box.remove_child(child)
 		child.queue_free()
 	play_button = null
 	var any_occupied := false
@@ -156,7 +157,12 @@ func _build_card(info: Dictionary) -> Control:
 			nick = tr("v2.default_name")
 		var mode_key := "live.mode_engineer" if str(info.get("mode", "cadete")) == "ingeniero" else "live.mode_cadet"
 		var mode_text := tr(mode_key)
-		UI.label(card, "%s  ·  %s" % [nick, mode_text], Rect2(24, 48, 490, 38), 26, UI.WHITE, true)
+		var title := UI.label(card, "%s  ·  %s" % [nick, mode_text], Rect2(24, 48, 478, 38), 24, UI.WHITE, true)
+		title.name = "ProfileTitle"
+		title.autowrap_mode = TextServer.AUTOWRAP_OFF
+		title.clip_text = true
+		title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		title.tooltip_text = title.text
 
 		var t := float(info.get("tiempo_juego", 0.0))
 		var clock_str := Clock.format_calendar(Clock.snapshot({"tiempo_juego": t}))
@@ -168,9 +174,13 @@ func _build_card(info: Dictionary) -> Control:
 			"%d ★" % stars,
 		]
 		var saved_iso := str(info.get("saved_iso", "")).strip_edges()
+		var stats := UI.label(card, "  •  ".join(meta_parts), Rect2(24, 90, 478, 24), 15, Color("#b8cfe2"))
+		stats.name = "SlotStats"
+		stats.clip_text = true
 		if not saved_iso.is_empty():
-			meta_parts.append(tr("live.slot_saved").format({"date": saved_iso.substr(0, 16)}))
-		UI.label(card, "   •   ".join(meta_parts), Rect2(24, 96, 496, 36), 16, Color("#b8cfe2"))
+			var saved := UI.label(card, tr("live.slot_saved").format({"date": saved_iso.substr(0, 16)}), Rect2(24, 116, 478, 22), 14, Color("#9bb6cc"))
+			saved.name = "SavedDate"
+			saved.clip_text = true
 
 		var cont_btn := UI.button(card, tr("live.slot_continue"), Rect2(526, 42, 152, 66), func():
 			slot_selected.emit(slot_id, false)
@@ -182,7 +192,9 @@ func _build_card(info: Dictionary) -> Control:
 		del_btn.name = "DeleteSlot%d" % slot_id
 		card.set_meta("primary_btn", cont_btn)
 	else:
-		UI.label(card, tr("live.slot_empty"), Rect2(24, 58, 470, 44), 22, Color("#9bb6cc"))
+		var empty := UI.label(card, tr("live.slot_empty").replace(" — ", "\n"), Rect2(24, 52, 478, 68), 21, Color("#9bb6cc"))
+		empty.name = "EmptySlotCaption"
+		empty.clip_text = true
 		var new_btn := UI.button(card, tr("live.slot_new"), Rect2(526, 42, 264, 66), func():
 			slot_selected.emit(slot_id, true)
 		, true)

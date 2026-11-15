@@ -30,6 +30,7 @@ func _ready() -> void:
 				break
 	if not profile.is_empty():
 		_gs().modo_juego = _gs().aplicar_perfil(profile)
+	_apply_menu_language()
 	mostrar_titulo()
 	if not sm.ultimo_error.is_empty(): call_deferred("_show_load_notice")
 
@@ -153,6 +154,7 @@ func mostrar_titulo() -> void:
 		_gs().idioma = lang
 		TranslationServer.set_locale(lang)
 		sm.guardar_idioma(lang)
+		_gs().preferencias["language"] = lang
 		panel.refresh()
 	)
 	_menu_layer.add_child(panel)
@@ -252,7 +254,15 @@ func cargar_slot(slot_id: int) -> void:
 		_gs().modo_juego = _gs().aplicar_perfil(profile)
 	else:
 		_gs().modo_juego = str(sm.obtener_modo_preferido())
+	_apply_menu_language()
 	_play_with_fade()
+
+func _apply_menu_language() -> void:
+	var lang: String = _gs().obtener_save_manager().idioma_preferido
+	if lang.is_empty(): return
+	_gs().idioma = lang
+	_gs().preferencias["language"] = lang
+	TranslationServer.set_locale(lang)
 
 func _play_with_fade() -> void:
 	_fade_token += 1
