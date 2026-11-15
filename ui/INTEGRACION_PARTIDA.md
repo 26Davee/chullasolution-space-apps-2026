@@ -6,7 +6,7 @@ Implementado sobre `unificacion_v1_proyect` (base fde4510), 15 de noviembre de 2
 
 La escena de juego usa `ui/live_game.gd`, adaptador que hereda las acciones y el mundo de `core/juego.gd`. Conserva modelos, cámara y colocación del equipo. Comparte paleta, botones, iconos, voz, Misiones y Upgrades con el tutorial.
 
-`ui/live_hud.gd` presenta cinco barras en una fila: energía de la base, agua, oxígeno, escudo y batería del robot. El reloj, hielo y estrellas tienen una cabecera de contraste. La misión ocupa la esquina inferior izquierda; el centro queda libre. Las acciones se abren desde el menú. Construir usa un cajón contextual con imágenes, existencias y coste visible.
+`ui/live_hud.gd` presenta cinco barras en una fila: energía de la base, agua, oxígeno, escudo y batería del robot. El reloj, hielo y estrellas tienen una cabecera de contraste. La misión ocupa la esquina inferior izquierda; el centro queda libre. Las estaciones están en una columna lateral con icono y nombre; el menú superior contiene opciones, ayuda, reinicio y regreso al inicio. Construir usa un cajón contextual con imágenes, existencias y coste visible.
 
 Los paneles pausan reloj, recursos, expedición, acciones temporizadas, movimiento y animaciones del mundo. Se cierran con botón o Escape; el foco de teclado se mantiene dentro. Recuperación y victoria requieren una decisión explícita. Se conserva la proporción 16:9 (mínimo 960×540), con márgenes en otras proporciones.
 
@@ -14,17 +14,17 @@ Los paneles pausan reloj, recursos, expedición, acciones temporizadas, movimien
 
 | Función | Implementación |
 |---|---|
-| Ayuda de Timmy | Objetivo pendiente, nombre del jugador, consejo anterior, lectura y controles. |
-| Centro de Control | Historial persistente, contador de mensajes nuevos, tormentas/ciclo y lectura con Timmy. |
+| Ayuda de Timmy | Pistas concretas por recursos/misión y guía de primeras tareas que espera acciones y resultados reales. |
+| Centro de Control | Atención, descubrimientos e historial; detalle, lectura y resolución guiada, sin duplicar alertas. |
 | Misión activa | Campos reales de MissionManager, progreso de triggers y detalle en Misiones. Texto breve en `ui/mission_goals.json`. |
 | Celebración | Una transacción por misión, estrellas, carta, suministros y animación. Cerrar reconoce el aviso. |
 | Suministros | Tabla editable `data/missions/supplies.json`, inventario persistente y entregas únicas por ID. |
 | Construcción | Consume una unidad tras colocación válida, paga energía y conserva modelos/posiciones. Añade el tanque de agua. Cancelar no consume existencias. |
 | Science | Cartas ilustradas realmente desbloqueadas por misiones y mejoras, lectura y fuentes del equipo. |
-| Alertas | Recursos bajos, noche, amanecer y tormentas; cola de avisos con texto/voz e historial. Prioridad para tormentas. |
+| Alertas | Banner con icono, borde, texto y botón Resolver; una alerta a la vez y prioridad para las urgentes. Historial persistente. |
 | Acciones | Validaciones de energía, hielo, distancia, inventario y espacio; barras de procesamiento/reparación. |
 | Mejoras | Conserva el árbol; muestra requisitos o estrellas pendientes, saldo autorizado y carta tras comprar. |
-| Recuperación | Cadete restaura checkpoint de misión; Ingeniero reinicia base, recursos, inventario y progresión. Conserva perfil/opciones. |
+| Recuperación | Pantallas por modo y causa, transición animada al checkpoint o reinicio completo. Conserva perfil/opciones. |
 | Guardado y pausa | Autoguardado cada 30 s activos, al completar misión, colocar, comprar, ir al menú y cerrar. Reanudar conserva el mundo. Escritura temporal, respaldo y avisos de fallo. |
 | Final | Comprueba todos los IDs del catálogo; resumen, Science, menú y nueva expedición con confirmación. |
 | Ayuda/estados | Controles reales, colección vacía, módulos agotados, jardín bloqueado, carga/guardado y voz no disponible. |
@@ -74,3 +74,19 @@ La simulación externa `simulation/simulacion.gd` no existe en esta rama: se con
 - `ui/tests/test_interaction.gd` prueba clic real por rayo de cámara sobre un procesador, fases del reloj, primera guía, persistencia y recorridos físicos completos a los tres puntos.
 
 Comprobación nativa de voz en Windows: narración activa antes de cerrar = true; tras cerrar = false y cola pendiente vacía. Se ejecutó con volumen de prueba cero.
+
+## Tareas guiadas y avisos visibles · 2026-11-15
+
+- `ui/task_guide.gd` conserva una máquina de estados para ambos modos. Los eventos de abrir, seleccionar, explorar, colocar y completar acciones avanzan la explicación; abrir una ventana no significa haber aprendido. La primera ejecución ofrece guía; cerrarla evita insistir automáticamente y Ayuda permite retomarla.
+- La falta de agua puede encadenar construir procesador → explorar hielo → volver al domo → añadir, encender y recoger agua. La guía termina cuando sube la reserva real. Reparación espera la subida real del escudo y recarga espera batería suficiente. En una tormenta se enseña a regresar y protegerse sin pedir reparar un escudo lleno.
+- Mientras Timmy explica la colocación se detiene el consumo de recursos, conservando el control del holograma. Al viajar o esperar un resultado, el tiempo y la simulación continúan. Los paneles completos mantienen la pausa habitual.
+- `ui/station_sequence.gd` comparte los controles ordenados de procesamiento/reparación entre práctica y partida. Solo la partida paga y aplica resultados, mediante las acciones existentes del equipo.
+- `ui/ice_survey_panel.gd` comparte elegir zona → explorar → recoger. Las tres zonas tienen existencias reales en `ui/ice_expedition.gd`; explorar una zona la descubre físicamente. Un viaje bloqueado mantiene su selección al reabrir y ofrece Reintentar.
+- `ui/build_practice.gd` usa un mundo de práctica aislado y el mismo `PlacementSystem`: holograma, colisiones, giro con R y colocación sobre terreno. No consume inventario ni avanza misiones reales. El ajuste en `interaction/placement_system.gd` conserva las coordenadas del evento para funcionar dentro del SubViewport.
+- `ui/task_guide_view.gd` coloca a Timmy en una tarjeta temporal junto a la base o en una banda compacta dentro de la tarea. `ui/context_hint.gd` reúne las pistas. El aprendizaje y la tarea activa se guardan con la expedición.
+- `ui/notification_center.gd` separa avisos por propósito, muestra un mensaje seleccionado y permite resolverlo con Timmy. `RunSession` actualiza alertas estables por recurso/tormenta en lugar de acumular copias; las resueltas pasan al historial. Abrir un detalle lo marca leído.
+- `ui/alert_banner.gd` presenta avisos destacados bajo las barras, sin tapar el menú lateral. Se ocultan detrás de paneles y durante la colocación; los errores de Construir aparecen sobre el cajón sin cubrir sus tarjetas.
+- `ui/outcome_art.gd` y `ui/run_transition.gd` añaden una celebración suave y una transición con icono/texto al recuperar o reiniciar. La restauración ocurre con la pantalla oscurecida y el mundo detenido. Reiniciar está disponible también antes del final, con confirmación.
+- Nuevos textos reutilizables EN/ES en `i18n/tasks.gd`. Se mantienen las voces preferidas Zira/Sabina y los diseños de Misiones/Upgrades.
+
+Prueba adicional: `ui/tests/test_task_lessons.gd` verifica colocación real, orden de controles, resultados efectivos, cancelación/reintento, primeras tareas, prioridad de avisos, recuperación animada en ambos modos y victoria. Las pruebas usan archivos separados del guardado del jugador. La revisión visual cubre inglés/español, ventana 1280×720 y una ventana más pequeña.

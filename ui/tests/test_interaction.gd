@@ -21,15 +21,9 @@ func run() -> void:
 	gs.set_process(false)
 	game._voice.muted = true
 	check(game.rail.buttons.size() == 9,"Nine labelled stations are directly accessible")
+	game.guide.start("process")
 	game._on_dock_action("processing")
-	check(game._modal_kind == "coach" and not gs.en_partida,"First use is guided and paused")
-	var tried = false
-	for button in game._modal_layer.find_children("*","Button",true,false):
-		if button.text == game.gx("try"):
-			button.pressed.emit()
-			tried = true
-			break
-	check(tried and game.session.learned.has("processing") and game._modal_kind == "action:processing","Try it completes first guidance and opens real controls")
+	check(game.guide.active() and game._modal_kind == "action:processing" and not gs.en_partida,"First task opens real controls with paused guidance")
 	game._close_modal()
 	game._on_station_clicked("processing",game.mundo)
 	check(game._modal_kind == "action:processing","Machine opens same real processing panel")
@@ -72,6 +66,8 @@ func run() -> void:
 	Engine.time_scale = 6
 	gs.en_partida = true
 	game.session.learned.expedition = true
+	game.guide.stop()
+	game.ice.scan("crater")
 	check(game.ice.start("crater"),"Trip can start")
 	var phases: Array = []
 	for i in 1200:

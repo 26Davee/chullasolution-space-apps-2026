@@ -71,6 +71,8 @@ var _current_scene: PackedScene
 var _ghost: GhostPreview
 var _ghost_material: Material
 var _yaw: float = 0.0
+var _pointer_known := false
+var _pointer_position := Vector2.ZERO
 var _has_target: bool = false
 var _is_valid: bool = false
 var _reject_reason: String = ""
@@ -101,6 +103,7 @@ func start_placement(piece_id: StringName, scene: PackedScene = null) -> void:
 	current_piece_id = piece_id
 	_current_scene = scene
 	_yaw = 0.0
+	_pointer_known = false
 	_has_target = false
 	_is_valid = false
 
@@ -144,7 +147,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if state != State.PLACING:
 		return
 
+	if event is InputEventMouseMotion:
+		_pointer_known = true
+		_pointer_position = event.position
+		return
 	if event is InputEventMouseButton and event.pressed:
+		_pointer_known = true
+		_pointer_position = event.position
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
 				_try_confirm(event.shift_pressed)
@@ -170,7 +179,7 @@ func _update_preview() -> void:
 		return
 
 	var space := get_world_3d().direct_space_state
-	var mouse := get_viewport().get_mouse_position()
+	var mouse := _pointer_position if _pointer_known else get_viewport().get_mouse_position()
 	var from := camera.project_ray_origin(mouse)
 	var to := from + camera.project_ray_normal(mouse) * ray_length
 

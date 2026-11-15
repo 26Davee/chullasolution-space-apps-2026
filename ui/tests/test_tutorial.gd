@@ -185,29 +185,29 @@ func run_flow(test_case: Dictionary) -> void:
                     match parts[1]:
                         "construction":
                             click(activity._module_buttons[1])
-                            click(activity._plots[0])
-                            check(activity._plot_images[0].visible, "A module can be placed in the practice preview")
-                            check(activity._plots.size() == 1 and activity._plot_images.size() == 1, "Construction has one clear preview")
+                            await place_practice(activity,Vector3(-8,0,16))
+                            check(activity.placed.get_child_count() == 1, "Practice places a real 3D module with the shared hologram")
                             click(activity._module_buttons[2])
-                            click(activity._plots[0])
-                            check(activity._placed_module == 2 and activity._plot_images.size() == 1, "A different module replaces the single preview")
+                            await place_practice(activity,Vector3(4,0,16))
+                            check(activity._placed_module == 2, "Another module can be placed using the same controls")
                         "expedition":
                             click(activity._zone_buttons[1])
                             click(activity._scan_button)
                             check(activity._scanned.has(1), "A map zone can be scanned")
+                            click(activity._collect_button)
                         "processing":
                             click(activity._process_buttons[2])
                             check(activity._process_step == 0, "Processing cannot skip steps")
                             for button in activity._process_buttons: click(button)
                             check(activity._process_step == 3, "Ice processing demo completes")
                             await process_frame
-                            check(activity._feedback.position.y + activity._feedback.size.y <= 398, "Processing feedback stays above reset button")
+                            check(activity._feedback.position.y + activity._feedback.size.y <= activity.size.y - 62, "Processing feedback stays above reset button")
                         "repair":
                             for button in activity._patch_buttons: click(button)
                             check(activity._patched.size() == 3, "Three shield spots can be repaired")
                             activity._reset_repair()
                             await create_timer(0.35).timeout
-                            check(activity._shield_bar.value == 35 and activity._patched.is_empty(), "Reset cancels pending repair animation")
+                            check(activity._shield_bar.value == activity.initial_shield and activity._patched.is_empty(), "Reset cancels pending repair animation")
                         "science":
                             for card_index in range(4):
                                 activity._choose_card(card_index, false)
@@ -362,3 +362,20 @@ func test_catalog_and_purchases() -> void:
     check(not view._buy.disabled, "Authoritative unlock enables the dependent upgrade")
     view.queue_free()
     await process_frame
+
+func place_practice(activity: Control, point: Vector3) -> void:
+    var viewport: SubViewport = activity.world_view.viewport
+    var pos: Vector2 = activity.world_view.camera.unproject_position(point)
+    var motion := InputEventMouseMotion.new()
+    motion.position = pos
+    motion.global_position = pos
+    viewport.push_input(motion,true)
+    await physics_frame
+    await physics_frame
+    var press := InputEventMouseButton.new()
+    press.position = pos
+    press.global_position = pos
+    press.button_index = MOUSE_BUTTON_LEFT
+    press.pressed = true
+    viewport.push_input(press,true)
+    await physics_frame

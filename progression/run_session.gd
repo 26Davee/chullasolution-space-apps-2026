@@ -96,15 +96,24 @@ func acknowledge_reward(id: String) -> void:
 	save_run()
 
 func add_message(id: String, kind: String, data: Dictionary) -> void:
+	var stable := id
+	if kind == "storm": stable = "storm"
+	elif kind in ["day","night"]: stable = "cycle"
 	for item in messages:
-		if str(item.id) == id: return
-	messages.push_front({"id": id, "kind": kind, "data": data.duplicate(true), "read": false, "day_seconds": gs.tiempo_juego})
+		if str(item.id) == stable:
+			item.data = data.duplicate(true)
+			item.kind = kind
+			item.resolved = false
+			item.read = false
+			item.day_seconds = gs.tiempo_juego
+			return
+	messages.push_front({"id":stable,"kind":kind,"data":data.duplicate(true),"read":false,"resolved":false,"day_seconds":gs.tiempo_juego})
 	if messages.size() > 60: messages.resize(60)
 
 func unread_count() -> int:
 	var total = 0
 	for item in messages:
-		if not bool(item.get("read", false)): total += 1
+		if not bool(item.get("read", false)) and not bool(item.get("resolved",false)): total += 1
 	return total
 
 func mark_read(id: String) -> void:
@@ -138,6 +147,7 @@ func restore(snapshot: Dictionary) -> void:
 	inventory = snapshot.get("inventory", {}).duplicate(true)
 	delivered = snapshot.get("delivered", []).duplicate()
 	messages = snapshot.get("messages", []).duplicate(true)
+	compact_messages()
 	pending_rewards = snapshot.get("pending_rewards", []).duplicate(true)
 	finished = bool(snapshot.get("finished", false))
 	game.restore_world(snapshot.get("world", {}))
@@ -170,3 +180,30 @@ func reset_run(mode: String) -> void:
 	game.restore_world({})
 	loading = false
 	checkpoint = capture()
+
+func resolve_message(id: String) -> void:
+	for item in messages:
+		if str(item.id) == id and not bool(item.get("resolved",false)):
+			item.resolved = true
+			item.read = true
+
+func compact_messages() -> void:
+	var kept: Array = []
+	var keys := {}
+	for item in messages:
+		var id := str(item.id)
+		if id.begins_with("low:"):
+			var resource := id.get_slice(":",1)
+			item.id = "alert:"+resource
+			item.kind = "resource"
+			item.data = {"resource":resource}
+		elif id.begins_with("storm:"): item.id = "storm"
+		elif id.begins_with("cycle:"): item.id = "cycle"
+		id = str(item.id)
+		if keys.has(id): continue
+		keys[id] = true
+		if item.kind == "resource" and float(gs.get(str(item.data.resource))) > 30:
+			item.resolved = true
+			item.read = true
+		kept.append(item)
+	messages = kept

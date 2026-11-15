@@ -50,6 +50,13 @@ func _draw() -> void:
             draw_style_box(_box(ink,4),Rect2(-11,-5,22,20))
         "check":
             draw_polyline(PackedVector2Array([Vector2(-11,0),Vector2(-3,9),Vector2(13,-10)]),ink,4,true)
+        "checkpoint":
+            draw_arc(Vector2.ZERO,15,PI*0.2,TAU,32,ink,4,true)
+            draw_colored_polygon(PackedVector2Array([Vector2(15,-13),Vector2(3,-14),Vector2(12,-3)]),ink)
+            draw_polyline(PackedVector2Array([Vector2(-8,0),Vector2(-2,7),Vector2(9,-6)]),ink,3,true)
+        "close":
+            draw_line(Vector2(-11,-11),Vector2(11,11),ink,3,true)
+            draw_line(Vector2(-11,11),Vector2(11,-11),ink,3,true)
         "menu":
             for y in [-10, 0, 10]: draw_line(Vector2(-14,y),Vector2(14,y),ink,3,true)
         "ice":

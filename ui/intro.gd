@@ -501,7 +501,7 @@ func _open_modal(kind: String, title: String, wide := false) -> void:
     focus_before_modal = get_viewport().gui_get_focus_owner()
     modal_kind = kind
     modal_focus.clear()
-    _modal_rect = Rect2(160, 96, 960, 580) if wide else Rect2(320, 96, 640, 580)
+    _modal_rect = Rect2(40, 24, 1200, 672) if wide else Rect2(320, 96, 640, 580)
     if kind == "menu":
         _modal_rect = Rect2(812, 92, 424, 590)
     if kind == "section:upgrades":
@@ -736,18 +736,32 @@ func _open_section(section: String) -> void:
         else:
             _label(holder, _t("panels.unavailable"), Rect2(0, 48, holder.size.x, 160), 24)
     elif bridge.training:
-        _activity_view = preload("res://ui/visual_activity.gd").new()
-        _activity_view.section = section
+        if section == "construction":
+            _activity_view = preload("res://ui/build_practice.gd").new()
+        elif section == "expedition":
+            _activity_view = preload("res://ui/ice_survey_panel.gd").new()
+        elif section in ["processing","repair"]:
+            _activity_view = preload("res://ui/station_sequence.gd").new()
+            _activity_view.section = section
+        else:
+            _activity_view = preload("res://ui/visual_activity.gd").new()
+            _activity_view.section = section
         if section == "science": _activity_view.set_pinned_cards(_discovery_pins)
         _activity_view.size = holder.size
         holder.add_child(_activity_view)
+        if _activity_view.has_signal("completed"):
+            _activity_view.completed.connect(func():
+                tutorial.record_action("section:"+section)
+                _refresh_tutorial_controls(false)
+            )
         _activity_view.narration_requested.connect(func(text: String): voice.speak(text, language))
         for control in _activity_view.find_children("*", "Control", true, false):
             if control.focus_mode != Control.FOCUS_NONE and control.is_visible_in_tree():
                 modal_focus.append(control)
     else:
         _label(holder, _t("panels.unavailable"), Rect2(0, 48, holder.size.x, 160), 24)
-    tutorial.record_action("section:" + section)
+    if section not in ["construction","expedition","processing","repair"]:
+        tutorial.record_action("section:" + section)
     _refresh_tutorial_controls(false)
     _trap_modal_focus()
 

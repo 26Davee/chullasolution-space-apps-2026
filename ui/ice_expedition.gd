@@ -12,6 +12,7 @@ var phase := "idle"
 var route_kind := "going"
 var selected := "crater"
 var discovered: Array = ["crater"]
+var surveyed: Dictionary = {}
 var stock: Dictionary = {"crater":18,"ridge":24,"basin":30}
 var collected := 0
 var alerted := false
@@ -31,9 +32,18 @@ func zone(id: String) -> Dictionary:
 	for item in ZONES:
 		if str(item.id) == id: return item
 	return ZONES[0]
+func scan(id: String) -> void:
+	if phase != "idle": return
+	if not discovered.has(id):
+		discovered.append(id)
+		_spawn_zone(id)
+	surveyed[id] = true
+	changed.emit()
+
 func discover() -> void:
 	for item in ZONES:
 		if not discovered.has(str(item.id)):
+			surveyed[str(item.id)] = true
 			discovered.append(str(item.id))
 			_spawn_zone(str(item.id))
 			changed.emit()
@@ -50,6 +60,9 @@ func _spawn_zone(id: String) -> void:
 func start(id: String) -> bool:
 	if phase != "idle":
 		game._show_toast(game.gx("trip_busy"))
+		return false
+	if not surveyed.has(id):
+		game._show_toast(tr("flow.scan_first"))
 		return false
 	if not discovered.has(id) or int(stock.get(id,0)) <= 0:
 		game._show_toast(game.gx("zone_empty"))
@@ -168,13 +181,14 @@ func _finish_return() -> void:
 func capture() -> Dictionary:
 	var path: Array = []
 	for point in _route: path.append([point.x,point.y,point.z])
-	return {"route_kind":route_kind,"phase":phase,"selected":selected,"discovered":discovered.duplicate(),"stock":stock.duplicate(),"collected":collected,"alerted":alerted,"target":[_target.x,_target.y,_target.z],"route":path,"request_route":_request_route,"mining":_mining}
+	return {"surveyed":surveyed.duplicate(),"route_kind":route_kind,"phase":phase,"selected":selected,"discovered":discovered.duplicate(),"stock":stock.duplicate(),"collected":collected,"alerted":alerted,"target":[_target.x,_target.y,_target.z],"route":path,"request_route":_request_route,"mining":_mining}
 func restore(data: Dictionary) -> void:
 	route_kind = str(data.get("route_kind","returning" if int(data.get("collected",0)) > 0 else "going"))
 	phase = str(data.get("phase","idle"))
 	if phase not in ["idle","going","mining","returning","blocked"]: phase = "idle"
 	selected = str(data.get("selected","crater"))
 	discovered = data.get("discovered",["crater"]).duplicate()
+	surveyed = data.get("surveyed",{}).duplicate()
 	stock = data.get("stock",{"crater":18,"ridge":24,"basin":30}).duplicate()
 	for id in _zones.keys():
 		if id != "crater": _zones[id].free(); _zones.erase(id)
