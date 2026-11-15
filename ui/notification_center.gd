@@ -1,4 +1,5 @@
 extends Control
+signal message_opened(item: Dictionary)
 signal guide_requested(task: String, module: String)
 signal section_requested(section: String)
 signal narration_requested(text: String)
@@ -41,6 +42,7 @@ func _severity(item: Dictionary) -> float:
 	if item.kind == "storm": return 90
 	return 100-float(game._gs().get(str(item.data.get("resource","agua"))))
 func _title(item: Dictionary) -> String:
+	if item.kind == "letter": return str(item.data.get("title",tr("live.messages")))
 	if item.kind == "resource": return tr("notice.resource").format({"resource":tr("hud."+str(item.data.resource)+".nombre")})
 	if item.kind == "storm": return tr("notice.storm")
 	if item.kind == "mission": return game.CatalogScript.text("misiones."+str(item.data.id)+".titulo",str(item.data.id))
@@ -64,6 +66,7 @@ func _render() -> void:
 			game.session.mark_read(_selected)
 			game._refresh_mail_badge()
 			_render()
+			message_opened.emit(item)
 		)
 		button.custom_minimum_size = Vector2(316,92)
 		UI.paint(button,str(item.id) == _selected)
@@ -78,7 +81,7 @@ func _show_detail(item: Dictionary) -> void:
 	var width := _detail.size.x
 	UI.panel(_detail,Rect2(Vector2.ZERO,_detail.size),Color("#193750"),20)
 	var icon := Icon.new()
-	icon.kind = str(item.data.get("resource","messages")).replace("energia_robot","robot_battery") if item.kind == "resource" else ("science" if item.kind in ["mission","upgrade"] else "messages")
+	icon.kind = str(item.data.get("resource","messages")).replace("energia_robot","robot_battery") if item.kind == "resource" else ("science" if item.kind in ["mission","upgrade"] else ("escudo" if item.kind == "storm" else "messages"))
 	icon.tint = UI.CYAN
 	icon.position = Vector2(24,20)
 	icon.size = Vector2(64,64)

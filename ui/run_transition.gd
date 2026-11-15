@@ -29,4 +29,4 @@ func _ready() -> void:
 	tween.tween_callback(func(): midpoint.emit())
 	tween.tween_interval(0.7)
 	tween.tween_property(self,"modulate:a",0.0,0.42)
-	tween.tween_callback(func(): finished.emit(); queue_free())
+	tween.tween_callback(func(): hide(); finished.emit(); queue_free())

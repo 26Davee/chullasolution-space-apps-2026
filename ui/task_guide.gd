@@ -66,7 +66,7 @@ func _choose() -> void:
 		elif gs.escudo < 75: _repair_or_power()
 		else: _stage("storm_wait")
 	elif task == "repair": _repair_or_power()
-	elif task == "recharge": _stage("recharge_return" if game._robot_distance_to_dome() > game.DOME_RECHARGE_RADIUS else "recharge_open")
+	elif task == "recharge": _stage("recharge_open")
 func _begin_ice() -> void:
 	state.ice_before = maxi(0,game._gs().hielo-game.ice.collected) if game.ice.phase != "idle" else game._gs().hielo
 	_stage("ice_return" if game.ice.phase != "idle" else "ice_open")
@@ -100,7 +100,7 @@ func notify(event: String, data: Dictionary = {}) -> void:
 			elif stage == "ice_open" and section == "expedition": _stage("ice_zone")
 			elif stage == "process_open" and section == "processing": _stage("process_0")
 			elif stage == "repair_open" and section == "repair": _stage("repair_0")
-			elif stage == "recharge_open" and section == "rest": _stage("recharge_click")
+			elif stage == "recharge_open" and section == "rest": _stage("recharge_return" if game._robot_distance_to_dome() > game.DOME_RECHARGE_RADIUS else "recharge_click")
 		"module_selected":
 			if stage == "build_select" and str(data.get("module","")) == str(state.module): _stage("build_place")
 		"module_placed":
@@ -180,7 +180,7 @@ func target() -> String:
 	if stage.begins_with("ice_"): return "expedition"
 	if stage.begins_with("process_"): return "processing"
 	if stage.begins_with("repair_"): return "repair"
-	if stage.begins_with("recharge_"): return "rest" if stage != "recharge_return" else "expedition"
+	if stage.begins_with("recharge_"): return "rest"
 	return ""
 func refresh(narrate := false) -> void:
 	if not active(): return
@@ -194,15 +194,18 @@ func refresh(narrate := false) -> void:
 	if narrate and not game.home_paused and not game._landing_active: game._speak(_speech)
 func layout() -> void:
 	if not view.visible: return
-	var compact: bool = game._modal_kind in ["ice_map","action:processing","action:repair","action:rest"] and is_instance_valid(game._modal_layer)
+	var compact: bool = game._modal_kind in ["ice_map","action:processing","action:repair","action:rest"] and is_instance_valid(game._modal_layer) and game._modal_content().size.x >= 600
 	if compact:
 		var panel: Control = game._modal_content()
 		view.position = panel.position+Vector2(28,72)
 		view.set_compact(true,panel.size.x-56)
+	elif game._modal_kind == "action:rest":
+		view.position = Vector2(22,416)
+		view.set_compact(false,408)
 	elif game._modal_layer != null:
 		view.hide()
 	else:
-		view.position = Vector2(16,306 if game._build_tray.visible else 410)
+		view.position = Vector2(22,416)
 		view.set_compact(false,408)
 func capture() -> Dictionary: return {"state":state.duplicate(true),"pending":pending.duplicate()}
 func restore(data: Dictionary) -> void:

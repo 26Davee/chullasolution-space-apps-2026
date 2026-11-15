@@ -32,7 +32,6 @@ func advance() -> bool:
         return false
     if step_id == "ready":
         completed = true
-        player.locked = true
         step_id = "done"
     else:
         step_id = Steps.IDS[Steps.IDS.find(step_id) + 1]

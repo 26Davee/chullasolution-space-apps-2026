@@ -20,7 +20,7 @@ func run() -> void:
 	game.set_process(false)
 	gs.set_process(false)
 	game._voice.muted = true
-	check(game.rail.buttons.size() == 9,"Nine labelled stations are directly accessible")
+	check(game.rail.buttons.size() == 4 and game.rail.utility_buttons.has("more"),"Four primary actions and More leave the world unobstructed")
 	game.guide.start("process")
 	game._on_dock_action("processing")
 	check(game.guide.active() and game._modal_kind == "action:processing" and not gs.en_partida,"First task opens real controls with paused guidance")
@@ -56,7 +56,7 @@ func run() -> void:
 	check(clock.display({"tiempo_juego":240}).time == "18:00","Sunset at 18:00")
 	check(clock.display({"tiempo_juego":480}).time == "06:00","Sunrise at 06:00")
 	game._hud.set_state({"tiempo_juego":360,"es_dia":true})
-	check(game._hud._phase_icon.kind == "moon" and game._hud._clock.text.contains("NIGHT"),"HUD phase cannot drift from clock, even with stale telemetry")
+	check(game._hud._phase_icon.kind == "moon" and game._hud._clock.text.contains("00:00"),"HUD phase cannot drift from clock, even with stale telemetry")
 	var ambient = game.mundo.get_node("Ambiente")
 	ambient.set_solar_time(120)
 	check(ambient.get_node("Cielo/DistantSun").visible and ambient.get_node("Sol").light_energy > 0.9,"Midday sun is visible and bright")

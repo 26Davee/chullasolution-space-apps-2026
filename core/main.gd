@@ -16,8 +16,14 @@ func _ready() -> void:
 	var data: Dictionary = _gs().obtener_save_manager().obtener_datos_completos()
 	var profile: Dictionary = data.get("perfil",{})
 	if bool(profile.get("tutorial_completed",false)):
-		_gs().modo_juego = _gs().aplicar_perfil(profile)
-		mostrar_titulo()
+		var mode = _gs().aplicar_perfil(profile)
+		if str(profile.get("age_group","")) in ["7_9","10_12"] and not str(profile.get("nickname","")).strip_edges().is_empty():
+			_gs().modo_juego = mode
+			mostrar_titulo()
+		else:
+			_show_intro(false)
+			_intro.tutorial.completed = true
+			_intro._show_profile_screen()
 	else:
 		_show_intro(false)
 	if not _gs().obtener_save_manager().ultimo_error.is_empty(): call_deferred("_show_load_notice")
@@ -33,12 +39,29 @@ func _show_intro(review: bool) -> void:
 	if review:
 		_intro.tutorial.player.nickname = _gs().nombre_astronauta
 		_intro.tutorial.player.choose_age("7_9" if _gs().modo_juego == "cadete" else "10_12")
+	_intro.restart_requested.connect(func(profile):
+		_gs().aplicar_perfil(profile)
+		mostrar_titulo()
+		_restart_with_fade()
+	)
 	_intro.mission_requested.connect(func(profile):
 		if review:
 			_intro.hide()
 			mostrar_titulo()
 		else: _al_solicitar_mision_desde_intro(profile)
 	)
+	if not review:
+		_intro.profile_setup_entered.connect(func():
+			var sm = _gs().obtener_save_manager()
+			sm.guardar_expedicion(sm.obtener_datos_completos().get("expedicion",{}),_intro.get_profile())
+		)
+		_intro.home_entered.connect(func():
+			if not _intro.tutorial.completed: return
+			var profile: Dictionary = _intro.get_profile()
+			_gs().modo_juego = _gs().aplicar_perfil(profile)
+			var sm = _gs().obtener_save_manager()
+			sm.guardar_expedicion(sm.obtener_datos_completos().get("expedicion",{}),profile)
+		)
 	if review:
 		_intro.home_entered.connect(func():
 			_intro.hide()
@@ -86,6 +109,7 @@ func mostrar_titulo() -> void:
 	_menu.resume_available = is_instance_valid(_juego) or not saved.is_empty()
 	_menu_layer.add_child(_menu)
 	_menu.play_requested.connect(_play_with_fade)
+	_menu.restart_requested.connect(_restart_with_fade)
 	_menu.options_requested.connect(_menu_options)
 	_menu.tutorial_requested.connect(func(): _menu_layer.hide(); _show_intro(true))
 	_pantalla = _menu
@@ -115,20 +139,13 @@ func _play_with_fade() -> void:
 	_transitioning = false
 
 func _menu_options() -> void:
-	if not is_instance_valid(_juego):
-		_gs().iniciar_partida(str(_gs().preferencias.get("mode","cadete")))
-		_juego = load(ESCENA_JUEGO).instantiate()
-		_juego.home_paused = true
-		_juego.salir_al_menu.connect(mostrar_titulo)
-		add_child(_juego)
-		await get_tree().process_frame
-		await get_tree().process_frame
+	await _ensure_game_from_menu()
 	_show_world(true)
 	_juego.set_paused(true)
 	_menu_layer.hide()
 	_juego.options_from_home = true
 	if not _juego.options_closed.is_connected(mostrar_titulo): _juego.options_closed.connect(mostrar_titulo)
-	_juego._open_audio_modal()
+	_juego._open_section_menu()
 
 func mostrar_menu_modo() -> void:
 	_show_intro(false)
@@ -157,3 +174,41 @@ func _show_world(value: bool) -> void:
 	_juego.visible = value
 	if is_instance_valid(_juego.interfaz): _juego.interfaz.visible = value
 	if not value and is_instance_valid(_juego._voice): _juego._voice.stop()
+
+func _ensure_game_from_menu() -> void:
+	if is_instance_valid(_juego): return
+	_gs().iniciar_partida(str(_gs().preferencias.get("mode","cadete")))
+	_juego = load(ESCENA_JUEGO).instantiate()
+	_juego.home_paused = true
+	_juego.salir_al_menu.connect(mostrar_titulo)
+	add_child(_juego)
+	await get_tree().process_frame
+	await get_tree().process_frame
+func _restart_with_fade() -> void:
+	if _transitioning: return
+	_transitioning = true
+	await _ensure_game_from_menu()
+	var mode = str(_gs().preferencias.get("mode",_gs().modo_juego))
+	_juego.set_paused(true)
+	var layer = CanvasLayer.new()
+	layer.layer = 100
+	add_child(layer)
+	var effect = preload("res://ui/run_transition.gd").new()
+	effect.kind = "restart"
+	effect.message = tr("outcome.restart")
+	effect.midpoint.connect(func():
+		_juego.restore_run_for_transition(true,mode)
+		if is_instance_valid(_intro):
+			_intro.queue_free()
+			_intro = null
+		_menu_layer.hide()
+		_show_world(true)
+		_pantalla = _juego
+	)
+	effect.finished.connect(func():
+		_juego.set_paused(false)
+		_juego._offer_tour()
+		_transitioning = false
+		layer.queue_free()
+	)
+	layer.add_child(effect)

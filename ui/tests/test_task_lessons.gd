@@ -49,6 +49,7 @@ func run() -> void:
 	game.guide.start("water")
 	game._on_dock_action("processing")
 	var seq = game._sequence_view
+	check(Rect2(Vector2.ZERO,game.guide.view.size).encloses(game.guide.view._stop.get_rect()),"Compact guidance controls stay inside their panel")
 	check(game.guide.state.stage == "process_0" and seq != null,"Water lesson opens real ordered controls")
 	seq._process_action(2)
 	check(seq._process_step == 0,"Processing cannot skip loading and powering")
@@ -88,9 +89,12 @@ func run() -> void:
 	game.guide.start("ice")
 	game._on_dock_action("expedition")
 	var survey = game._survey_view
+	var map_buttons = survey.find_children("*","Button",true,false)
+	check(not map_buttons[-1].get_global_rect().intersects(map_buttons[-2].get_global_rect()),"Map return and stop controls do not overlap")
 	survey._choose_zone(0)
 	check(survey._collect_button.disabled,"Real collection is locked before scanning")
 	survey._scan_zone()
+	await survey._radar.completed
 	check(game.ice.surveyed.has("crater") and game.guide.state.stage == "ice_collect","Scanning finds the real site and advances Timmy")
 	survey._collect()
 	check(game.ice.phase == "going" and game.guide.state.stage == "ice_return","Collect starts travel; lesson remains unfinished until return")
@@ -158,10 +162,7 @@ func run() -> void:
 	game.guide.stop()
 	# Confirm restart is available during an unfinished expedition and runs a transition.
 	game._open_section_menu()
-	var has_restart = false
-	for b in game._modal_layer.find_children("*","Button",true,false):
-		if b.text == game.tx("restart"): has_restart = true
-	check(has_restart,"In-game menu offers restart before victory")
+	check(game._navigation_view.buttons.has("exit") and game._navigation_view.buttons.has("audio"),"Settings exposes voice and safe return; Start over is on the home menu")
 	game._play_run_transition(true,true)
 	await create_timer(1.8).timeout
 	check(gs.nombre_astronauta == "Alex" and gs.paneles_instalados == 0 and sm.obtener_misiones_completadas().is_empty(),"Animated manual restart clears expedition and preserves profile")

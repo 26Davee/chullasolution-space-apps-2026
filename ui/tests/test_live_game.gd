@@ -24,11 +24,11 @@ func run() -> void:
 	gs.set_process(false)
 	check(game._session_ready,"Live session initialized")
 	check(not game._mission_title.text.is_empty() and not game._mission_desc.text.is_empty(),"Real mission title and objective visible")
-	var last_x = -1.0
+	var last_y = -1.0
 	for id in game._hud.IDS:
 		var card: Control = game._hud.resource_buttons[id]
-		check(card.position.y == 48 and card.position.x > last_x,"All five bars share a single ordered row: "+id)
-		last_x = card.position.x
+		check(card.position.x == 6 and card.position.y > last_y,"All five bars share one ordered column: "+id)
+		last_y = card.position.y
 	game._open_section_menu()
 	var before = gs.tiempo_juego
 	gs._process(2)

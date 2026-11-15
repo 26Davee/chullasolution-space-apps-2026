@@ -31,15 +31,31 @@ func _ready() -> void:
 	world_view.scene.add_child(placement)
 	placement.piece_placed.connect(_placed)
 	placement.placement_rejected.connect(func(_id,_reason): _feedback.text = tr("live.blocked"))
+	var card_height := minf(96,(size.y-120)/4-8)
 	for i in MODULES.size():
-		var button = UI.button(self,tr("structures."+MODULES[i]),Rect2(0,54+i*74,196,62),_choose_module.bind(i))
-		button.add_theme_font_size_override("font_size",18)
+		var button = UI.button(self,"",Rect2(0,50+i*(card_height+8),196,card_height),_choose_module.bind(i))
+		button.name = "PracticeModule_"+MODULES[i]
+		var picture = TextureRect.new()
+		picture.texture = load("res://assets/ui/activities/"+["solar","processor","oxygen","garden"][i]+"-v1.png")
+		picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		picture.position = Vector2(6,6)
+		picture.size = Vector2(84,card_height-12)
+		picture.mouse_filter = MOUSE_FILTER_IGNORE
+		button.add_child(picture)
+		var title = UI.label(button,tr("structures."+MODULES[i]),Rect2(98,6,92,card_height-12),16,UI.WHITE,true)
+		title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		button.tooltip_text = title.text
 		_module_buttons.append(button)
 	_feedback = UI.label(self,tr("flow.build_choose"),Rect2(216,size.y-48,size.x-216,44),18,UI.GOLD,true)
 	UI.button(self,tr("visual.try_again"),Rect2(0,size.y-64,196,48),_reset)
 func _choose_module(index: int, narrate := true) -> void:
 	_selected_module = index
-	for i in _module_buttons.size(): UI.paint(_module_buttons[i],i == index)
+	for i in _module_buttons.size():
+		UI.paint(_module_buttons[i])
+		if i == index:
+			_module_buttons[i].add_theme_stylebox_override("normal",UI.style(Color("#16344d"),UI.GOLD,3))
+			_module_buttons[i].add_theme_stylebox_override("hover",UI.style(Color("#20465f"),UI.GOLD,3))
 	placement.start_placement(StringName(MODULES[index]))
 	_feedback.text = tr("flow.build_place")
 	if narrate: narration_requested.emit(_feedback.text)

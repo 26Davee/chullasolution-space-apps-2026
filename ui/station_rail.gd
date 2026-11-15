@@ -1,36 +1,52 @@
 extends Control
 signal section_requested(section: String)
+signal utility_requested(action: String)
 const UI = preload("res://ui/ui_kit.gd")
 const Icon = preload("res://ui/ui_icon.gd")
 const ITEMS := [["construction","construction"],["expedition","ice"],["processing","agua"],["repair","repair"],["rest","robot_battery"],["missions","missions"],["upgrades","upgrades"],["science","science"],["messages","messages"]]
-const COLORS := {"construction":Color("#ffc64f"),"expedition":Color("#68b9ff"),"processing":Color("#68b9ff"),"repair":Color("#ff927a"),"rest":Color("#b4a4ff"),"missions":Color("#ffc64f"),"upgrades":Color("#b4a4ff"),"science":Color("#7fe7bf"),"messages":Color("#59e0dc")}
+const PRIMARY := ["construction","expedition","repair","missions"]
 var buttons: Dictionary = {}
+var utility_buttons: Dictionary = {}
 var _attention := ""
+var _current := ""
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
-	size = Vector2(148,477)
-	for i in ITEMS.size():
-		var id: String = ITEMS[i][0]
-		var button = UI.button(self,"",Rect2(0,i*53,148,46),section_requested.emit.bind(id))
+	size = Vector2(452,68)
+	UI.panel(self,Rect2(Vector2.ZERO,size),Color("#101e34ed"),18).mouse_filter = MOUSE_FILTER_STOP
+	for i in 5:
+		var id: String = PRIMARY[i] if i < 4 else "more"
+		var button = UI.button(self,"",Rect2(6+i*88,5,86,58),section_requested.emit.bind(id) if i < 4 else utility_requested.emit.bind("more"))
 		button.name = "Station_"+id
 		var icon = Icon.new()
-		icon.kind = ITEMS[i][1]
+		icon.kind = {"construction":"construction","expedition":"ice","repair":"repair","missions":"missions"}.get(id,"more")
 		icon.disc = false
-		icon.tint = COLORS.get(id,UI.CYAN)
+		icon.tint = UI.CYAN
 		icon.size = Vector2(24,24)
-		icon.position = Vector2(10,11)
+		icon.position = Vector2(31,6)
 		button.add_child(icon)
-		var label = UI.label(button,"",Rect2(42,4,98,38),14,UI.WHITE,true)
-		label.name = "Caption"
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		buttons[id] = button
+		var caption = UI.label(button,"",Rect2(2,32,82,22),13,UI.WHITE,true)
+		caption.name = "Caption"
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		if i < 4: buttons[id] = button
+		else: utility_buttons.more = button
 	refresh()
 func refresh() -> void:
+	var selected: String = _attention if not _attention.is_empty() else _current
 	for id in buttons:
-		buttons[id].get_node("Caption").text = tr("live."+id)
-		buttons[id].tooltip_text = tr("guide."+id)
-		UI.paint(buttons[id])
-		if id == _attention: buttons[id].add_theme_stylebox_override("normal",UI.style(Color("#22475d"),UI.GOLD,3))
+		buttons[id].get_node("Caption").text = tr("nav.dock."+id)
+		_paint(buttons[id],id == selected)
+	if utility_buttons.has("more"):
+		utility_buttons.more.get_node("Caption").text = tr("nav.more")
+		_paint(utility_buttons.more,not selected.is_empty() and not PRIMARY.has(selected))
+func _paint(button: Button, selected: bool) -> void:
+	UI.paint(button)
+	button.add_theme_stylebox_override("normal",UI.style(Color("#243a50a0") if selected else Color.TRANSPARENT,UI.GOLD if selected else Color.TRANSPARENT,2 if selected else 0,12))
+	button.get_child(0).tint = UI.GOLD if selected else UI.CYAN
+	button.get_child(0).queue_redraw()
 func set_attention(id: String) -> void:
 	_attention = id
+	if is_node_ready(): refresh()
+
+func set_current(id: String) -> void:
+	_current = id
 	if is_node_ready(): refresh()

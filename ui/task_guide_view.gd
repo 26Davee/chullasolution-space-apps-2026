@@ -32,19 +32,19 @@ func set_compact(compact: bool, width: float) -> void:
 	_compact = compact
 	_stop.text = tr("live.close" if compact else "flow.stop_guide")
 	if compact:
-		size = Vector2(width,66)
+		size = Vector2(width,90)
 		_panel.size = size
 		_portrait.position = Vector2(4,0)
-		_portrait.size = Vector2(64,66)
+		_portrait.size = Vector2(64,90)
 		_title.position = Vector2(76,3)
-		_title.size = Vector2(width-220,22)
+		_title.size = Vector2(width-184,22)
 		_speech.position = Vector2(76,27)
-		_speech.size = Vector2(width-220,36)
+		_speech.size = Vector2(width-184,58)
 		_speech.add_theme_font_size_override("font_size",16)
-		_repeat.position = Vector2(width-132,6)
-		_repeat.size = Vector2(120,24)
-		_stop.position = Vector2(width-132,36)
-		_stop.size = Vector2(120,24)
+		_repeat.position = Vector2(width-100,12)
+		_repeat.size = Vector2(88,28)
+		_stop.position = Vector2(width-100,52)
+		_stop.size = Vector2(88,28)
 	else:
 		size = Vector2(408,174)
 		_panel.size = size

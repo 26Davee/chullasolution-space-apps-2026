@@ -57,6 +57,15 @@ func _draw() -> void:
         "close":
             draw_line(Vector2(-11,-11),Vector2(11,11),ink,3,true)
             draw_line(Vector2(-11,11),Vector2(11,-11),ink,3,true)
+        "more":
+            for x in [-12,0,12]: draw_circle(Vector2(x,0),3,ink)
+        "language":
+            draw_arc(Vector2.ZERO,16,0,TAU,40,ink,2,true)
+            draw_arc(Vector2.ZERO,8,0,TAU,30,ink,2,true)
+            draw_line(Vector2(-16,0),Vector2(16,0),ink,2,true)
+        "audio":
+            draw_colored_polygon(PackedVector2Array([Vector2(-15,-6),Vector2(-7,-6),Vector2(3,-14),Vector2(3,14),Vector2(-7,6),Vector2(-15,6)]),ink)
+            draw_arc(Vector2(3,0),12,-PI/3,PI/3,20,ink,3,true)
         "menu":
             for y in [-10, 0, 10]: draw_line(Vector2(-14,y),Vector2(14,y),ink,3,true)
         "ice":

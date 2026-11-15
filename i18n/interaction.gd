@@ -47,7 +47,7 @@ const MESSAGES := {
     },
     "es": {
         "guide.tour_title": "¡Bienvenido a tu base lunar!",
-        "guide.tour": "Las estaciones están a la derecha: Construir añade módulos; Viaje busca hielo; Procesar crea agua; Reparar protege el domo y Recargar da energía al robot. Misiones, Mejoras, Science y el Centro guardan tus objetivos y descubrimientos. También puedes tocar las máquinas.",
+        "guide.tour": "Las acciones frecuentes están abajo. En Más están Procesar hielo, Recargar robot, Mejoras, el Álbum científico y el Centro de Control. También puedes tocar las máquinas.",
         "guide.try": "¡Muéstrame!",
         "guide.construction": "Elige un módulo disponible. Revisa su coste de energía y toca un lugar libre en la Luna. El holograma indica si cabe. R gira y clic derecho cancela.",
         "guide.expedition": "Elige un punto de hielo en el mapa. El robot viaja, recoge hielo y regresa automáticamente. Explora para descubrir más puntos. Puedes cancelar o reintentar una ruta bloqueada.",
@@ -76,7 +76,7 @@ const MESSAGES := {
         "guide.stop_trip": "Cancelar viaje",
         "guide.zone_stock": "Hielo restante: {n}",
         "guide.letter": "NUEVA CARTA DE DESCUBRIMIENTO",
-        "guide.letter_saved": "Tu carta está en Science. ¡Ábrela para escuchar a Timmy!",
+        "guide.letter_saved": "Tu carta está en el álbum científico. ¡Ábrela para escuchar a Timmy!",
         "guide.upgrade_installed": "MEJORA INSTALADA",
         "guide.star_receipt": "Estrellas: {before} → {after}",
         "guide.back_tree": "Volver a Mejoras",

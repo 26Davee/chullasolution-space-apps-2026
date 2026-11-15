@@ -35,6 +35,7 @@ var _transition_active := false
 var guide: Node
 var _sequence_view: Control
 var _survey_view: Control
+var _navigation_view: Control
 var ice: Node
 var _trip_collected = false
 var _trip_ice = 0
@@ -114,7 +115,7 @@ func _setup_bridge_and_ui() -> void:
 	_ui_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	interfaz.add_child(_ui_root)
 	_hud = LiveHud.new()
-	_hud.position = Vector2(16, 8)
+	_hud.position = Vector2(22,20)
 	_ui_root.add_child(_hud)
 	_hud.resource_pressed.connect(_on_resource_pressed)
 	_hud.set_mode(gs.modo_juego)
@@ -131,9 +132,10 @@ func _setup_bridge_and_ui() -> void:
 	debug_label.hide()
 
 func _build_side_mission_card() -> void:
-	_mission_panel = UI.panel(_ui_root, Rect2(16, 594, 408, 110), Color("#071b32ee"), 16)
-	_mission_title = UI.label(_mission_panel, "", Rect2(14,10,380,24), 16, UI.GOLD, true)
-	_mission_desc = UI.label(_mission_panel, "", Rect2(14,38,380,44), 16, UI.WHITE)
+	_mission_panel = UI.panel(_ui_root,Rect2(22,628,292,76),Color("#101e34ec"),14)
+	_mission_title = UI.label(_mission_panel,"",Rect2(12,6,268,20),14,UI.GOLD,true)
+	_mission_title.max_lines_visible = 1
+	_mission_desc = UI.label(_mission_panel,"",Rect2(12,27,268,30),13,UI.WHITE)
 	_mission_desc.max_lines_visible = 2
 	_mission_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_mission_panel.gui_input.connect(func(event):
@@ -141,16 +143,15 @@ func _build_side_mission_card() -> void:
 	)
 	_goal_progress = ProgressBar.new()
 	_goal_progress.show_percentage = false
-	_goal_progress.add_theme_font_size_override("font_size", 1)
-	_goal_progress.add_theme_stylebox_override("background", UI.style(Color("#34445e")))
-	_goal_progress.add_theme_stylebox_override("fill", UI.style(UI.CYAN))
+	_goal_progress.add_theme_stylebox_override("background",UI.style(Color("#34445e")))
+	_goal_progress.add_theme_stylebox_override("fill",UI.style(UI.CYAN))
 	_mission_panel.add_child(_goal_progress)
-	_goal_progress.position = Vector2(14,90)
-	_goal_progress.size = Vector2(220,6)
-	_mission_reward = UI.label(_mission_panel, "", Rect2(244,82,150,20), 13, UI.CYAN)
-	_storm_badge = UI.panel(_ui_root, Rect2(432,144,416,42), Color("#631b1bee"),12)
+	_goal_progress.position = Vector2(12,63)
+	_goal_progress.size = Vector2(174,5)
+	_mission_reward = UI.label(_mission_panel,"",Rect2(196,56,86,18),11,UI.CYAN)
+	_storm_badge = UI.panel(_ui_root,Rect2(332,184,500,40),Color("#631b1bee"),12)
 	_storm_badge.hide()
-	_storm_label = UI.label(_storm_badge, "", Rect2(14,7,388,28),15,UI.WHITE,true)
+	_storm_label = UI.label(_storm_badge,"",Rect2(14,6,472,28),15,UI.WHITE,true)
 
 func icon_button(parent: Node, kind: String, rect: Rect2, label: String, callback: Callable, active := false) -> Button:
 	var button = UI.button(parent, "", rect, callback, active)
@@ -166,15 +167,27 @@ func icon_button(parent: Node, kind: String, rect: Rect2, label: String, callbac
 	return button
 
 func _build_top_toolbar() -> void:
-	_menu_button = icon_button(_ui_root,"menu",Rect2(1208,8,56,40),tx("menu"),_open_section_menu,true)
+	_menu_button = UI.button(_ui_root,"",Rect2(1096,20,168,40),_open_section_menu)
+	var gear = Icon.new()
+	gear.kind = "settings"
+	gear.disc = false
+	gear.tint = UI.CYAN
+	gear.position = Vector2(12,10)
+	gear.size = Vector2(20,20)
+	_menu_button.add_child(gear)
+	UI.label(_menu_button,tr("nav.settings"),Rect2(42,4,120,32),15,UI.WHITE,true).name = "Caption"
 	rail = preload("res://ui/station_rail.gd").new()
-	rail.position = Vector2(1116,146)
+	rail.position = Vector2(414,636)
 	_ui_root.add_child(rail)
 	rail.section_requested.connect(_on_dock_action)
-	_cam_button = icon_button(_ui_root,"camera",Rect2(1044,644,56,56),tx("help"),_toggle_camera_target)
-	_timmy_button = UI.button(_ui_root,"Timmy",Rect2(1116,636,148,60),_open_timmy,true)
-	_mail_button = rail.buttons.messages
-	_mail_badge = UI.label(_mail_button,"",Rect2(124,-7,24,24),13,UI.INK,true)
+	rail.utility_requested.connect(func(action):
+		if action == "more": _open_more_menu()
+	)
+	_cam_button = icon_button(_ui_root,"camera",Rect2(1098,660,40,40),tx("help"),_toggle_camera_target)
+	_timmy_button = UI.button(_ui_root,"Timmy",Rect2(1154,660,110,40),_open_timmy,true)
+	_cam_button.hide()
+	_mail_button = rail.utility_buttons.more
+	_mail_badge = UI.label(_mail_button,"",Rect2(66,-8,24,24),13,UI.INK,true)
 	var badge_style = UI.style(UI.GOLD,Color.TRANSPARENT,0,12)
 	badge_style.content_margin_left = 0
 	badge_style.content_margin_right = 0
@@ -185,7 +198,7 @@ func _build_top_toolbar() -> void:
 
 func _build_bottom_dock() -> void:
 	# A contextual drawer replaces the permanent eight-button dock.
-	_build_tray = UI.panel(_ui_root,Rect2(16,486,1024,218),Color("#071b32fa"),18)
+	_build_tray = UI.panel(_ui_root,Rect2(856,78,400,540),Color("#071b32fa"),18)
 	_build_tray.mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_tray.hide()
 	_controls_hint = UI.label(_ui_root,"",Rect2(440,676,600,22),13,UI.WHITE)
@@ -196,18 +209,18 @@ func _build_placement_and_toast() -> void:
 	_placement_banner = UI.panel(_ui_root,Rect2(296,158,688,48),Color("#071b32f7"),14)
 	_placement_banner.hide()
 	_placement_label = UI.label(_placement_banner,"",Rect2(18,10,652,28),16,UI.GOLD,true)
-	_toast_panel = UI.panel(_ui_root,Rect2(436,594,608,66),Color("#071b32f7"),16)
+	_toast_panel = UI.panel(_ui_root,Rect2(448,552,400,66),Color("#071b32f7"),16)
 	_toast_panel.hide()
-	_toast_label = UI.label(_toast_panel,"",Rect2(18,12,572,44),17,UI.WHITE)
-	_action_panel = UI.panel(_ui_root,Rect2(436,526,608,56),Color("#102b46f7"),14)
+	_toast_label = UI.label(_toast_panel,"",Rect2(16,10,368,48),16,UI.WHITE)
+	_action_panel = UI.panel(_ui_root,Rect2(448,482,400,56),Color("#102b46f7"),14)
 	_action_panel.hide()
-	_action_label = UI.label(_action_panel,"",Rect2(16,6,576,26),16,UI.CYAN,true)
+	_action_label = UI.label(_action_panel,"",Rect2(16,6,368,26),16,UI.CYAN,true)
 	_action_progress = ProgressBar.new()
 	_action_progress.show_percentage = false
 	_action_progress.add_theme_font_size_override("font_size",1)
 	_action_panel.add_child(_action_progress)
 	_action_progress.position = Vector2(16,36)
-	_action_progress.size = Vector2(576,8)
+	_action_progress.size = Vector2(368,8)
 
 func _process(delta: float) -> void:
 	super._process(delta)
@@ -219,7 +232,7 @@ func _process(delta: float) -> void:
 		guide.tick(delta)
 	if _toast_timer <= 0 and not _toast_queue.is_empty() and not is_instance_valid(_modal_layer) and not home_paused and not placement_system.is_placing():
 		var item: Dictionary = _toast_queue.pop_front()
-		_toast_panel.position = Vector2(436,410 if _build_tray.visible else 594)
+		_toast_panel.position = Vector2(448,552)
 		_toast_label.text = str(item.text)
 		_toast_timer = float(item.seconds)
 		_toast_panel.show()
@@ -277,6 +290,9 @@ func _open_modal(kind: String, title: String, panel_size: Vector2) -> Control:
 	_swapping_modal = true
 	var panel = super._open_modal(kind,title,panel_size)
 	_swapping_modal = false
+	if is_instance_valid(alerts):
+		alerts.blocked = true
+		alerts.hide()
 	_build_tray.hide()
 	_toast_panel.hide()
 	_mission_panel.hide()
@@ -287,9 +303,12 @@ func _open_modal(kind: String, title: String, panel_size: Vector2) -> Control:
 	return panel
 
 func _close_modal() -> void:
+	for item in [rail,_menu_button,_timmy_button,_hud]:
+		if is_instance_valid(item): item.z_index = 0
 	if is_instance_valid(_voice): _voice.stop()
 	for queued in _toast_queue:
 		if queued.has("voice"): queued.voice = false
+	if rail != null: rail.set_current("")
 	var notify_home = options_from_home and not _swapping_modal
 	super._close_modal()
 	if notify_home:
@@ -300,6 +319,7 @@ func _close_modal() -> void:
 	_survey_view = null
 	if guide != null: guide.panel_closed()
 	if _session_ready:
+		if is_instance_valid(alerts): alerts.blocked = home_paused or _transition_active or placement_system.is_placing()
 		_apply_pause()
 		call_deferred("_maybe_show_reward")
 	if is_instance_valid(_focus_before) and _focus_before.is_visible_in_tree(): _focus_before.grab_focus()
@@ -316,15 +336,49 @@ func _trap_focus() -> void:
 	controls[0].grab_focus()
 
 func _open_section_menu() -> void:
-	var panel = _open_modal("menu",tx("menu"),Vector2(580,530))
-	UI.button(panel,tx("settings"),Rect2(28,88,524,52),_open_audio_modal)
-	UI.button(panel,tx("help"),Rect2(28,154,524,52),_open_controls)
-	UI.button(panel,"Timmy · "+tx("help"),Rect2(28,220,524,52),_open_timmy)
-	UI.button(panel,tx("home"),Rect2(28,300,524,54),_return_home,true)
-	UI.button(panel,tx("restart"),Rect2(28,370,524,48),_confirm_new_game)
-	UI.button(panel,tx("back"),Rect2(28,434,524,48),_close_modal)
+	_open_navigation("settings")
+func _open_more_menu() -> void:
+	_open_navigation("more")
+func _open_navigation(page: String) -> void:
+	var panel = _open_drawer(page,tr("nav."+page),Vector2(400,500 if page == "more" else 390))
+	rail.set_current("more" if page == "more" else "")
+	_navigation_view = preload("res://ui/navigation_menu.gd").new()
+	_navigation_view.page = page
+	_navigation_view.position = Vector2(28,80)
+	_navigation_view.size = Vector2(344,panel.size.y-116)
+	panel.add_child(_navigation_view)
+	_navigation_view.action_requested.connect(func(action):
+		match action:
+			"language": _open_language_settings()
+			"audio": _open_audio_modal()
+			"controls": _open_controls()
+			"exit": _confirm_exit()
+			"timmy": _open_timmy()
+			_: _on_dock_action(action)
+	)
+	call_deferred("_trap_focus")
+func _open_drawer(kind: String, title: String, dimensions: Vector2) -> Control:
+	var panel = _open_modal(kind,title,dimensions)
+	panel.position = Vector2(1256-dimensions.x,78)
+	panel.get_child(0).add_theme_font_size_override("font_size",22)
+	(_modal_layer.get_child(0) as ColorRect).color.a = 0.12
+	for item in [rail,_menu_button,_timmy_button,_hud]: item.z_index = 60
+	if guide != null: guide.layout()
+	return panel
+func _open_language_settings() -> void:
+	var panel = _open_drawer("language",tr("nav.language"),Vector2(400,340))
+	for i in 2:
+		var lang: String = ["en","es"][i]
+		UI.button(panel,"English" if i == 0 else "Español",Rect2(28,90+i*70,344,56),func(): _set_language(lang),_gs().idioma == lang)
+	UI.button(panel,tr("nav.back_settings"),Rect2(28,250,344,48),_open_section_menu)
+func _confirm_exit() -> void:
+	var panel = _open_drawer("exit",tr("nav.exit"),Vector2(400,320))
+	UI.label(panel,tr("nav.exit_body"),Rect2(28,88,344,104),20,UI.WHITE)
+	UI.button(panel,tx("cancel"),Rect2(28,220,116,52),_open_section_menu)
+	UI.button(panel,tr("nav.save_exit"),Rect2(156,220,216,52),_return_home,true)
 
 func _on_dock_action(id: String) -> void:
+	if is_instance_valid(_modal_layer): _close_modal()
 	if guide != null and not guide.active():
 		var tasks = {"expedition":"ice","processing":"process","repair":"repair","rest":"recharge"}
 		var task: String = tasks.get(id,"")
@@ -338,6 +392,7 @@ func _on_dock_action(id: String) -> void:
 				_perform_station(target)
 				return
 	_perform_station(id)
+	rail.set_current(id)
 
 func _perform_station(id: String) -> void:
 	if id == "construction": _build_catalog()
@@ -389,30 +444,32 @@ func _build_catalog() -> void:
 	if session == null: return
 	for child in _build_tray.get_children(): child.queue_free()
 	_build_buttons.clear()
-	UI.label(_build_tray,tx("inventory"),Rect2(18,10,900,26),18,UI.CYAN,true)
-	UI.button(_build_tray,tx("close"),Rect2(906,8,100,30),func():
+	UI.label(_build_tray,tx("construction"),Rect2(16,10,260,30),23,UI.GOLD,true)
+	UI.label(_build_tray,tr("nav.build_choose"),Rect2(16,44,368,24),14,UI.CYAN)
+	var close = UI.button(_build_tray,tx("close"),Rect2(304,10,80,30),func():
 		_build_tray.hide()
 		_mission_panel.show()
+		rail.set_current("")
 		if guide != null: guide.build_closed()
 	)
+	close.add_theme_font_size_override("font_size",12)
 	for i in MODULES.size():
 		var id: String = MODULES[i]
 		var stock = int(session.inventory.get(id,0))
-		var button = UI.button(_build_tray,"",Rect2(16+i*200,46,192,158),_start_build.bind(id))
+		var button = UI.button(_build_tray,"",Rect2(16+(i%2)*192,72+(i/2)*156,176,148),_start_build.bind(id))
 		button.name = "Module_"+id
-		module_picture(button,id,Rect2(6,6,180,76))
-		UI.label(button,module_name(id),Rect2(10,86,172,28),15,UI.WHITE,true)
-		UI.label(button,tx("stock",{"n":stock}),Rect2(10,112,172,24),14,UI.GOLD)
-		UI.label(button,tx("cost",{"n":module_cost(id)}),Rect2(10,138,172,18),12,UI.CYAN)
-		if stock == 0:
-			button.modulate = Color(0.72,0.79,0.85)
+		module_picture(button,id,Rect2(6,6,164,64))
+		UI.label(button,module_name(id),Rect2(10,76,156,32),14,UI.WHITE,true)
+		UI.label(button,tx("stock",{"n":stock}),Rect2(10,108,156,18),13,UI.GOLD)
+		UI.label(button,tx("cost",{"n":module_cost(id)}),Rect2(10,128,156,18),12,UI.CYAN)
+		if stock == 0: button.modulate = Color(0.72,0.79,0.85)
 		button.tooltip_text = tx("cost",{"n":module_cost(id)})
 		_build_buttons[id] = button
 	_build_tray.show()
 	_toast_queue.clear()
 	_toast_timer = 0
 	_toast_panel.hide()
-	_mission_panel.hide()
+	rail.set_current("construction")
 	if guide != null: guide.notify("station_open",{"section":"construction"})
 
 func module_name(id: String) -> String:
@@ -484,6 +541,7 @@ func _on_piece_placed(piece_id: StringName, _position: Vector3) -> void:
 	_pending_build_id = ""
 	gs.notificar_evento_mision("estructura_construida",{"id_estructura":id,"total_paneles":gs.paneles_instalados})
 	_show_toast(tx("module_done",{"module":module_name(id)}))
+	rail.set_current("")
 	if guide != null: guide.notify("module_placed",{"module":id})
 	_bind_stations()
 	session.save_run()
@@ -492,6 +550,7 @@ func _on_piece_placed(piece_id: StringName, _position: Vector3) -> void:
 
 func _on_placement_cancelled(_id: StringName) -> void:
 	_pending_build_id = ""
+	rail.set_current("")
 	if guide != null: guide.build_closed()
 	_mission_panel.show()
 
@@ -507,15 +566,15 @@ func _update_placement_banner(placing: bool) -> void:
 func _open_action(id: String) -> void:
 	if id == "expedition": _open_ice_map(); return
 	if id in ["processing","repair"]:
-		var panel = _open_modal("action:"+id,tx(id),Vector2(1200,672))
+		var panel = _open_drawer("action:"+id,tx(id),Vector2(760,540))
 		var view = preload("res://ui/station_sequence.gd").new()
 		view.section = id
 		view.training = false
 		view.initial_shield = _gs().escudo
 		view.blocked_reason = _action_problem(id)
 		view.allowed = view.blocked_reason.is_empty()
-		view.position = Vector2(28,150)
-		view.size = Vector2(1144,478)
+		view.position = Vector2(28,180)
+		view.size = Vector2(704,324)
 		panel.add_child(view)
 		_sequence_view = view
 		view.step_performed.connect(func(section,index):
@@ -529,12 +588,15 @@ func _open_action(id: String) -> void:
 			guide.notify("station_open",{"section":id})
 			guide.layout()
 		return
-	var panel = _open_modal("action:rest",tx("rest"),Vector2(900,590))
-	module_picture(panel,"panel_solar",Rect2(28,150,350,270))
-	UI.label(panel,tx("low_robot"),Rect2(410,154,462,126),24,UI.WHITE)
-	UI.label(panel,"%d %%" % roundi(_gs().energia_robot),Rect2(410,300,462,44),30,UI.GOLD,true)
-	UI.button(panel,tx("rest"),Rect2(410,382,462,54),func(): _execute_action("rest"),true)
-	UI.button(panel,tx("return_dome"),Rect2(28,474,844,54),_return_to_dome)
+	var panel = _open_drawer("action:rest",tx("rest"),Vector2(400,550))
+	var view = preload("res://ui/recharge_panel.gd").new()
+	view.position = Vector2(28,84)
+	view.size = Vector2(344,400)
+	view.battery = _gs().energia_robot
+	view.near_dome = _robot_distance_to_dome() <= DOME_RECHARGE_RADIUS
+	view.recharge_requested.connect(func(): _execute_action("rest"))
+	view.return_requested.connect(_return_to_dome)
+	panel.add_child(view)
 	if guide != null:
 		guide.notify("station_open",{"section":"rest"})
 		guide.layout()
@@ -595,30 +657,33 @@ func _tick_expedition(delta: float) -> void:
 
 func _open_timmy() -> void:
 	var hint = preload("res://ui/context_hint.gd").get_hint(self)
-	var panel = _open_modal("timmy",tx("timmy"),Vector2(850,490))
+	var panel = _open_drawer("timmy",tx("timmy"),Vector2(400,520))
 	var image = TextureRect.new()
 	image.texture = load("res://assets/ui/timmy.png")
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	image.position = Vector2(28,96)
-	image.size = Vector2(200,304)
+	image.position = Vector2(24,92)
+	image.size = Vector2(106,180)
 	panel.add_child(image)
-	UI.label(panel,str(hint.text),Rect2(258,94,564,190),25,UI.WHITE)
-	UI.button(panel,tr("flow.guide_me"),Rect2(258,326,564,52),func():
+	UI.label(panel,_player_name(),Rect2(146,82,226,30),21,UI.GOLD,true)
+	UI.label(panel,str(hint.text),Rect2(146,122,226,198),19,UI.WHITE)
+	UI.button(panel,tr("flow.guide_me"),Rect2(28,346,344,52),func():
 		_close_modal()
 		if guide.active(): guide.refresh(true)
 		else: guide.start(str(hint.task),str(hint.get("module","")))
 	,true)
-	UI.button(panel,tr("v2.repeat"),Rect2(258,394,564,44),func(): _speak(str(hint.text)))
+	UI.button(panel,tr("v2.repeat"),Rect2(28,414,164,46),func(): _speak(str(hint.text)))
+	UI.button(panel,tr("nav.controls"),Rect2(204,414,168,46),_open_controls)
 	_speak(str(hint.text))
 
 func _next_advice() -> String:
 	return str(preload("res://ui/context_hint.gd").get_hint(self).text)
 
 func _open_controls() -> void:
-	var panel = _open_modal("help",tx("help"),Vector2(740,470))
-	UI.label(panel,tx("controls"),Rect2(32,90,676,260),25,UI.WHITE)
-	UI.button(panel,tx("repeat"),Rect2(32,374,676,48),func(): _speak(tx("controls")),true)
+	var panel = _open_drawer("help",tr("nav.controls"),Vector2(400,570))
+	UI.label(panel,tx("controls"),Rect2(28,88,344,350),18,UI.WHITE)
+	UI.button(panel,tx("repeat"),Rect2(28,464,164,48),func(): _speak(tx("controls")),true)
+	UI.button(panel,tx("back"),Rect2(204,464,168,48),_open_section_menu)
 
 func _speak(text: String) -> void:
 	_voice.speak(text,TranslationServer.get_locale())
@@ -702,6 +767,9 @@ func _open_messages() -> void:
 	var panel = _open_modal("messages",tx("messages"),Vector2(1200,672))
 	var center = preload("res://ui/notification_center.gd").new()
 	center.game = self
+	var has_alert = session.messages.any(func(item): return str(item.kind) in ["resource","storm"] and not item.get("resolved",false))
+	if not has_alert:
+		center._page = "discoveries" if session.messages.any(func(item): return str(item.kind) in ["mission","upgrade"] and not item.get("read",false)) else "history"
 	center.position = Vector2(28,78)
 	center.size = Vector2(1144,548)
 	panel.add_child(center)
@@ -717,7 +785,7 @@ func message_text(item: Dictionary) -> String:
 			var keys = {"agua":"low_water","energia":"low_energy","oxigeno":"low_oxygen","escudo":"low_shield","energia_robot":"low_robot"}
 			return tx("low",{"resource":tr("hud."+id+".nombre"),"action":tx(str(keys.get(id,"low_water")))})
 		"upgrade": return gx("upgrade_installed")+". "+CatalogScript.text("upgrades."+str(data.id)+".nombre",str(data.id))
-		"text": return str(data.get("text",""))
+		"text","letter": return str(data.get("text",""))
 		"mission":
 			var name = CatalogScript.text("misiones."+str(data.id)+".titulo",str(data.id))
 			return tx("mail_mission",{"name":name})
@@ -734,43 +802,29 @@ func _maybe_show_reward() -> void:
 func _open_reward(reward: Dictionary) -> void:
 	var panel = _open_modal("reward",tx("reward"),Vector2(940,600))
 	var title = CatalogScript.text("misiones."+str(reward.id)+".titulo",str(reward.id))
-	UI.label(panel,title,Rect2(28,82,884,50),28,UI.GOLD,true)
-	UI.label(panel,tx("reward_detail",{"stars":reward.stars}),Rect2(28,142,884,36),22,UI.WHITE)
-	var card = UI.panel(panel,Rect2(28,204,420,240),Color("#193750"),18)
-	UI.label(card,gx("letter"),Rect2(18,12,384,28),17,UI.GOLD,true)
-	module_picture(card,_mission_module(str(reward.id)),Rect2(16,58,166,140))
 	var science_title = ""
 	for mission in session.mm.obtener_todas_las_misiones():
 		if str(mission.id) == str(reward.id): science_title = str(session.mm.obtener_mision_localizada(mission).get("carta_nasa",{}).get("titulo",""))
-	UI.label(card,science_title,Rect2(198,58,204,104),22,UI.WHITE,true)
-	UI.label(card,gx("letter_saved"),Rect2(18,200,384,34),14,UI.CYAN)
-	UI.label(panel,tx("supplies"),Rect2(476,204,436,32),20,UI.CYAN,true)
-	var supply_scroll = ScrollContainer.new()
-	supply_scroll.position = Vector2(476,246)
-	supply_scroll.size = Vector2(436,198)
-	supply_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(supply_scroll)
-	var column = VBoxContainer.new()
-	column.add_theme_constant_override("separation",10)
-	supply_scroll.add_child(column)
-	if reward.get("supplies",{}).is_empty():
-		UI.label(panel,gx("no_supplies"),Rect2(476,264,418,126),23,UI.WHITE)
-	for id in reward.get("supplies",{}):
-		var item = UI.panel(column,Rect2(0,0,416,170),Color("#193750"),16)
-		item.custom_minimum_size = Vector2(416,170)
-		module_picture(item,str(id),Rect2(12,12,166,142))
-		UI.label(item,"%s ×%d" % [module_name(id),int(reward.supplies[id])],Rect2(194,44,204,84),22,UI.WHITE,true)
-	UI.button(panel,tx("view_card"),Rect2(28,494,420,54),func():
+	var view = preload("res://ui/reward_view.gd").new()
+	view.position = Vector2(28,82)
+	view.size = Vector2(884,466)
+	view.mission_title = title
+	view.science_title = science_title
+	view.card_module = _mission_module(str(reward.id))
+	view.stars = int(reward.stars)
+	view.supplies = reward.get("supplies",{}).duplicate()
+	view.picture_builder = module_picture
+	view.module_title = module_name
+	view.acknowledged.connect(func(science):
 		session.acknowledge_reward(str(reward.id))
-		_open_section_modal("science")
-	,true)
-	UI.button(panel,tx("continue"),Rect2(476,494,436,54),func():
-		session.acknowledge_reward(str(reward.id))
-		_close_modal()
+		if science: _open_section_modal("science")
+		else: _close_modal()
 	)
+	panel.add_child(view)
 	(panel.get_child(1) as Button).pressed.connect(func(): session.acknowledge_reward(str(reward.id)))
 	_pop_in(panel)
 	_speak(tx("reward")+" "+title+". "+gx("letter")+": "+science_title+". "+gx("letter_saved"))
+
 
 func _open_victory() -> void:
 	var panel = _open_modal("victory",tr("outcome.victory"),Vector2(1120,650))
@@ -846,52 +900,44 @@ func _return_home() -> void:
 	salir_al_menu.emit()
 
 func _open_audio_modal() -> void:
-	var panel = _open_modal("audio",tx("settings"),Vector2(760,594))
+	var panel = _open_drawer("audio",tr("nav.audio"),Vector2(400,580))
 	var gs = _gs()
-	UI.button(panel,"EN",Rect2(28,82,150,44),func(): _set_language("en"),gs.idioma == "en")
-	UI.button(panel,"ES",Rect2(194,82,150,44),func(): _set_language("es"),gs.idioma == "es")
-	UI.button(panel,tr("intro.voice_off" if _voice.muted else "intro.voice_on"),Rect2(374,82,358,44),func():
+	UI.button(panel,tr("intro.voice_off" if _voice.muted else "intro.voice_on"),Rect2(28,82,344,44),func():
 		_voice.muted = not _voice.muted
 		_save_preferences()
 		_open_audio_modal()
 	,not _voice.muted)
-	UI.label(panel,tx("voice")+" · "+("Sabina" if gs.idioma == "es" else "Zira"),Rect2(28,150,704,30),20,UI.CYAN,true)
+	UI.label(panel,tx("voice")+" · "+("Sabina" if gs.idioma == "es" else "Zira"),Rect2(28,142,344,30),18,UI.CYAN,true)
 	_voice_choice = OptionButton.new()
-	_voice_choice.position = Vector2(28,190)
-	_voice_choice.size = Vector2(704,44)
-	_voice_choice.add_theme_font_size_override("font_size",19)
+	_voice_choice.position = Vector2(28,180)
+	_voice_choice.size = Vector2(344,44)
+	_voice_choice.add_theme_font_size_override("font_size",16)
 	UI.paint(_voice_choice)
 	panel.add_child(_voice_choice)
-	var voices: Array = _voice.voices_for(gs.idioma)
-	_voice_choice.add_item("Sabina" if gs.idioma == "es" else "Zira")
-	_voice_choice.set_item_metadata(0,"")
-	for voice in voices:
-		_voice_choice.add_item(str(voice.name))
-		_voice_choice.set_item_metadata(_voice_choice.item_count-1,str(voice.id))
-		if str(_voice.selected_voices.get(gs.idioma,"")) == str(voice.id): _voice_choice.select(_voice_choice.item_count-1)
 	_voice_choice.item_selected.connect(func(index):
 		_voice.set_voice(gs.idioma,str(_voice_choice.get_item_metadata(index)))
 		_save_preferences()
 	)
-	_audio_status = UI.label(panel,"",Rect2(28,246,704,48),16,UI.WHITE)
+	_audio_status = UI.label(panel,"",Rect2(28,234,344,64),14,UI.WHITE)
 	_audio_voice_signature = ""
 	_refresh_audio_voices()
 	for i in 2:
-		UI.label(panel,tx("volume" if i == 0 else "speed"),Rect2(28,314+i*70,200,28),20,UI.WHITE)
+		UI.label(panel,tx("volume" if i == 0 else "speed"),Rect2(28,310+i*66,344,26),17,UI.WHITE)
 		var slider = HSlider.new()
 		slider.min_value = 0 if i == 0 else 0.7
 		slider.max_value = 100 if i == 0 else 1.3
 		slider.step = 5 if i == 0 else 0.05
 		slider.value = _voice.volume if i == 0 else _voice.rate
-		slider.position = Vector2(250,314+i*70)
-		slider.size = Vector2(482,36)
+		slider.position = Vector2(28,340+i*66)
+		slider.size = Vector2(344,26)
 		panel.add_child(slider)
 		slider.value_changed.connect(func(value):
 			if i == 0: _voice.volume = int(value)
 			else: _voice.rate = float(value)
 			_save_preferences()
 		)
-	UI.button(panel,tr("v2.test"),Rect2(28,482,704,50),func(): _speak(tx("welcome",{"name":_player_name()})),true)
+	UI.button(panel,tr("v2.test"),Rect2(28,466,164,48),func(): _speak(tx("welcome",{"name":_player_name()})),true)
+	UI.button(panel,tx("back"),Rect2(204,466,168,48),_open_section_menu)
 
 func _save_preferences() -> void:
 	var gs = _gs()
@@ -907,10 +953,12 @@ func _set_language(language: String) -> void:
 	_save_preferences()
 	_hud.refresh()
 	rail.refresh()
+	if guide != null and guide.active(): guide.refresh(false)
 	_refresh_active_mission_panel()
-	_menu_button.tooltip_text = tx("menu")
+	_menu_button.tooltip_text = tr("nav.settings")
+	_menu_button.get_node("Caption").text = tr("nav.settings")
 	_timmy_button.tooltip_text = tx("timmy")
-	_open_audio_modal()
+	_open_language_settings()
 func _toggle_language() -> void:
 	_set_language("en" if _gs().idioma == "es" else "es")
 
@@ -1139,11 +1187,11 @@ func _on_ice_changed() -> void:
 	if session != null and not session.loading: session.save_run()
 
 func _open_ice_map() -> void:
-	var panel = _open_modal("ice_map",tx("expedition"),Vector2(1200,672))
+	var panel = _open_drawer("ice_map",tx("expedition"),Vector2(760,540))
 	var view = preload("res://ui/ice_survey_panel.gd").new()
 	view.training = false
-	view.position = Vector2(28,150)
-	view.size = Vector2(1144,478)
+	view.position = Vector2(28,180)
+	view.size = Vector2(704,324)
 	view.set_state(ice.capture())
 	panel.add_child(view)
 	_survey_view = view
@@ -1221,18 +1269,7 @@ func _play_run_transition(restart: bool, manual: bool) -> void:
 	effect.kind = "restart" if restart else "checkpoint"
 	effect.message = tr("outcome.restart" if restart else "outcome.checkpoint")
 	effect.midpoint.connect(func():
-		if restart: session.reset_run(mode)
-		else: session.recover()
-		_gs().en_partida = false
-		session.save_run()
-		_bridge._zero_handled = false
-		_alerted.clear()
-		alerts.clear()
-		_toast_queue.clear()
-		_close_modal()
-		_sync_all_from_state()
-		_hud.set_mode(mode)
-		_apply_pause()
+		restore_run_for_transition(restart,mode)
 	)
 	effect.finished.connect(func():
 		_transition_active = false
@@ -1243,3 +1280,17 @@ func _play_run_transition(restart: bool, manual: bool) -> void:
 		elif manual: _offer_tour()
 	)
 	interfaz.add_child(effect)
+
+func restore_run_for_transition(restart: bool, mode: String) -> void:
+	if restart: session.reset_run(mode)
+	else: session.recover()
+	_gs().en_partida = false
+	session.save_run()
+	_bridge._zero_handled = false
+	_alerted.clear()
+	alerts.clear()
+	_toast_queue.clear()
+	_close_modal()
+	_sync_all_from_state()
+	_hud.set_mode(mode)
+	_apply_pause()
