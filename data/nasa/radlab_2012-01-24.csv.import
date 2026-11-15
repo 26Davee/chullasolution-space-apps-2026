@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://7aaouevsbnkk"
+
+[deps]
+
+files=["res://data/nasa/radlab_2012-01-24.instrument.translation", "res://data/nasa/radlab_2012-01-24.absorbed.translation", "res://data/nasa/radlab_2012-01-24.instrument.translation", "res://data/nasa/radlab_2012-01-24.spacecraft.translation"]
+
+source_file="res://data/nasa/radlab_2012-01-24.csv"
+dest_files=["res://data/nasa/radlab_2012-01-24.instrument.translation", "res://data/nasa/radlab_2012-01-24.absorbed.translation", "res://data/nasa/radlab_2012-01-24.instrument.translation", "res://data/nasa/radlab_2012-01-24.spacecraft.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

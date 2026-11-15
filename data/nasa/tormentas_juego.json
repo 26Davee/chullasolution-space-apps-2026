@@ -1,0 +1,42 @@
+{
+    "fuente":  "NASA RadLab (OSDR), instrumento CRaTER, nave LRO (orbita la Luna)",
+    "campo_usado":  "absorbed_dose_rate (confirmar unidad en RadLab)",
+    "regla_intensidad":  "1 + 0.5 * (log10(pico) - log10(pico_min)) / (log10(pico_max) - log10(pico_min))",
+    "regla_tiempo":  "1 hora real = 0.677 s de juego; duracion entre 20 y 30 s, medida con las horas sobre 10 veces el nivel normal",
+    "nota":  "Los picos son datos reales de CRaTER en orbita lunar. El momento en que llegan al juego, la intensidad y la duracion son decisiones del juego.",
+    "eventos":  [
+                    {
+                        "fecha":  "2021-10-28",
+                        "archivo":  "data/nasa/radlab_2021-10-28_reducido.csv",
+                        "linea_base":  12.9,
+                        "pico":  712.71,
+                        "pico_utc":  "2021-10-29T02:59:59",
+                        "t_juego_s":  180,
+                        "intensidad":  1,
+                        "horas_sobre_10x":  18,
+                        "duracion_s":  20
+                    },
+                    {
+                        "fecha":  "2017-09-10",
+                        "archivo":  "data/nasa/radlab_2017-09-10_reducido.csv",
+                        "linea_base":  21,
+                        "pico":  22968.75,
+                        "pico_utc":  "2017-09-11T05:02:38",
+                        "t_juego_s":  420,
+                        "intensidad":  1.39,
+                        "horas_sobre_10x":  91,
+                        "duracion_s":  30
+                    },
+                    {
+                        "fecha":  "2012-01-24",
+                        "archivo":  "data/nasa/radlab_2012-01-24_reducido.csv",
+                        "linea_base":  null,
+                        "pico":  61829.17,
+                        "pico_utc":  "2012-01-24T16:06:41",
+                        "t_juego_s":  660,
+                        "intensidad":  1.5,
+                        "horas_sobre_10x":  49.9,
+                        "duracion_s":  30
+                    }
+                ]
+}

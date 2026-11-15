@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://cd4hemumghgph"
+
+[deps]
+
+files=["res://data/nasa/radlab_2021-10-28.instrument.translation", "res://data/nasa/radlab_2021-10-28.absorbed.translation", "res://data/nasa/radlab_2021-10-28.instrument.translation", "res://data/nasa/radlab_2021-10-28.spacecraft.translation"]
+
+source_file="res://data/nasa/radlab_2021-10-28.csv"
+dest_files=["res://data/nasa/radlab_2021-10-28.instrument.translation", "res://data/nasa/radlab_2021-10-28.absorbed.translation", "res://data/nasa/radlab_2021-10-28.instrument.translation", "res://data/nasa/radlab_2021-10-28.spacecraft.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true
