@@ -1,0 +1,25 @@
+{
+    "fuente":  "NASA TSIS-1 / TIM, LASP (Universidad de Colorado), nivel 3, promedios de 24 horas",
+    "enlace":  "https://lasp.colorado.edu/tsis/data/tsi-data/",
+    "unidad":  "W/m2",
+    "fecha_descarga":  "15/11/2026",
+    "desde":  "2018-01-11",
+    "hasta":  "2026-11-10",
+    "dias_validos":  2762,
+    "dias_descartados":  465,
+    "tsi_a_1_ua":  {
+                       "minimo":  1360.29,
+                       "maximo":  1363.69,
+                       "promedio":  1362.07,
+                       "variacion_pico_a_pico_pct":  0.25
+                   },
+    "tsi_a_distancia_de_la_tierra":  {
+                                         "minimo":  1316.32,
+                                         "maximo":  1409.56,
+                                         "promedio":  1360.51,
+                                         "variacion_pico_a_pico_pct":  6.85
+                                     },
+    "dia_lunar_dias_terrestres":  29.53,
+    "razon_eficiencia_superpaneles":  null,
+    "nota":  "Medido desde la Estacion Espacial Internacional (orbita terrestre), no en la Luna. La Luna esta a una distancia del Sol casi igual a la de la Tierra. El juego usa valores de prueba; estos datos solo respaldan que la produccion de dia sea constante."
+}
