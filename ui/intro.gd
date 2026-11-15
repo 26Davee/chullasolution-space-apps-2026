@@ -55,7 +55,7 @@ var _menu_view: Control
 var _activity_view: Control
 var _discovery_pins: Dictionary = {}
 var _modal_rect := Rect2(320, 96, 640, 580)
-var language := "en"
+var language := "es"
 var spoken_text := ""
 var voice: Node
 var canvas: Control
@@ -766,6 +766,10 @@ func _begin_expedition() -> void:
     _transition_to("expedition")
 
 func _return_to_home() -> void:
+    if not _in_expedition or _transitioning: return
+    _transition_to("home")
+
+func show_pause_menu() -> void:
     if not _in_expedition or _transitioning: return
     _transition_to("home")
 

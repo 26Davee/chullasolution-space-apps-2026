@@ -29,4 +29,4 @@ Sáb 09:15 la estructura y el proyecto de Godot ya están subidos (comprueba que
 - `game_state.gd`: autoload `GameState`. Las 21 variables y 12 señales del diccionario, límites, `pagar`, `instantanea()` y acciones (`solicitar_construir`, `solicitar_viaje_hielo`, `solicitar_procesar_hielo`, `solicitar_reparar_escudo`). Enchufa `simulation/simulacion.gd` y reenvía sus señales.
 - `main.gd`: flujo de pantallas: intro (puesto 6) → aterrizaje (puesto 3) → juego. Traduce el modo `cadet/engineer` de la intro a `cadete/ingeniero`.
 - `juego.gd`: arma el juego: mundo de Carlos, astronauta con animación de Nicolás, cámara orbital, clic para mover, colocación de piezas, misiones de Gael y HUD.
-- `hud_juego.gd`: HUD **provisional** (barras, reloj, misión, botones, carta NASA). Lo reemplaza el puesto 6.
+- `hud_juego.gd`: conecta el HUD visual del puesto 6 con GameState y conserva las acciones, misión y carta NASA del juego.

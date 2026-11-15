@@ -1,6 +1,6 @@
 extends CanvasLayer
-## HUD provisional del juego (puesto 1). Lo reemplaza el puesto 6 cuando tenga el suyo.
-## Solo LEE GameState y avisa con señales; no cambia el estado por su cuenta.
+## HUD de juego: visuales del puesto 6 con acciones del puesto 1.
+## Solo lee GameState y emite señales; no cambia el estado por su cuenta.
 
 signal construir_pedido(id_estructura: String)
 signal ir_por_hielo_pedido()
@@ -14,20 +14,10 @@ const HUESO := Color("#F4EFE6")
 const AMBAR := Color("#F2B544")
 const TURQUESA := Color("#33C7D6")
 const CORAL := Color("#FF6F61")
+const HUD_ANDREA := preload("res://ui/hud.tscn")
 
-const BARRAS := [
-	["energia", "Energía", Color("#F2B544")],
-	["agua", "Agua", Color("#4FB3F0")],
-	["oxigeno", "Oxígeno", Color("#33C7D6")],
-	["vida", "Vida", Color("#6FD39A")],
-	["escudo", "Escudo", Color("#B28CFF")],
-	["hielo", "Hielo", Color("#CDEBFF")],
-]
-
-var _barras: Dictionary = {}
-var _valores: Dictionary = {}
-var _reloj: Label
-var _estrellas: Label
+var _hud_andrea: Control
+var _estado_hud_anterior: Dictionary = {}
 var _mision_titulo: Label
 var _mision_texto: Label
 var _aviso: Label
@@ -40,7 +30,7 @@ var _aviso_tween: Tween
 
 func _ready() -> void:
 	layer = 10
-	_construir_barras()
+	_construir_hud_andrea()
 	_construir_centro()
 	_construir_mision()
 	_construir_acciones()
@@ -48,25 +38,47 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var g := GameState
-	for clave in _barras:
-		var barra: ProgressBar = _barras[clave]
-		var maximo := g.maximo_de(clave)
-		barra.max_value = maximo
-		barra.value = g.valor_de(clave)
-		(_valores[clave] as Label).text = "%d / %d" % [int(g.valor_de(clave)), int(maximo)]
-	var ciclo := int(g.tiempo_juego) % int(g.TIEMPO_CICLO_SOLAR)
-	_reloj.text = "%s  ·  %d:%02d" % ["☀ DÍA" if g.es_dia else "☾ NOCHE", int(g.tiempo_juego) / 60, int(g.tiempo_juego) % 60]
-	_reloj.add_theme_color_override("font_color", AMBAR if g.es_dia else Color("#9DB4FF"))
-	_estrellas.text = "★ %d" % g.estrellas
-	var v := g.progreso_viaje()
-	_viaje.visible = g.en_viaje_hielo
-	if g.en_viaje_hielo:
+	_actualizar_hud_andrea()
+	var v := GameState.progreso_viaje()
+	_viaje.visible = GameState.en_viaje_hielo
+	if GameState.en_viaje_hielo:
 		_viaje.text = "⛏ Viaje al cráter: %d / %d s" % [int(v.x), int(v.y)]
-	if g.alerta_nube and not g.nube_activa:
-		_reloj.text += "   ⚠ NUBE EN %d s" % int(g.tiempo_para_nube)
-	elif g.nube_activa:
-		_reloj.text += "   ☄ NUBE SOLAR"
+	if GameState.alerta_nube and not GameState.nube_activa:
+		_viaje.visible = true
+		_viaje.text += "   ⚠ NUBE EN %d s" % int(GameState.tiempo_para_nube)
+	elif GameState.nube_activa:
+		_viaje.visible = true
+		_viaje.text = "☄ NUBE SOLAR"
+
+
+func _construir_hud_andrea() -> void:
+	preload("res://ui/ui_kit.gd").register_translations()
+	_hud_andrea = HUD_ANDREA.instantiate()
+	_hud_andrea.position = Vector2(30, 12)
+	add_child(_hud_andrea)
+	_hud_andrea.set_mode(GameState.modo_juego)
+	_hud_andrea.set_practice(false)
+	_actualizar_hud_andrea()
+
+
+func _actualizar_hud_andrea() -> void:
+	if not is_instance_valid(_hud_andrea) or not _hud_andrea.is_node_ready():
+		return
+	var estado := {
+		"energia": {"value": GameState.energia, "max": GameState.maximo_de("energia")},
+		"agua": {"value": GameState.agua, "max": GameState.maximo_de("agua")},
+		"oxigeno": {"value": GameState.oxigeno, "max": GameState.maximo_de("oxigeno")},
+		"vida": {"value": GameState.vida, "max": GameState.maximo_de("vida")},
+		"escudo": {"value": GameState.escudo, "max": GameState.maximo_de("escudo")},
+		"hielo": GameState.hielo,
+		"estrellas": GameState.estrellas,
+		"herramienta_nivel": GameState.herramienta_nivel,
+		"es_dia": GameState.es_dia,
+		"tiempo_juego": GameState.tiempo_juego,
+	}
+	if estado != _estado_hud_anterior:
+		_estado_hud_anterior = estado.duplicate(true)
+		_hud_andrea.set_state(estado)
 
 
 # ───────────────────────── API pública ─────────────────────────
@@ -140,47 +152,17 @@ func _panel(ancla: int, ancho: float) -> VBoxContainer:
 	return col
 
 
-func _construir_barras() -> void:
-	var col := _panel(Control.PRESET_TOP_LEFT, 290)
-	col.get_parent().position = Vector2(14, 14)
-	for b in BARRAS:
-		var fila := HBoxContainer.new()
-		col.add_child(fila)
-		var nombre := _etiqueta(b[1], 15)
-		nombre.custom_minimum_size.x = 74
-		fila.add_child(nombre)
-		var barra := ProgressBar.new()
-		barra.show_percentage = false
-		barra.custom_minimum_size = Vector2(120, 16)
-		barra.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		barra.add_theme_stylebox_override("background", _estilo(Color(0, 0, 0, 0.4), 8))
-		barra.add_theme_stylebox_override("fill", _estilo(b[2], 8))
-		fila.add_child(barra)
-		var valor := _etiqueta("", 13, Color("#B9C9DC"))
-		valor.custom_minimum_size.x = 64
-		valor.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		fila.add_child(valor)
-		_barras[b[0]] = barra
-		_valores[b[0]] = valor
-
-
 func _construir_centro() -> void:
-	var col := _panel(Control.PRESET_CENTER_TOP, 0)
-	col.get_parent().position = Vector2(500, 14)
-	_reloj = _etiqueta("", 18)
-	_reloj.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(_reloj)
-	_estrellas = _etiqueta("", 18, AMBAR)
-	_estrellas.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(_estrellas)
 	_viaje = _etiqueta("", 16, TURQUESA)
 	_viaje.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(_viaje)
+	_viaje.position = Vector2(420, 198)
+	_viaje.custom_minimum_size = Vector2(440, 30)
+	add_child(_viaje)
 	_aviso_panel = PanelContainer.new()
 	_aviso_panel.add_theme_stylebox_override("panel", _estilo(Color(0.03, 0.07, 0.15, 0.92), 14, TURQUESA))
 	_aviso_panel.visible = false
 	add_child(_aviso_panel)
-	_aviso_panel.position = Vector2(340, 118)
+	_aviso_panel.position = Vector2(300, 238)
 	_aviso_panel.custom_minimum_size = Vector2(600, 0)
 	_aviso = _etiqueta("", 18)
 	_aviso.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -190,7 +172,7 @@ func _construir_centro() -> void:
 
 func _construir_mision() -> void:
 	var col := _panel(Control.PRESET_TOP_RIGHT, 360)
-	col.get_parent().position = Vector2(906, 14)
+	col.get_parent().position = Vector2(906, 198)
 	_mision_titulo = _etiqueta("", 18, AMBAR)
 	_mision_titulo.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	col.add_child(_mision_titulo)
@@ -232,7 +214,7 @@ func _construir_acciones() -> void:
 	fila.add_child(_boton("⚙ Procesar hielo", TURQUESA, func(): procesar_hielo_pedido.emit()))
 	fila.add_child(_boton("◈ Reparar escudo", Color("#B28CFF"), func(): reparar_escudo_pedido.emit()))
 	fila.add_child(VSeparator.new())
-	fila.add_child(_boton("Salir", CORAL, func(): salir_pedido.emit()))
+	fila.add_child(_boton("Menú", CORAL, func(): salir_pedido.emit()))
 	fondo.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	fondo.position = Vector2(112, 650)
 	var ayuda := _etiqueta("Clic: caminar  ·  Clic derecho + arrastrar: girar cámara  ·  Rueda: zoom  ·  R: girar pieza  ·  Esc: cancelar", 13, Color("#B9C9DC"))

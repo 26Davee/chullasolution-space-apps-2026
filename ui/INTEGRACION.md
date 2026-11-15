@@ -80,7 +80,7 @@ IDs de barras: `energia`, `agua`, `oxigeno`, `vida`, `escudo`. Hielo es un conta
 
 El reloj acepta el tiempo acumulado `tiempo_juego`. Para la presentación se proyectan los 300 segundos de día y 180 de noche del material a un reloj 06:00–18:00–06:00 y se incrementa el día cada ciclo. No es una duración lunar real ni modifica el reloj de P2. Si P2 dispone de un reloj propio, proporcionar `dia_mision` y `minutos_mision` (minutos desde medianoche), o llamar `bridge.receive_mission_clock(day, minutes)`: esos valores tienen prioridad.
 
-Al confirmar el final del tutorial se muestra el menú de inicio con imagen y Jugar, Opciones y Ver de nuevo el tutorial. La partida todavía no inicia. Al pulsar Jugar se repite el oscurecimiento y se muestra la base provisional; entonces `intro.mission_requested(profile)` se emite **una sola vez**. P1 debe conectar esa señal para guardar el perfil, cargar la escena de la expedición e iniciar la simulación. Perfil:
+Al confirmar el final del tutorial se muestra el menú de inicio con imagen y Jugar, Opciones y Ver de nuevo el tutorial. Al pulsar Jugar, `intro.mission_requested(profile)` se emite **una sola vez**; `core/main.gd` la conecta, conserva la instancia de la intro, presenta el aterrizaje e inicia la escena 3D con el perfil. La simulación y el guardado siguen siendo responsabilidad de P1/P2/P5. Perfil:
 
 ```gdscript
 {
@@ -119,6 +119,13 @@ La simulación de acciones, la persistencia/checkpoints, la dificultad real y el
 - Al finalizar el tutorial aparece el menú de inicio. Jugar abre la base provisional mediante una transición. Esta vista no ejecuta la simulación 3D; P1 puede sustituirla al recibir mission_requested.
 
 Las siete ilustraciones nuevas fueron generadas con la herramienta integrada image_gen y están en **assets/ui/activities/**. Los archivos originales generados se conservaron; el conjunto de prompts y nombres finales está en **assets/ui/activities/generation.json**. Se reutilizan imágenes entre actividades y tablero; no se generaron ni sustituyeron modelos 3D.
+
+## Conexión con la partida jugable
+
+- `core/main.gd` conecta `mission_requested`, `pause_requested` y `resume_requested`. El primer inicio abre aterrizaje y juego; Menú pausa y conserva la misma instancia de la escena; Reanudar vuelve a ella sin reiniciar recursos ni perfil.
+- `core/hud_juego.gd` instancia `ui/hud.tscn`, alimenta las cinco barras, contadores, reloj y herramienta con valores vivos de `GameState`, y conserva los botones de construcción, hielo, reparación y misión del juego.
+- Al pausar se detienen el procesamiento y la entrada de la escena jugable; la simulación no consume recursos hasta reanudar.
+- La pantalla ilustrada de expedición sigue siendo una vista de práctica. La partida principal usa `scenes/juego.tscn` y el mundo 3D.
 
 Fuentes de los cuatro ejemplos científicos (consultadas el 2026-11-14; texto resumido para niños, ilustraciones de IA):
 
