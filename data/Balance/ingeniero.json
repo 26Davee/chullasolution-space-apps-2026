@@ -1,0 +1,164 @@
+{
+  "modo": "ingeniero",
+  "dia_segundos": 480,
+  "dia_luz_segundos": 300,
+  "energia_maxima": 100,
+  "energia_maxima_bateria": 150,
+  "hielo_maximo": 40,
+  "inicio": {
+	"energia": 60,
+	"agua": 20,
+	"oxigeno": 60,
+	"vida": 100,
+	"escudo": 100
+  },
+  "base": {
+	"consumo_energia_por_s": 0.05,
+	"oxigeno_tripulacion_por_s": 0.15
+  },
+  "panel": {
+	"energia_por_s_dia": 0.6
+  },
+  "procesador": {
+	"agua_por_hielo": 10,
+	"tiempo_s": 5,
+	"tiempo_rapido_s": 3,
+	"energia_por_s": 0.4
+  },
+  "generador": {
+	"oxigeno_por_s": 0.45,
+	"energia_por_s": 0.3,
+	"agua_por_s": 0.15,
+	"enciende_bajo": 90,
+	"apaga_en": 100,
+	"factor_eficiente": 0.75,
+	"factor_reciclador_agua": 0.7
+  },
+  "tanque": {
+	"agua_base": 60,
+	"agua_por_tanque": 50
+  },
+  "jardin": {
+	"vida_extra_por_s": 0.2,
+	"agua_por_s": 0.05
+  },
+  "costos": {
+	"panel_solar": 23,
+	"procesador_hielo": 38,
+	"generador_oxigeno": 45,
+	"tanque_agua": 30,
+	"reciclador_agua": 53,
+	"jardin": 60
+  },
+  "mejoras": {
+	"energia_panel_extra": {
+	  "panel_energia": 0.72
+	},
+	"energia_produccion": {
+	  "panel_energia": 0.9
+	}
+  },
+  "nube": {
+	"primera_s": 180,
+	"cada_s": 240,
+	"aviso_s": 20,
+	"aviso_largo_s": 40,
+	"golpe": 40,
+	"golpe_resistente": 30,
+	"sobrante_a_vida": 0.75,
+	"duracion_s": 20,
+	"pausa_generador_s": 10
+  },
+  "escudo": {
+	"reparar_energia": 30,
+	"reparar_energia_barato": 22,
+	"reparar_s": 8,
+	"reparar_s_barato": 8,
+	"reparar_valor": 40
+  },
+  "vida": {
+	"minima": 10,
+	"maxima": 100,
+	"recupera_por_s": 0.2,
+	"recupera_oxigeno_min": 20,
+	"sin_oxigeno_por_s": 0.5
+  },
+  "viaje": {
+	"caminar_s": 40,
+	"margen_bloqueo": 10,
+	"multiplicador_nube": 1.5
+  },
+  "herramientas": [
+	{
+	  "nombre": "pala",
+	  "hielo": 2,
+	  "excavar_s": 20,
+	  "vida": 15
+	},
+	{
+	  "nombre": "pico",
+	  "hielo": 4,
+	  "excavar_s": 14,
+	  "vida": 14
+	},
+	{
+	  "nombre": "taladro_manual",
+	  "hielo": 7,
+	  "excavar_s": 10,
+	  "vida": 9
+	},
+	{
+	  "nombre": "taladro_mochila",
+	  "hielo": 10,
+	  "excavar_s": 6,
+	  "vida": 5
+	}
+  ],
+  "niveles": [
+	{
+	  "estrellas": 0,
+	  "cupos": {
+		"paneles": 2,
+		"procesadores": 1,
+		"tanques": 0,
+		"recicladores": 0
+	  }
+	},
+	{
+	  "estrellas": 3,
+	  "cupos": {
+		"paneles": 3,
+		"procesadores": 1,
+		"tanques": 1,
+		"recicladores": 0
+	  }
+	},
+	{
+	  "estrellas": 6,
+	  "cupos": {
+		"paneles": 4,
+		"procesadores": 2,
+		"tanques": 1,
+		"recicladores": 0
+	  }
+	},
+	{
+	  "estrellas": 10,
+	  "cupos": {
+		"paneles": 5,
+		"procesadores": 2,
+		"tanques": 2,
+		"recicladores": 1
+	  }
+	},
+	{
+	  "estrellas": 14,
+	  "cupos": {
+		"paneles": 6,
+		"procesadores": 2,
+		"tanques": 2,
+		"recicladores": 1
+	  }
+	}
+  ]
+}
