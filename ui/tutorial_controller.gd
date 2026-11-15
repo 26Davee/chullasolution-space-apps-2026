@@ -22,8 +22,6 @@ func record_action(action: String) -> void:
     completed_actions[action] = true
 
 func can_advance() -> bool:
-    if step_id == "age" and player.age_group.is_empty():
-        return false
     var required := target()
     return required.is_empty() or completed_actions.has(required)
 
@@ -32,6 +30,7 @@ func advance() -> bool:
         return false
     if step_id == "ready":
         completed = true
+        player.locked = true
         step_id = "done"
     else:
         step_id = Steps.IDS[Steps.IDS.find(step_id) + 1]

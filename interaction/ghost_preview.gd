@@ -33,6 +33,35 @@ func overlaps(space: PhysicsDirectSpaceState3D, mask: int) -> bool:
 	return false
 
 
+## Devuelve true si todas las formas de la pieza (en XZ) caben dentro de `max_radius` alrededor de `center`.
+func fits_within_radius(center: Vector3, max_radius: float) -> bool:
+	var c2 := Vector2(center.x, center.z)
+	if _shapes.is_empty():
+		return Vector2(global_position.x, global_position.z).distance_to(c2) <= max_radius
+	for entry in _shapes:
+		var cs: CollisionShape3D = entry.node
+		if not is_instance_valid(cs):
+			continue
+		var xf: Transform3D = cs.global_transform
+		var s: Shape3D = entry.shape
+		if s is BoxShape3D:
+			var hs: Vector3 = s.size * 0.5
+			var bx := Vector2(xf.basis.x.x, xf.basis.x.z) * hs.x
+			var bz := Vector2(xf.basis.z.x, xf.basis.z.z) * hs.z
+			var o2 := Vector2(xf.origin.x, xf.origin.z)
+			for sx in [-1.0, 1.0]:
+				for sz in [-1.0, 1.0]:
+					if (o2 + bx * sx + bz * sz).distance_to(c2) > max_radius:
+						return false
+			continue
+		var rad := 0.5
+		if s is SphereShape3D or s is CapsuleShape3D or s is CylinderShape3D:
+			rad = float(s.radius)
+		if Vector2(xf.origin.x, xf.origin.z).distance_to(c2) + rad > max_radius:
+			return false
+	return true
+
+
 # ---------------------------------------------------------------------------
 
 func _sanitize(node: Node) -> void:

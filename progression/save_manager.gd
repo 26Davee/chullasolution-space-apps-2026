@@ -10,16 +10,36 @@ signal progreso_guardado(exito: bool)
 signal estrellas_cambiadas(disponibles: int, totales: int)
 
 const DEFAULT_SAVE_PATH := "user://save_data.json"
+const MAX_SLOTS := 3
+const SLOTS_DIR := "user://saves"
+const SLOT_PATH_FMT := "user://saves/slot_%d.json"
+const META_PATH := "user://saves_meta.json"
 
+@export_dir var storage_directory := ""
 @export var save_path: String = DEFAULT_SAVE_PATH
 
+var active_slot: int = 1
+var tutorial_seen: bool = false
 var _datos: Dictionary = {}
 var ultimo_error := ""
 var respaldo_recuperado := false
 
 
 func _ready() -> void:
+	if not storage_directory.is_empty(): DirAccess.make_dir_recursive_absolute(storage_directory)
+	if save_path == DEFAULT_SAVE_PATH:
+		_migrar_guardado_legado()
+		_cargar_meta()
+		save_path = _slot_path(active_slot)
 	cargar_progreso()
+
+
+static func ruta_slot(slot_id: int) -> String:
+	return SLOT_PATH_FMT % clampi(slot_id, 1, MAX_SLOTS)
+
+
+func _es_ruta_slots() -> bool:
+	return save_path == _slot_path(active_slot)
 
 
 ## Carga el archivo de guardado desde disco o inicializa una partida limpia.
@@ -29,8 +49,10 @@ func cargar_progreso() -> Dictionary:
 	_datos = _crear_estructura_por_defecto()
 
 	if not FileAccess.file_exists(save_path):
-		guardar_progreso()
+		if not _es_ruta_slots():
+			guardar_progreso()
 		progreso_cargado.emit(_datos.duplicate(true))
+		estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
 		return _datos.duplicate(true)
 
 	var archivo := FileAccess.open(save_path, FileAccess.READ)
@@ -65,6 +87,9 @@ func cargar_progreso() -> Dictionary:
 
 ## Escribe el estado actual del progreso en disco en formato JSON.
 func guardar_progreso() -> bool:
+	var dir_path := save_path.get_base_dir()
+	if not dir_path.is_empty():
+		DirAccess.make_dir_recursive_absolute(dir_path)
 	var temporary := save_path + ".tmp"
 	var archivo := FileAccess.open(temporary, FileAccess.WRITE)
 	if archivo == null:
@@ -200,6 +225,8 @@ func _crear_estructura_por_defecto() -> Dictionary:
 		"mejoras_compradas": [],
 		"cartas_nasa_desbloqueadas": [],
 		"modo_preferido": "cadete",
+		"saved_at": 0.0,
+		"saved_iso": "",
 	}
 
 
@@ -214,6 +241,8 @@ func _combinar_con_defecto(leido: Dictionary) -> void:
 	_datos["cartas_nasa_desbloqueadas"] = _convertir_a_array_string(leido.get("cartas_nasa_desbloqueadas", []))
 	var modo := str(leido.get("modo_preferido", "cadete"))
 	_datos["modo_preferido"] = modo if (modo == "cadete" or modo == "ingeniero") else "cadete"
+	_datos["saved_at"] = float(leido.get("saved_at", 0.0))
+	_datos["saved_iso"] = str(leido.get("saved_iso", ""))
 
 
 func _convertir_a_array_string(origen: Variant) -> Array[String]:
@@ -230,7 +259,175 @@ func _convertir_a_array_string(origen: Variant) -> Array[String]:
 func guardar_expedicion(datos: Dictionary, perfil: Dictionary) -> bool:
 	_datos["expedicion"] = datos.duplicate(true)
 	_datos["perfil"] = perfil.duplicate(true)
+	_datos["saved_at"] = Time.get_unix_time_from_system()
+	_datos["saved_iso"] = Time.get_datetime_string_from_system(false, true)
 	return guardar_progreso()
+
+
+func guardar_perfil(perfil: Dictionary) -> bool:
+	_datos["perfil"] = perfil.duplicate(true)
+	_datos["saved_at"] = Time.get_unix_time_from_system()
+	_datos["saved_iso"] = Time.get_datetime_string_from_system(false, true)
+	return guardar_progreso()
+
+
+func seleccionar_slot(slot_id: int) -> Dictionary:
+	active_slot = clampi(slot_id, 1, MAX_SLOTS)
+	_guardar_meta()
+	save_path = _slot_path(active_slot)
+	return cargar_progreso()
+
+
+func borrar_slot(slot_id: int) -> bool:
+	var id := clampi(slot_id, 1, MAX_SLOTS)
+	var target := _slot_path(id)
+	for suffix in ["", ".bak", ".tmp", ".invalid"]:
+		var fpath: String = target + str(suffix)
+		if FileAccess.file_exists(fpath):
+			DirAccess.remove_absolute(fpath)
+	if id == active_slot:
+		ultimo_error = ""
+		respaldo_recuperado = false
+		_datos = _crear_estructura_por_defecto()
+		estrellas_cambiadas.emit(0, 0)
+		progreso_cargado.emit(_datos.duplicate(true))
+	return true
+
+
+func listar_slots() -> Array:
+	var out: Array = []
+	for i in range(1, MAX_SLOTS + 1):
+		out.append(leer_slot_resumen(i))
+	return out
+
+
+func hay_algun_slot_ocupado() -> bool:
+	for info in listar_slots():
+		if bool(info.get("occupied", false)):
+			return true
+	return false
+
+
+func primer_slot_libre() -> int:
+	for info in listar_slots():
+		if not bool(info.get("occupied", false)):
+			return int(info.get("slot", 1))
+	return 1
+
+
+func leer_slot_resumen(slot_id: int) -> Dictionary:
+	var id := clampi(slot_id, 1, MAX_SLOTS)
+	var data: Dictionary = {}
+	var target := _slot_path(id)
+	if id == active_slot and save_path == target and _datos_ocupados(_datos):
+		data = _datos
+	elif FileAccess.file_exists(target):
+		var json := JSON.new()
+		if json.parse(FileAccess.get_file_as_string(target)) == OK and json.data is Dictionary:
+			data = json.data
+	if data.is_empty() or not _datos_ocupados(data):
+		return {
+			"slot": id,
+			"active": id == active_slot,
+			"occupied": false,
+			"nickname": "",
+			"mode": "cadete",
+			"tiempo_juego": 0.0,
+			"missions_done": 0,
+			"stars_total": 0,
+			"mission_id": "",
+			"saved_iso": "",
+			"saved_at": 0.0,
+		}
+	var exp: Dictionary = data.get("expedicion", {}) if data.get("expedicion") is Dictionary else {}
+	var cur: Dictionary = exp.get("current", {}) if exp.get("current") is Dictionary else {}
+	var cur_state: Dictionary = cur.get("state", {}) if cur.get("state") is Dictionary else {}
+	var cur_legacy: Dictionary = cur.get("legacy", {}) if cur.get("legacy") is Dictionary else {}
+	var cur_missions: Dictionary = cur.get("missions", {}) if cur.get("missions") is Dictionary else {}
+	var perfil: Dictionary = data.get("perfil", {}) if data.get("perfil") is Dictionary else {}
+	var mode_raw := str(perfil.get("mode", cur_state.get("modo_juego", data.get("modo_preferido", "cadete"))))
+	var mode_norm := "ingeniero" if (mode_raw == "engineer" or mode_raw == "ingeniero") else "cadete"
+	var top_comp: Array = data.get("misiones_completadas", []) if data.get("misiones_completadas") is Array else []
+	var leg_comp: Array = cur_legacy.get("misiones_completadas", []) if cur_legacy.get("misiones_completadas") is Array else []
+	var stars_total := maxi(int(data.get("estrellas_totales", 0)), int(cur_legacy.get("estrellas_totales", 0)))
+	return {
+		"slot": id,
+		"active": id == active_slot,
+		"occupied": true,
+		"nickname": str(perfil.get("nickname", "")).strip_edges(),
+		"mode": mode_norm,
+		"tiempo_juego": float(cur_state.get("tiempo_juego", 0.0)),
+		"missions_done": maxi(top_comp.size(), leg_comp.size()),
+		"stars_total": stars_total,
+		"mission_id": str(cur_missions.get("activa_id", cur_missions.get("mision_activa_id", ""))),
+		"saved_iso": str(data.get("saved_iso", "")),
+		"saved_at": float(data.get("saved_at", 0.0)),
+	}
+
+
+static func _datos_ocupados(d: Dictionary) -> bool:
+	if d.is_empty():
+		return false
+	var exp = d.get("expedicion", {})
+	if exp is Dictionary and not exp.is_empty():
+		return true
+	var perfil = d.get("perfil", {})
+	if perfil is Dictionary and (bool(perfil.get("tutorial_completed", false)) or not str(perfil.get("nickname", "")).strip_edges().is_empty()):
+		return true
+	if int(d.get("estrellas_totales", 0)) > 0:
+		return true
+	var comp = d.get("misiones_completadas", [])
+	return comp is Array and not comp.is_empty()
+
+
+func _migrar_guardado_legado() -> void:
+	if not storage_directory.is_empty(): return
+	if not FileAccess.file_exists(DEFAULT_SAVE_PATH) or FileAccess.file_exists(_slot_path(1)):
+		return
+	var json := JSON.new()
+	if json.parse(FileAccess.get_file_as_string(DEFAULT_SAVE_PATH)) != OK or not (json.data is Dictionary):
+		return
+	if not _datos_ocupados(json.data):
+		return
+	DirAccess.make_dir_recursive_absolute(SLOTS_DIR)
+	DirAccess.copy_absolute(DEFAULT_SAVE_PATH, _slot_path(1))
+
+
+func _cargar_meta() -> void:
+	if not FileAccess.file_exists(_metadata_path()):
+		return
+	var json := JSON.new()
+	if json.parse(FileAccess.get_file_as_string(_metadata_path())) == OK and json.data is Dictionary:
+		active_slot = clampi(int(json.data.get("active_slot", 1)), 1, MAX_SLOTS)
+		tutorial_seen = bool(json.data.get("tutorial_seen", false))
+
+
+func _guardar_meta() -> void:
+	var f := FileAccess.open(_metadata_path(), FileAccess.WRITE)
+	if f == null:
+		return
+	f.store_string(JSON.stringify({"active_slot": active_slot, "tutorial_seen": tutorial_seen}, "\t"))
+	f.close()
+
+
+func fue_tutorial_visto() -> bool:
+	if tutorial_seen:
+		return true
+	for i in range(1, MAX_SLOTS + 1):
+		var target := _slot_path(i)
+		if FileAccess.file_exists(target):
+			var json := JSON.new()
+			if json.parse(FileAccess.get_file_as_string(target)) == OK and json.data is Dictionary:
+				var perfil = json.data.get("perfil", {})
+				if perfil is Dictionary and bool(perfil.get("tutorial_completed", false)):
+					tutorial_seen = true
+					return true
+	return false
+
+
+func marcar_tutorial_visto(visto: bool = true) -> void:
+	tutorial_seen = visto
+	_guardar_meta()
 
 
 func restaurar_progreso(datos: Dictionary) -> void:
@@ -238,3 +435,9 @@ func restaurar_progreso(datos: Dictionary) -> void:
 	_combinar_con_defecto(datos)
 	progreso_cargado.emit(_datos.duplicate(true))
 	estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
+
+func _slot_path(slot_id: int) -> String:
+	return ruta_slot(slot_id) if storage_directory.is_empty() else storage_directory.path_join("slot_%d.json" % clampi(slot_id,1,MAX_SLOTS))
+
+func _metadata_path() -> String:
+	return META_PATH if storage_directory.is_empty() else storage_directory.path_join("meta.json")

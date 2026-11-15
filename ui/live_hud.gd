@@ -19,34 +19,36 @@ var _cargo: Label
 var _mode = "cadete"
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
-	size = Vector2(1248,190)
-	UI.panel(self,Rect2(0,0,240,190),Color("#101e34ec"),16).mouse_filter = MOUSE_FILTER_STOP
-	UI.panel(self,Rect2(358,0,500,36),Color("#101e34ec"),14)
+	size = Vector2(1248, 130)
+	var header = UI.panel(self,Rect2(0,0,1180,40),Color("#071b32eb"),12)
+	var title = UI.label(self, "KILLAWASI", Rect2(4, 2, 200, 32), 25, UI.WHITE, true)
 	_phase_icon = Icon.new()
 	_phase_icon.kind = "sun"
 	_phase_icon.disc = false
 	_phase_icon.tint = UI.GOLD
-	_phase_icon.position = Vector2(370,7)
-	_phase_icon.size = Vector2(22,22)
+	_phase_icon.position = Vector2(216,8)
+	_phase_icon.size = Vector2(24,24)
 	add_child(_phase_icon)
-	_clock = UI.label(self,"",Rect2(402,7,176,24),15,UI.WHITE,true)
-	_cargo = UI.label(self,"",Rect2(576,7,270,24),14,UI.GOLD,true)
+	_clock = UI.label(self, "", Rect2(246, 6, 360, 26), 18, UI.WHITE, true)
+	_cargo = UI.label(self, "", Rect2(620, 6, 546, 26), 17, UI.GOLD, true)
 	_cargo.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_cargo.visible = not tutorial_layout
+	header.visible = not tutorial_layout
+	title.visible = not tutorial_layout
 	values = _values
 	for i in IDS.size():
 		var id: String = IDS[i]
-		var card = UI.button(self, "", Rect2(6,10+i*34,228,30), resource_pressed.emit.bind(id))
+		var card = UI.button(self, "", Rect2(i * 252, 48, 240, 72), resource_pressed.emit.bind(id))
 		card.name = "Resource_" + id
 		resource_buttons[id] = card
 		var icon = Icon.new()
 		icon.kind = "robot_battery" if id == "energia_robot" else id
 		icon.tint = COLORS[i]
-		icon.position = Vector2(6,5)
-		icon.size = Vector2(20,20)
+		icon.position = Vector2(12, 18)
+		icon.size = Vector2(34, 34)
 		card.add_child(icon)
-		_labels[id] = UI.label(card, "", Rect2(34,4,104,24),14, UI.WHITE, true)
-		_values[id] = UI.label(card, "", Rect2(184,4,42,22),14, UI.WHITE, true)
-		_values[id].autowrap_mode = TextServer.AUTOWRAP_OFF
+		_labels[id] = UI.label(card, "", Rect2(56, 8, 170, 24), 17, UI.WHITE, true)
+		_values[id] = UI.label(card, "", Rect2(168, 36, 58, 24), 16, UI.WHITE, true)
 		var bar = ProgressBar.new()
 		bar.show_percentage = false
 		bar.mouse_filter = MOUSE_FILTER_IGNORE
@@ -54,8 +56,8 @@ func _ready() -> void:
 		bar.add_theme_stylebox_override("background", UI.style(Color("#34445e"), Color.TRANSPARENT, 0, 7))
 		bar.add_theme_stylebox_override("fill", UI.style(COLORS[i], Color.TRANSPARENT, 0, 7))
 		card.add_child(bar)
-		bar.position = Vector2(136,13)
-		bar.size = Vector2(46,6)
+		bar.position = Vector2(56, 42)
+		bar.size = Vector2(104, 12)
 		bars[id] = bar
 	values = _values
 	refresh()
@@ -74,22 +76,19 @@ func refresh() -> void:
 		bars[id].value = ratio * 100
 		_labels[id].text = tr("hud." + id + ".nombre")
 		if id == "oxigeno": _labels[id].text = _labels[id].text.replace(" (4)","")
-		_values[id].text = "%d%%" % roundi(ratio * 100)
+		_values[id].text = "%d %%" % roundi(ratio * 100)
 		resource_buttons[id].tooltip_text = tr("hud." + id + ".help")
-		resource_buttons[id].add_theme_stylebox_override("normal", UI.style(Color.TRANSPARENT, Color("#ff927a") if ratio <= 0.2 else Color.TRANSPARENT, 2 if ratio <= 0.2 else 0,8))
+		resource_buttons[id].add_theme_stylebox_override("normal", UI.style(Color("#102b46ee"), Color("#ff927a") if ratio <= 0.2 else Color("#536e87"), 2 if ratio <= 0.2 else 1))
 		if _target == "resource:"+id:
 			resource_buttons[id].add_theme_stylebox_override("normal", UI.style(Color("#22475d"),UI.GOLD,3))
-	var clock = Clock.display(_state)
-	_clock.text = tr("live.hours").format(clock)
+	var clock = Clock.snapshot(_state)
+	_clock.text = Clock.format_calendar(clock) + " · " + tr("guide.dayphase" if Clock.is_day(_state) else "guide.nightphase")
 	_phase_icon.kind = "sun" if Clock.is_day(_state) else "moon"
 	_phase_icon.tint = UI.GOLD if Clock.is_day(_state) else UI.CYAN
 	_phase_icon.queue_redraw()
-	_clock.add_theme_font_size_override("font_size",15)
-	_clock.tooltip_text = "%d / %d / %d" % [int(clock.day), int(clock.month), int(clock.year)]
-	if tutorial_layout:
-		_cargo.text = "%s %d/10   %s %d" % [tr("live.ice"),int(_state.get("hielo",0)),tr("live.stars"),int(_state.get("estrellas",0))]
-		return
-	_cargo.text = "%s %d/10   %s %d   %s" % [tr("live.ice"), int(_state.get("hielo", 0)), tr("live.stars"), int(_state.get("estrellas", 0)), tr("mode." + _mode)]
+	_clock.add_theme_font_size_override("font_size",16)
+	_clock.tooltip_text = "%d / %d / %d" % [int(clock.day), int(clock.completed_months), int(clock.year)]
+	_cargo.text = "%s %d / 10      %s %d      %s" % [tr("live.ice"), int(_state.get("hielo", 0)), tr("live.stars"), int(_state.get("estrellas", 0)), tr("mode." + _mode)]
 
 func set_target(target: String) -> void:
 	_target = target

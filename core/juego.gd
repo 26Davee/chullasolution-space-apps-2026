@@ -18,7 +18,6 @@ const SectionMenuScript = preload("res://ui/section_menu.gd")
 const MissionListScript = preload("res://ui/mission_list.gd")
 const UpgradeTreeScript = preload("res://ui/upgrade_tree.gd")
 const VisualActivityScript = preload("res://ui/visual_activity.gd")
-const HudScene = preload("res://ui/hud.tscn")
 const LandingIntroScene = preload("res://world/landing_intro.tscn")
 
 const PIECE_SCENES := {
@@ -32,12 +31,14 @@ const STRUCTURE_COST := {
 	"panel_solar": 10.0,
 	"procesador_hielo": 12.0,
 	"generador_oxigeno": 15.0,
+	"tanque_agua": 14.0,
 	"jardin": 18.0,
 }
 const STRUCTURE_LIMITS := {
 	"panel_solar": 2,
-	"procesador_hielo": 1,
+	"procesador_hielo": 3,
 	"generador_oxigeno": 1,
+	"tanque_agua": 2,
 	"jardin": 1,
 }
 const EXPEDITION_ICE_CAP := 10
@@ -50,7 +51,10 @@ const SPE_STORM_PROFILES := [
 const DAY_CYCLE_SECONDS := 480.0
 const DAY_LIGHT_SECONDS := 240.0
 const DOME_CENTER := Vector3.ZERO
-const DOME_RECHARGE_RADIUS := 7.5
+const DOME_BASE_SCALE := 3.0
+const DOME_BASE_INNER_RADIUS := 16.8
+const DOME_RECHARGE_RADIUS := 16.0
+const EXPANSION_UPGRADES := ["panel_extra", "jardin_lunar"]
 const ROBOT_RECHARGE_RATE_PCT_S := 12.5
 const BASE_RECHARGE_DRAIN_PCT_S := 0.03764
 const SPE_FIRST_STORM_S := 180.0
@@ -66,7 +70,6 @@ const SPE_STORM_DURATION_S := 25.0
 @onready var click_to_move: Node = $ClickToMove
 @onready var placement_system: Node = $PlacementSystem
 @onready var interfaz: CanvasLayer = $Interfaz
-@onready var debug_label: Label = $Interfaz/Debug
 
 var _bridge: Node
 var _catalog: RefCounted
@@ -116,6 +119,7 @@ var _next_storm_profile: Dictionary = SPE_STORM_PROFILES[0]
 var _gen_overload_timer: float = 0.0
 var _gen_overload_cooldown: float = 0.0
 var _storm_unlocked_mission_id: String = ""
+var _m14_superstorm_armed: bool = false
 
 
 func _ready() -> void:
@@ -214,24 +218,7 @@ func _setup_bridge_and_ui() -> void:
 	_ui_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	interfaz.add_child(_ui_root)
 
-	_hud = HudScene.instantiate()
-	_hud.position = Vector2(30, 14)
-	_hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_ui_root.add_child(_hud)
-	if _hud.has_signal("resource_pressed"):
-		_hud.connect("resource_pressed", _on_resource_pressed)
-	_hud.call("set_practice", false)
-	_hud.call("set_show_robot_bar", true)
-	_hud.call("set_mode", gs.modo_juego if gs != null else "cadete")
-
-	_build_side_mission_card()
-	_build_top_toolbar()
-	_build_bottom_dock()
 	_build_placement_and_toast()
-
-	if is_instance_valid(debug_label):
-		debug_label.visible = false
-		interfaz.move_child(debug_label, interfaz.get_child_count() - 1)
 
 
 func _build_side_mission_card() -> void:
@@ -433,14 +420,15 @@ func _process(delta: float) -> void:
 		_was_placing = placing
 		_update_placement_banner(placing)
 
-	if debug_label != null and debug_label.visible:
-		_actualizar_debug()
-
 	if DisplayServer.get_name() == "headless":
 		return
 
 	_tick_fallback_simulation(delta)
 	_tick_expedition(delta)
+
+
+var _dome_tween: Tween
+var _dome_target_scale: float = DOME_BASE_SCALE
 
 
 func _dome_world_pos() -> Vector3:
@@ -451,9 +439,65 @@ func _dome_world_pos() -> Vector3:
 	return DOME_CENTER
 
 
+func _dome_expansion_steps() -> int:
+	var steps := 0
+	for uid in EXPANSION_UPGRADES:
+		if _has_upgrade(uid):
+			steps += 1
+	return steps
+
+
+func _dome_expansion_scale() -> float:
+	var s := DOME_BASE_SCALE
+	for _i in range(_dome_expansion_steps()):
+		s = s + (s * 1.25)
+	return s
+
+
+func _dome_factor() -> float:
+	return _dome_expansion_scale() / DOME_BASE_SCALE
+
+
+func _dome_recharge_radius() -> float:
+	return DOME_RECHARGE_RADIUS * _dome_factor()
+
+
+func _sync_dome_scale(animate: bool = false) -> void:
+	var target_scale := _dome_expansion_scale()
+	var factor := target_scale / DOME_BASE_SCALE
+	if is_instance_valid(placement_system):
+		placement_system.set("dome_inner_radius", DOME_BASE_INNER_RADIUS * factor)
+	if is_instance_valid(camara):
+		camara.set("distancia_max", maxf(62.0, 62.0 * factor))
+	if is_instance_valid(tormenta):
+		tormenta.scale = Vector3.ONE * factor
+	if is_instance_valid(mundo):
+		var terreno := mundo.get_node_or_null("Terreno") as Node3D
+		if terreno != null:
+			terreno.scale = Vector3(factor, 1.0, factor)
+		var crater := mundo.get_node_or_null("CraterHielo") as Node3D
+		if crater != null:
+			crater.position = Vector3(-21.0, 0.0, 14.0) * factor
+		var ice_node: Node = get("ice") as Node
+		if ice_node != null and ice_node.has_method("sync_zone_positions"):
+			ice_node.call("sync_zone_positions")
+		var domo := mundo.get_node_or_null("Domo") as Node3D
+		if domo != null:
+			var target_vec := Vector3.ONE * target_scale
+			if animate and is_inside_tree() and not is_equal_approx(_dome_target_scale, target_scale):
+				_dome_target_scale = target_scale
+				if is_instance_valid(_dome_tween):
+					_dome_tween.kill()
+				_dome_tween = create_tween()
+				_dome_tween.tween_property(domo, "scale", target_vec, 0.85).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			elif not (is_instance_valid(_dome_tween) and _dome_tween.is_running() and is_equal_approx(_dome_target_scale, target_scale)):
+				_dome_target_scale = target_scale
+				domo.scale = target_vec
+
+
 func _robot_distance_to_dome() -> float:
 	if not is_instance_valid(robot):
-		return DOME_RECHARGE_RADIUS + 1.0
+		return _dome_recharge_radius() + 1.0
 	var r := robot.global_position
 	var d := _dome_world_pos()
 	return Vector2(r.x, r.z).distance_to(Vector2(d.x, d.z))
@@ -495,9 +539,9 @@ func _tick_fallback_simulation(delta: float) -> void:
 		_bridge.call("receive_clock", gs.tiempo_juego)
 
 	var diff := 0.75 if str(gs.modo_juego) == "cadete" else 1.0
-	var gen_eff := 0.70 if _has_upgrade("generador_eficiente") else 1.0
+	var gen_eff := 0.75 if _has_upgrade("generador_eficiente") else 1.0
 	var moving := is_instance_valid(click_to_move) and bool(click_to_move.get("_moviendo"))
-	var near_dome := _robot_distance_to_dome() <= DOME_RECHARGE_RADIUS
+	var near_dome := _robot_distance_to_dome() <= _dome_recharge_radius()
 
 	# --- 1. Base Total Energy (2,000 kWh = 100%) ---
 	var base_energy_delta := (-0.2339 if gs.es_dia else -0.3483) * diff
@@ -527,61 +571,21 @@ func _tick_fallback_simulation(delta: float) -> void:
 		base_energy_delta -= 0.2144 * gen_eff * diff
 		water_delta -= 0.3204 * gen_eff * diff
 		o2_delta += 1.1382
-	if gs.jardin_instalado and float(gs.agua) > 0.0:
-		base_energy_delta -= 0.1846 * diff
-		water_delta -= 0.020 * diff
-		o2_delta += 0.0370
+	var garden_count := _structure_count(gs, "jardin")
+	if garden_count > 0 and float(gs.agua) > 0.0:
+		base_energy_delta -= 0.1846 * diff * float(garden_count)
+		water_delta -= 0.020 * diff * float(garden_count)
+		o2_delta += 0.10 * float(garden_count)
 
 	gs.cambiar_recurso("energia", base_energy_delta * delta)
 	gs.cambiar_recurso("agua", water_delta * delta)
 	gs.cambiar_recurso("oxigeno", o2_delta * delta)
 
-	# --- 2. Robot Own Battery (5.42 kWh = 100%) & Dome Recharge ---
-	if bool(gs.descansando_en_domo):
-		if not near_dome or moving:
-			_set_robot_resting(gs, false)
-			_refresh_dock_states()
-			_sync_bridge_telemetry(gs)
-		elif float(gs.energia_robot) >= 99.95 or float(gs.energia) <= 0.05:
-			var full := float(gs.energia_robot) >= 99.95
-			_set_robot_resting(gs, false)
-			_refresh_dock_states()
-			_sync_bridge_telemetry(gs)
-			if full:
-				_show_toast(_msg("Batería del robot al 100% ✓", "Robot battery charged to 100% ✓"), 2.4)
-		else:
-			var gain := minf(ROBOT_RECHARGE_RATE_PCT_S * delta, 100.0 - float(gs.energia_robot))
-			var base_cost := BASE_RECHARGE_DRAIN_PCT_S * (gain / ROBOT_RECHARGE_RATE_PCT_S)
-			gs.cambiar_energia_robot(gain)
-			gs.cambiar_recurso("energia", -base_cost)
-	else:
-		var tool_lvl := int(gs.herramienta_nivel)
-		var move_drain := 3.5
-		if tool_lvl >= 4:
-			move_drain = 1.6
-		elif tool_lvl == 3:
-			move_drain = 2.2
-		elif tool_lvl == 2:
-			move_drain = 2.8
-		if moving:
-			var storm_extra := float(_storm_profile.get("robot_extra", 0.8)) if (bool(gs.nube_activa) and not near_dome) else 0.0
-			gs.cambiar_energia_robot(-(move_drain + storm_extra) * delta)
-			if float(gs.energia_robot) <= 0.0 and is_instance_valid(click_to_move):
-				click_to_move.set("_moviendo", false)
-				_refresh_dock_states()
-				_show_toast(_msg(
-					"¡Batería del robot agotada! Recarga con el sol o en el Domo.",
-					"Robot battery empty! Recharge via sunlight or at the Dome."
-				), 3.0)
-		else:
-			var idle_delta := -0.05 if not near_dome else 0.0
-			if gs.es_dia and float(gs.energia_robot) < 100.0:
-				idle_delta += 0.60
-			if not is_zero_approx(idle_delta):
-				gs.cambiar_energia_robot(idle_delta * delta)
+	_tick_robot_energy(gs,delta)
 
 	# --- 3. Solar Storms (SPE / LRO CRaTER) & Dome Shield (desde mision_08+) ---
-	var shield_res := 0.72 if _has_upgrade("mas_resistencia") else 1.0
+	var shield_res := 0.75 if _has_upgrade("mas_resistencia") else 1.0
+	var warn_window := _storm_warning_seconds()
 	var storms_unlocked := _storms_unlocked_for_mission(gs)
 	if not storms_unlocked and not bool(gs.nube_activa):
 		if bool(gs.alerta_nube):
@@ -609,14 +613,19 @@ func _tick_fallback_simulation(delta: float) -> void:
 			gs.tiempo_para_nube = SPE_NEXT_INTERVAL_S
 			_storm_warning_emitted = false
 			_last_storm_badge_sec = -1
+			if is_instance_valid(_storm_badge):
+				_storm_badge.visible = false
+			if _m14_superstorm_armed:
+				_m14_superstorm_armed = false
+				gs.notificar_evento_mision("tormenta_maxima_resistida", {})
 			gs.nube_finalizada.emit()
 			_sync_bridge_telemetry(gs)
 	else:
 		gs.cambiar_recurso("escudo", -0.015 * diff * delta)
 		gs.tiempo_para_nube = maxf(0.0, float(gs.tiempo_para_nube) - delta)
-		if float(gs.tiempo_para_nube) <= 25.0 and float(gs.tiempo_para_nube) > 0.0:
+		if float(gs.tiempo_para_nube) <= warn_window and float(gs.tiempo_para_nube) > 0.0:
 			if not _storm_warning_emitted:
-				_next_storm_profile = _pick_storm_profile(_storm_count)
+				_next_storm_profile = _build_next_storm_profile(gs, diff, shield_res)
 				_storm_warning_emitted = true
 				gs.advertencia_nube_iniciada.emit(float(gs.tiempo_para_nube))
 			if not bool(gs.alerta_nube):
@@ -634,6 +643,8 @@ func _tick_fallback_simulation(delta: float) -> void:
 		elif float(gs.tiempo_para_nube) <= 0.0:
 			gs.alerta_nube = false
 			gs.nube_activa = true
+			if _m14_superstorm_armed and str(_next_storm_profile.get("id", "")) != "supertormenta":
+				_next_storm_profile = _build_next_storm_profile(gs, diff, shield_res)
 			_storm_profile = _next_storm_profile
 			_storm_count += 1
 			_storm_remaining = SPE_STORM_DURATION_S
@@ -641,6 +652,26 @@ func _tick_fallback_simulation(delta: float) -> void:
 			var fuerza := float(_storm_profile.get("force", 1.0))
 			gs.nube_impacto.emit(fuerza, float(gs.escudo))
 			_sync_bridge_telemetry(gs)
+		else:
+			if bool(gs.alerta_nube):
+				gs.alerta_nube = false
+				_sync_bridge_telemetry(gs)
+			_storm_warning_emitted = false
+			_last_storm_badge_sec = -1
+			if is_instance_valid(_storm_badge):
+				_storm_badge.visible = false
+
+
+func _reset_storm_ui_state() -> void:
+	_storm_remaining = 0.0
+	_storm_warning_emitted = false
+	_last_storm_badge_sec = -1
+	if is_instance_valid(_storm_badge):
+		_storm_badge.visible = false
+	if is_instance_valid(_storm_label):
+		_storm_label.text = ""
+	if is_instance_valid(_bridge) and _gs() != null:
+		_sync_bridge_telemetry(_gs())
 
 
 
@@ -658,10 +689,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _landing_active:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_F3:
-			debug_label.visible = not debug_label.visible
-			get_viewport().set_input_as_handled()
-		elif event.keycode == KEY_C:
+		if event.keycode == KEY_C:
 			_toggle_camera_target()
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_ESCAPE:
@@ -696,25 +724,107 @@ func _update_cam_button_label() -> void:
 		_cam_button.text = "Cam: Base (C)" if is_es else "Cam: Base (C)"
 
 
+func _storm_warning_seconds() -> float:
+	return 40.0 if _has_upgrade("alerta_temprana") else 20.0
+
+
+func _repair_time_seconds() -> float:
+	return 2.0 if _has_upgrade("alerta_temprana") else 3.0
+
+
+func _repair_energy_cost() -> int:
+	var gs := _gs()
+	var eng := gs != null and str(gs.modo_juego) == "ingeniero"
+	if eng:
+		return 22 if _has_upgrade("reparar_barato") else 30
+	return 15 if _has_upgrade("reparar_barato") else 20
+
+
+func _ice_yield_for_tool(lvl: int) -> int:
+	if lvl >= 4:
+		return 10
+	if lvl == 3:
+		return 7
+	if lvl == 2:
+		return 4
+	return 3
+
+
+func _ice_extraction_cost_for_tool(lvl: int) -> float:
+	if lvl >= 4:
+		return 8.0
+	if lvl == 3:
+		return 10.0
+	if lvl == 2:
+		return 13.0
+	return 16.0
+
+
+func _tool_move_drain(gs: Node) -> float:
+	var lvl := int(gs.herramienta_nivel) if gs != null else 1
+	var eng := gs != null and str(gs.modo_juego) == "ingeniero"
+	match lvl:
+		4:
+			return 0.23 if eng else 0.15
+		3:
+			return 0.45 if eng else 0.30
+		2:
+			return 0.68 if eng else 0.45
+		_:
+			return 0.90 if eng else 0.60
+
+
+func _placed_structure_count(id_estructura: String, exclude_node: Node = null) -> int:
+	if not is_instance_valid(estructuras_colocadas):
+		return 0
+	var count := 0
+	for child in estructuras_colocadas.get_children():
+		if child == exclude_node or child.is_queued_for_deletion():
+			continue
+		if str(child.get_meta(&"piece_id", &"")) == id_estructura:
+			count += 1
+	return count
+
+
 func _structure_limit(id_estructura: String) -> int:
 	if id_estructura == "panel_solar":
 		return 3 if _has_upgrade("panel_extra") else int(STRUCTURE_LIMITS.get("panel_solar", 2))
+	if id_estructura == "jardin":
+		return 2 if _has_upgrade("jardin_lunar") else int(STRUCTURE_LIMITS.get("jardin", 1))
 	return int(STRUCTURE_LIMITS.get(id_estructura, 1))
 
 
-func _structure_count(gs: Node, id_estructura: String) -> int:
+func _structure_count(gs: Node, id_estructura: String, exclude_node: Node = null) -> int:
+	var placed := _placed_structure_count(id_estructura, exclude_node)
 	if gs == null:
-		return 0
+		return placed
 	match id_estructura:
 		"panel_solar":
-			return int(gs.paneles_instalados)
+			return maxi(placed, int(gs.paneles_instalados))
 		"procesador_hielo":
-			return 1 if bool(gs.procesador_instalado) else 0
+			return maxi(placed, 1 if bool(gs.procesador_instalado) else 0)
 		"generador_oxigeno":
-			return 1 if bool(gs.generador_instalado) else 0
+			return maxi(placed, 1 if bool(gs.generador_instalado) else 0)
 		"jardin":
-			return 1 if bool(gs.jardin_instalado) else 0
-	return 0
+			return maxi(placed, 1 if bool(gs.jardin_instalado) else 0)
+		"tanque_agua":
+			return placed
+	return placed
+
+
+func _build_next_storm_profile(gs: Node, diff: float, shield_res: float) -> Dictionary:
+	if _m14_superstorm_armed:
+		var shield_now := float(gs.escudo) if gs != null else 100.0
+		var raw_rate := maxf((shield_now + 6.0) / 18.0, 4.0) / maxf(diff * shield_res, 0.25)
+		return {
+			"id": "supertormenta",
+			"es": "EXTREMA",
+			"en": "EXTREME",
+			"rate": raw_rate,
+			"robot_extra": 1.40,
+			"force": 2.4,
+		}
+	return _pick_storm_profile(_storm_count)
 
 
 func _refresh_build_tray_labels() -> void:
@@ -754,8 +864,8 @@ func _storms_unlocked_for_mission(gs: Node) -> bool:
 	var unlocked := num >= 8
 	if unlocked and _storm_unlocked_mission_id != id_str:
 		_storm_unlocked_mission_id = id_str
-		if num == 8 and not bool(gs.nube_activa) and not bool(gs.alerta_nube) and float(gs.tiempo_para_nube) > 35.0:
-			gs.tiempo_para_nube = 35.0
+		if num == 8 and not bool(gs.nube_activa) and not bool(gs.alerta_nube) and float(gs.tiempo_para_nube) > _storm_warning_seconds() + 12.0:
+			gs.tiempo_para_nube = _storm_warning_seconds() + 12.0
 	return unlocked
 
 
@@ -788,9 +898,6 @@ func _start_build(id_estructura: String) -> void:
 	var gs := _gs()
 	if gs == null:
 		return
-	if id_estructura == "jardin" and not _has_upgrade("jardin_lunar"):
-		_show_toast(tr("structures.jardin.help"), 3.0)
-		return
 	var limit := _structure_limit(id_estructura)
 	if _structure_count(gs, id_estructura) >= limit:
 		_show_toast(_msg(
@@ -815,12 +922,15 @@ func _on_piece_placed(piece_id: StringName, _pos: Vector3) -> void:
 	var gs := _gs()
 	if gs == null:
 		return
+	var last: Node = null
+	if is_instance_valid(estructuras_colocadas) and estructuras_colocadas.get_child_count() > 0:
+		var cand := estructuras_colocadas.get_child(estructuras_colocadas.get_child_count() - 1)
+		if str(cand.get_meta(&"piece_id", &"")) == id:
+			last = cand
 	var limit := _structure_limit(id)
-	if _structure_count(gs, id) >= limit:
-		if is_instance_valid(estructuras_colocadas) and estructuras_colocadas.get_child_count() > 0:
-			var last := estructuras_colocadas.get_child(estructuras_colocadas.get_child_count() - 1)
-			if str(last.get_meta(&"piece_id", &"")) == id:
-				last.queue_free()
+	if _structure_count(gs, id, last) >= limit:
+		if is_instance_valid(last):
+			last.queue_free()
 		_show_toast(_msg(
 			"Límite de %s alcanzado (%d/%d)." % [tr("structures." + id), limit, limit],
 			"%s limit reached (%d/%d)." % [tr("structures." + id), limit, limit]
@@ -839,6 +949,8 @@ func _on_piece_placed(piece_id: StringName, _pos: Vector3) -> void:
 				gs.procesador_instalado = true
 			"generador_oxigeno":
 				gs.generador_instalado = true
+			"tanque_agua":
+				gs.agua_max += 50.0
 			"jardin":
 				gs.jardin_instalado = true
 		gs.notificar_evento_mision("estructura_construida", {
@@ -866,10 +978,11 @@ func _run_rest() -> void:
 		_show_toast(_msg("Descanso finalizado.", "Rest ended."), 2.0)
 		return
 	var dist := _robot_distance_to_dome()
-	if dist > DOME_RECHARGE_RADIUS:
+	var recharge_r := _dome_recharge_radius()
+	if dist > recharge_r:
 		_show_toast(_msg(
-			"Acércate al Domo para descansar y recargar (estás a %.1f m; máx. %.1f m)." % [dist, DOME_RECHARGE_RADIUS],
-			"Move closer to the Dome to rest & recharge (%.1f m away; max %.1f m)." % [dist, DOME_RECHARGE_RADIUS]
+			"Acércate al Domo para descansar y recargar (estás a %.1f m; máx. %.1f m)." % [dist, recharge_r],
+			"Move closer to the Dome to rest & recharge (%.1f m away; max %.1f m)." % [dist, recharge_r]
 		), 3.2)
 		return
 	if float(gs.energia_robot) >= 99.5:
@@ -940,14 +1053,9 @@ func _finish_local_expedition() -> void:
 	if gs == null:
 		return
 	gs.en_viaje_hielo = false
-	var yield_ice := 3
-	var drill_cost := 16.0
-	if int(gs.herramienta_nivel) >= 3:
-		yield_ice = 8
-		drill_cost = 10.0
-	elif int(gs.herramienta_nivel) == 2:
-		yield_ice = 5
-		drill_cost = 13.0
+	var lvl := int(gs.herramienta_nivel)
+	var yield_ice := _ice_yield_for_tool(lvl)
+	var drill_cost := _ice_extraction_cost_for_tool(lvl)
 	var space_left := maxi(0, EXPEDITION_ICE_CAP - int(gs.hielo))
 	var gained := mini(yield_ice, space_left)
 	gs.cambiar_recurso("hielo", gained)
@@ -987,10 +1095,11 @@ func _run_processing() -> void:
 		), 2.8)
 		return
 	var base_dist := _robot_distance_to_processing_zone()
-	if base_dist > DOME_RECHARGE_RADIUS:
+	var recharge_r := _dome_recharge_radius()
+	if base_dist > recharge_r:
 		_show_toast(_msg(
-			"Debes estar en la Base para procesar hielo (estás a %.1f m; máx. %.1f m)." % [base_dist, DOME_RECHARGE_RADIUS],
-			"Move back to the Base to process ice (%.1f m away; max %.1f m)." % [base_dist, DOME_RECHARGE_RADIUS]
+			"Debes estar en la Base para procesar hielo (estás a %.1f m; máx. %.1f m)." % [base_dist, recharge_r],
+			"Move back to the Base to process ice (%.1f m away; max %.1f m)." % [base_dist, recharge_r]
 		), 3.0)
 		return
 	if int(gs.hielo) <= 0:
@@ -1044,9 +1153,11 @@ func _run_repair() -> void:
 			_show_toast(msg, 2.8)
 		return
 	if gs.escudo >= 99.5:
-		_show_toast(_msg("El escudo del domo ya está al 100%.", "Dome shield is already at 100%."), 2.4)
+		gs.notificar_evento_mision("reparar_escudo_iniciado", {})
+		gs.notificar_evento_mision("escudo_reparado", {})
+		_show_toast(_msg("Escudo revisado al 100% ✓", "Shield inspected at 100% ✓"), 2.4)
 		return
-	var cost := 8.0 if _has_upgrade("reparar_barato") else 12.0
+	var cost := float(_repair_energy_cost())
 	if not gs.pagar("energia", cost):
 		_show_toast(_msg("Falta energía (%d⚡) para reparar escudo." % int(cost), "Need %d⚡ to repair shield." % int(cost)), 2.8)
 		return
@@ -1261,6 +1372,7 @@ func _on_mision_completada(id_mision: String, puntos: int, _carta: Dictionary) -
 
 
 func _on_mejora_desbloqueada(_id: String, _rama: String, _nivel: int) -> void:
+	_sync_dome_scale(true)
 	_sync_all_from_state()
 
 
@@ -1289,6 +1401,7 @@ func _sync_all_from_state() -> void:
 		_bridge.call("set_progression_state", prog)
 	_refresh_build_tray_labels()
 	_refresh_active_mission_panel()
+	_sync_dome_scale(false)
 	_sync_world_visuals(gs.es_dia)
 	_refresh_dock_states()
 
@@ -1444,21 +1557,45 @@ func _gs() -> Node:
 	return get_node_or_null("/root/GameState")
 
 
-func _actualizar_debug() -> void:
-	var gs := _gs()
-	if gs == null:
-		debug_label.text = tr("hud.back_intro")
-		return
-	var estado_dia := tr("hud.day") if gs.es_dia else tr("hud.night")
-	debug_label.text = "%s: %s | %s: %.0fs (%s) | ⚡Base %.0f%% | 🔋Robot %.0f%% | 🧊 %d (%d L) | 💧 %.0f%% (%d L) | 💨 %.0f%% | 🛡 %.0f%% | ★ %d" % [
-		tr("hud.mode"), gs.modo_juego.capitalize(),
-		tr("hud.time"), gs.tiempo_juego, estado_dia,
-		gs.energia, gs.energia_robot,
-		gs.hielo, int(gs.hielo) * 10,
-		gs.agua, int(round(gs.agua * 2.0)),
-		gs.oxigeno, gs.escudo, gs.estrellas
-	]
-
-
 func _processor_capacity() -> int:
 	return 3
+
+func _tick_robot_energy(gs: Node, delta: float) -> void:
+	var moving := is_instance_valid(click_to_move) and bool(click_to_move.get("_moviendo"))
+	var near_dome := _robot_distance_to_dome() <= _dome_recharge_radius()
+	# --- 2. Robot Own Battery (5.42 kWh = 100%) & Dome Recharge ---
+	if bool(gs.descansando_en_domo):
+		if not near_dome or moving:
+			_set_robot_resting(gs, false)
+			_refresh_dock_states()
+			_sync_bridge_telemetry(gs)
+		elif float(gs.energia_robot) >= 99.95 or float(gs.energia) <= 0.05:
+			var full := float(gs.energia_robot) >= 99.95
+			_set_robot_resting(gs, false)
+			_refresh_dock_states()
+			_sync_bridge_telemetry(gs)
+			if full:
+				_show_toast(_msg("Batería del robot al 100% ✓", "Robot battery charged to 100% ✓"), 2.4)
+		else:
+			var gain := minf(ROBOT_RECHARGE_RATE_PCT_S * delta, 100.0 - float(gs.energia_robot))
+			var base_cost := BASE_RECHARGE_DRAIN_PCT_S * (gain / ROBOT_RECHARGE_RATE_PCT_S)
+			gs.cambiar_energia_robot(gain)
+			gs.cambiar_recurso("energia", -base_cost)
+	else:
+		var move_drain := _tool_move_drain(gs)
+		if moving:
+			var storm_extra := float(_storm_profile.get("robot_extra", 0.8)) if (bool(gs.nube_activa) and not near_dome) else 0.0
+			gs.cambiar_energia_robot(-(move_drain + storm_extra) * delta)
+			if float(gs.energia_robot) <= 0.0 and is_instance_valid(click_to_move):
+				click_to_move.set("_moviendo", false)
+				_refresh_dock_states()
+				_show_toast(_msg(
+					"¡Batería del robot agotada! Recarga con el sol o en el Domo.",
+					"Robot battery empty! Recharge via sunlight or at the Dome."
+				), 3.0)
+		else:
+			var idle_delta := -0.05 if not near_dome else 0.0
+			if gs.es_dia and float(gs.energia_robot) < 100.0:
+				idle_delta += 0.60
+			if not is_zero_approx(idle_delta):
+				gs.cambiar_energia_robot(idle_delta * delta)

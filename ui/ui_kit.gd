@@ -81,9 +81,9 @@ static func register_translations() -> void:
             translation.add_message(live_key, preload("res://i18n/live.gd").MESSAGES[locale][live_key])
         for guide_key in preload("res://i18n/interaction.gd").MESSAGES[locale]:
             translation.add_message(guide_key, preload("res://i18n/interaction.gd").MESSAGES[locale][guide_key])
-        for task_key in preload("res://i18n/tasks.gd").MESSAGES[locale]:
-            translation.add_message(task_key, preload("res://i18n/tasks.gd").MESSAGES[locale][task_key])
         for key in catalogs[locale]:
             translation.add_message(key, catalogs[locale][key])
+        for guidance_key in preload("res://i18n/tutorial_guidance.gd").MESSAGES[locale]:
+            translation.add_message(guidance_key, preload("res://i18n/tutorial_guidance.gd").MESSAGES[locale][guidance_key])
         TranslationServer.add_translation(translation)
     _translations_registered = true

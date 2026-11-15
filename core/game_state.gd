@@ -429,7 +429,7 @@ func _inicializar_progresion() -> void:
 	if save_script == null or mission_script == null or tree_script == null:
 		return
 
-	_save_manager = save_script.new()
+	_save_manager = _crear_save_manager()
 	_save_manager.name = "SaveManager"
 	add_child(_save_manager)
 
@@ -468,7 +468,7 @@ func _al_aplicar_efecto_mejora(tipo: String, datos: Dictionary) -> void:
 		"herramienta_hielo":
 			herramienta_nivel = int(datos.get("herramienta_nivel", herramienta_nivel))
 		"desbloqueo_jardin":
-			jardin_instalado = true
+			pass
 
 
 # ─────────────────────────── Puente con la simulación (puesto 2) ───────────────────────────
@@ -550,3 +550,6 @@ func _emitir_energia_robot(forzar: bool = false) -> void:
 func _sincronizar_estrellas(disponibles: int, _totales: int) -> void:
 	estrellas = disponibles
 	estrellas_actualizadas.emit(estrellas)
+
+func _crear_save_manager() -> Node:
+	return load(RUTA_SAVE_MANAGER).new()

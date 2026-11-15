@@ -20,14 +20,20 @@ func run() -> void:
 	game.set_process(false)
 	gs.set_process(false)
 	game._voice.muted = true
-	check(game.rail.buttons.size() == 4 and game.rail.utility_buttons.has("more"),"Four primary actions and More leave the world unobstructed")
-	game.guide.start("process")
+	check(game._hud.dock_buttons.size() == 5,"Five primary dock tabs are visible")
 	game._on_dock_action("processing")
-	check(game.guide.active() and game._modal_kind == "action:processing" and not gs.en_partida,"First task opens real controls with paused guidance")
-	game._close_modal()
+	check(game._drawer.kind == "coach" and not gs.en_partida,"First use is guided and paused")
+	var tried = false
+	for button in game._drawer.find_children("*","Button",true,false):
+		if button.text == game.gx("try"):
+			button.pressed.emit()
+			tried = true
+			break
+	check(tried and game.session.learned.has("processing") and game._drawer.kind == "processing" and gs.en_partida,"Try it completes first guidance and opens live processing drawer")
+	game._close_drawer()
 	game._on_station_clicked("processing",game.mundo)
-	check(game._modal_kind == "action:processing","Machine opens same real processing panel")
-	game._close_modal()
+	check(game._drawer.kind == "processing" and gs.en_partida,"Machine opens same live processing drawer")
+	game._close_drawer()
 	# Test picking a rendered machine via the real camera ray.
 	var processor = load("res://assets/3d/procesador_hielo.tscn").instantiate()
 	processor.set_meta("piece_id",&"procesador_hielo")
@@ -40,8 +46,8 @@ func run() -> void:
 	await physics_frame
 	game.click_to_move._pos_clic = game.camara.unproject_position(processor.global_position+Vector3(0,1,0))
 	game.click_to_move._procesar_clic()
-	check(game._modal_kind == "action:processing","Actual mouse ray on processor opens the shared panel")
-	game._close_modal()
+	check(game._drawer.kind == "processing","Actual mouse ray on processor opens the shared drawer")
+	game._close_drawer()
 	check(not game._voice.is_speaking(),"Closing panel stops its voice")
 	game.ice.discover()
 	game.ice.discover()
@@ -56,7 +62,7 @@ func run() -> void:
 	check(clock.display({"tiempo_juego":240}).time == "18:00","Sunset at 18:00")
 	check(clock.display({"tiempo_juego":480}).time == "06:00","Sunrise at 06:00")
 	game._hud.set_state({"tiempo_juego":360,"es_dia":true})
-	check(game._hud._phase_icon.kind == "moon" and game._hud._clock.text.contains("00:00"),"HUD phase cannot drift from clock, even with stale telemetry")
+	check(game._hud._phase_icon.kind == "moon" and game._hud._clock.tooltip_text.contains("NIGHT"),"HUD phase cannot drift from clock, even with stale telemetry")
 	var ambient = game.mundo.get_node("Ambiente")
 	ambient.set_solar_time(120)
 	check(ambient.get_node("Cielo/DistantSun").visible and ambient.get_node("Sol").light_energy > 0.9,"Midday sun is visible and bright")
@@ -66,8 +72,6 @@ func run() -> void:
 	Engine.time_scale = 6
 	gs.en_partida = true
 	game.session.learned.expedition = true
-	game.guide.stop()
-	game.ice.scan("crater")
 	check(game.ice.start("crater"),"Trip can start")
 	var phases: Array = []
 	for i in 1200:
@@ -86,6 +90,37 @@ func run() -> void:
 			if game.ice.phase in ["idle","blocked"]: break
 		print("ZONE ",zone_id," STATUS ",game.ice.phase," POS ",game.robot.global_position)
 		check(game.ice.phase == "idle","Discovered site completes real movement: "+zone_id)
+	# Verify 3x dome geometry, no tracks, Capsula-only repair binding, and placement bounds inside dome.
+	var domo: Node3D = game.mundo.get_node_or_null("Domo")
+	var capsula: Node3D = game.mundo.get_node_or_null("Capsula")
+	check(domo != null and domo.scale.x >= 2.9, "Dome scaled 3x")
+	check(game.mundo.get_node_or_null("Camino") == null and game.mundo.get_node_or_null("CaminoCrater") == null, "Tracks removed from moon world")
+	check(domo != null and not domo.has_meta("station_section"), "Dome no longer triggers repair click")
+	check(capsula != null and str(capsula.get_meta("station_section", "")) == "repair", "Ship (Capsula) triggers repair station")
+	game.placement_system.start_placement(&"panel_solar")
+	var ghost: Node3D = game.placement_system._ghost
+	check(ghost != null, "Ghost preview initialized")
+	if ghost != null:
+		ghost.position = Vector3(8.0, 0.0, 8.0)
+		check(ghost.fits_within_radius(Vector3.ZERO, game.placement_system.dome_inner_radius), "Module inside 3x dome fits within dome radius")
+		ghost.position = Vector3(22.0, 0.0, 22.0)
+		check(not ghost.fits_within_radius(Vector3.ZERO, game.placement_system.dome_inner_radius), "Module outside dome is rejected")
+	game.placement_system.cancel_placement()
+	# Verify dome expansion by +(current * 1.25) and collectible SupplyDrop on panel_extra upgrade.
+	var inv_before: int = int(game.session.inventory.get("panel_solar", 0))
+	gs.obtener_save_manager().registrar_mision_completada("mision_01", 5)
+	game._on_upgrade_requested("panel_extra")
+	game._close_modal()
+	await frames()
+	check(is_equal_approx(game._dome_expansion_scale(), 6.75), "Dome expands from 3.0 to 3.0 + (3.0 * 1.25) = 6.75")
+	check(game.placement_system.dome_inner_radius > 37.0, "Dome inner placement radius scales up with dome")
+	check(game.session.pending_drops.size() == 1, "Upgrade spawns a collectible SupplyDrop")
+	var drop_node: Node3D = game._find_drop_node("panel_extra")
+	check(drop_node != null and str(drop_node.get_meta("station_section", "")) == "supply_drop", "SupplyDrop node bound as collectible station")
+	game._active_drop_id = "panel_extra"
+	game._complete_supply_drop_pickup()
+	check(int(game.session.inventory.get("panel_solar", 0)) == inv_before + 1, "Simulated drop collection adds +1 panel_solar to inventory")
+	check(game.session.pending_drops.is_empty(), "Picked drop is removed from pending_drops")
 	Engine.time_scale = 1
 	game.queue_free()
 	await frames()

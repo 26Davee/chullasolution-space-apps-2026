@@ -50,6 +50,11 @@ enum State { IDLE, PLACING }
 ## Si es true la pieza se inclina según la normal del terreno.
 @export var align_to_normal: bool = false
 
+@export_group("Domo")
+@export var restrict_to_dome: bool = true
+@export var dome_center: Vector3 = Vector3.ZERO
+@export var dome_inner_radius: float = 16.8
+
 # --- Aspecto del holograma -------------------------------------------------
 @export_group("Holograma")
 @export var valid_color: Color = Color(0.2, 0.95, 0.85, 0.45)
@@ -71,8 +76,6 @@ var _current_scene: PackedScene
 var _ghost: GhostPreview
 var _ghost_material: Material
 var _yaw: float = 0.0
-var _pointer_known := false
-var _pointer_position := Vector2.ZERO
 var _has_target: bool = false
 var _is_valid: bool = false
 var _reject_reason: String = ""
@@ -103,7 +106,6 @@ func start_placement(piece_id: StringName, scene: PackedScene = null) -> void:
 	current_piece_id = piece_id
 	_current_scene = scene
 	_yaw = 0.0
-	_pointer_known = false
 	_has_target = false
 	_is_valid = false
 
@@ -126,8 +128,25 @@ func cancel_placement() -> void:
 	placement_cancelled.emit(id)
 
 
+func confirm_current() -> void:
+	if state == State.PLACING:
+		_try_confirm(false)
+
+
 func is_placing() -> bool:
 	return state == State.PLACING
+
+
+func get_ghost_position() -> Vector3:
+	return _ghost.global_position if is_instance_valid(_ghost) else Vector3.ZERO
+
+
+func has_valid_target() -> bool:
+	return _has_target and _is_valid
+
+
+func get_reject_reason() -> String:
+	return _reject_reason
 
 
 func rotate_piece(steps: int = 1) -> void:
@@ -147,15 +166,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if state != State.PLACING:
 		return
 
-	if event is InputEventMouseMotion:
-		_pointer_known = true
-		_pointer_position = event.position
-		return
 	if event is InputEventMouseButton and event.pressed:
-		_pointer_known = true
-		_pointer_position = event.position
 		match event.button_index:
 			MOUSE_BUTTON_LEFT:
+				_update_preview(event.position)
 				_try_confirm(event.shift_pressed)
 				get_viewport().set_input_as_handled()
 			MOUSE_BUTTON_RIGHT:
@@ -174,12 +188,15 @@ func _unhandled_input(event: InputEvent) -> void:
 # Previsualización
 # ===========================================================================
 
-func _update_preview() -> void:
+func _update_preview(mouse_position := Vector2.INF) -> void:
 	if camera == null or _ghost == null:
+		return
+	var vp := get_viewport()
+	if not mouse_position.is_finite() and vp != null and vp.gui_get_hovered_control() != null:
 		return
 
 	var space := get_world_3d().direct_space_state
-	var mouse := _pointer_position if _pointer_known else get_viewport().get_mouse_position()
+	var mouse := mouse_position if mouse_position.is_finite() else get_viewport().get_mouse_position()
 	var from := camera.project_ray_origin(mouse)
 	var to := from + camera.project_ray_normal(mouse) * ray_length
 
@@ -219,6 +236,9 @@ func _update_preview() -> void:
 	if slope > max_slope_deg:
 		valid = false
 		_reject_reason = "Pendiente demasiado pronunciada (%.0f°)" % slope
+	elif restrict_to_dome and not _ghost.fits_within_radius(dome_center, dome_inner_radius):
+		valid = false
+		_reject_reason = "outside_dome"
 	elif _ghost.overlaps(space, pieces_mask):
 		valid = false
 		_reject_reason = "Choca con otra pieza"

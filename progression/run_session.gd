@@ -14,6 +14,8 @@ var inventory: Dictionary = {}
 var delivered: Array = []
 var messages: Array = []
 var pending_rewards: Array = []
+var pending_drops: Array = []
+var spawned_upgrade_drops: Array = []
 var checkpoint: Dictionary = {}
 var finished = false
 var loading = false
@@ -23,7 +25,7 @@ var _autosave = 0.0
 
 func setup(host: Node) -> void:
 	game = host
-	gs = get_node("/root/GameState")
+	gs = game._gs()
 	sm = gs.obtener_save_manager()
 	mm = gs.obtener_mission_manager()
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/missions/supplies.json"))
@@ -49,7 +51,7 @@ func begin() -> void:
 func _process(delta: float) -> void:
 	if gs == null or not gs.en_partida or loading or finished: return
 	_autosave += delta
-	if _autosave >= 30.0:
+	if _autosave >= 10.0:
 		_autosave = 0
 		save_run()
 
@@ -96,24 +98,15 @@ func acknowledge_reward(id: String) -> void:
 	save_run()
 
 func add_message(id: String, kind: String, data: Dictionary) -> void:
-	var stable := id
-	if kind == "storm": stable = "storm"
-	elif kind in ["day","night"]: stable = "cycle"
 	for item in messages:
-		if str(item.id) == stable:
-			item.data = data.duplicate(true)
-			item.kind = kind
-			item.resolved = false
-			item.read = false
-			item.day_seconds = gs.tiempo_juego
-			return
-	messages.push_front({"id":stable,"kind":kind,"data":data.duplicate(true),"read":false,"resolved":false,"day_seconds":gs.tiempo_juego})
+		if str(item.id) == id: return
+	messages.push_front({"id": id, "kind": kind, "data": data.duplicate(true), "read": false, "day_seconds": gs.tiempo_juego})
 	if messages.size() > 60: messages.resize(60)
 
 func unread_count() -> int:
 	var total = 0
 	for item in messages:
-		if not bool(item.get("read", false)) and not bool(item.get("resolved",false)): total += 1
+		if not bool(item.get("read", false)): total += 1
 	return total
 
 func mark_read(id: String) -> void:
@@ -127,7 +120,7 @@ func capture() -> Dictionary:
 	var legacy: Dictionary = sm.obtener_datos_completos()
 	legacy.erase("expedicion")
 	legacy.erase("perfil")
-	return {"learned": learned.duplicate(true), "read_cards": read_cards.duplicate(true), "state": state, "missions": mm.capturar_estado(), "legacy": legacy, "world": game.capture_world(), "inventory": inventory.duplicate(true), "delivered": delivered.duplicate(), "messages": messages.duplicate(true), "pending_rewards": pending_rewards.duplicate(true), "finished": finished}
+	return {"learned": learned.duplicate(true), "read_cards": read_cards.duplicate(true), "state": state, "missions": mm.capturar_estado(), "legacy": legacy, "world": game.capture_world(), "inventory": inventory.duplicate(true), "delivered": delivered.duplicate(), "messages": messages.duplicate(true), "pending_rewards": pending_rewards.duplicate(true), "pending_drops": pending_drops.duplicate(true), "spawned_upgrade_drops": spawned_upgrade_drops.duplicate(), "finished": finished}
 
 func save_run() -> bool:
 	if loading: return false
@@ -147,10 +140,13 @@ func restore(snapshot: Dictionary) -> void:
 	inventory = snapshot.get("inventory", {}).duplicate(true)
 	delivered = snapshot.get("delivered", []).duplicate()
 	messages = snapshot.get("messages", []).duplicate(true)
-	compact_messages()
 	pending_rewards = snapshot.get("pending_rewards", []).duplicate(true)
+	pending_drops = snapshot.get("pending_drops", []).duplicate(true)
+	spawned_upgrade_drops = snapshot.get("spawned_upgrade_drops", []).duplicate()
 	finished = bool(snapshot.get("finished", false))
 	game.restore_world(snapshot.get("world", {}))
+	if not bool(gs.alerta_nube) and not bool(gs.nube_activa) and game != null and game.has_method("_reset_storm_ui_state"):
+		game.call("_reset_storm_ui_state")
 	loading = false
 	gs._emitir_todos_los_recursos(true)
 	gs._emitir_energia_robot(true)
@@ -161,6 +157,11 @@ func recover() -> void:
 		restore(checkpoint.duplicate(true))
 	else:
 		reset_run(str(gs.modo_juego))
+	gs.alerta_nube = false
+	gs.nube_activa = false
+	gs.tiempo_para_nube = maxf(float(gs.tiempo_para_nube), 45.0)
+	if game != null and game.has_method("_reset_storm_ui_state"):
+		game.call("_reset_storm_ui_state")
 	gs.en_partida = true
 	save_run()
 
@@ -176,34 +177,9 @@ func reset_run(mode: String) -> void:
 	delivered.clear()
 	messages.clear()
 	pending_rewards.clear()
+	pending_drops.clear()
+	spawned_upgrade_drops.clear()
 	finished = false
 	game.restore_world({})
 	loading = false
 	checkpoint = capture()
-
-func resolve_message(id: String) -> void:
-	for item in messages:
-		if str(item.id) == id and not bool(item.get("resolved",false)):
-			item.resolved = true
-			item.read = true
-
-func compact_messages() -> void:
-	var kept: Array = []
-	var keys := {}
-	for item in messages:
-		var id := str(item.id)
-		if id.begins_with("low:"):
-			var resource := id.get_slice(":",1)
-			item.id = "alert:"+resource
-			item.kind = "resource"
-			item.data = {"resource":resource}
-		elif id.begins_with("storm:"): item.id = "storm"
-		elif id.begins_with("cycle:"): item.id = "cycle"
-		id = str(item.id)
-		if keys.has(id): continue
-		keys[id] = true
-		if item.kind == "resource" and float(gs.get(str(item.data.resource))) > 30:
-			item.resolved = true
-			item.read = true
-		kept.append(item)
-	messages = kept
