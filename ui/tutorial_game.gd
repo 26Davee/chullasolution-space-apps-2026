@@ -33,6 +33,19 @@ func _refresh_storm_banner() -> void:
 
 func _process(delta: float) -> void:
     super._process(delta)
+    if is_instance_valid(_toast_panel):
+        _toast_label.position = Vector2(16,8)
+        _toast_label.size.x = 420
+        var text_height := maxf(40,_toast_label.get_minimum_size().y)
+        _toast_label.size.y = text_height
+        _toast_panel.position = Vector2(414,132)
+        _toast_panel.size = Vector2(452,text_height+16)
     if DisplayServer.get_name() == "headless" and _session_ready and not _landing_active:
         _tick_fallback_simulation(delta)
         _tick_expedition(delta)
+
+func _refresh_world_callouts() -> void:
+    super._refresh_world_callouts()
+    # Timmy already explains click-to-place and right-click/Esc cancellation.
+    # Keep the expedition interface unchanged; hide this duplicate card only in training.
+    if is_instance_valid(_place_callout): _place_callout.hide()

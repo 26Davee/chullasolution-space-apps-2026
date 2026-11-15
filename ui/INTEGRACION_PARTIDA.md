@@ -37,6 +37,10 @@ La selección de idioma muestra English/Spanish en inglés e Inglés/Español en
 
 No se generaron nuevas ilustraciones ni se descargaron nuevos datos NASA durante esta fase. Se reutilizaron los modelos, imágenes, cartas y datos de la rama del equipo.
 
+### Revisión visual final
+
+Se compararon los cajones con `provicional_V1` en `2771313` y se aplicaron sus correcciones de distribución. El diálogo del tutorial adapta su altura al texto; los botones compartidos ajustan sus rótulos al espacio disponible y las pestañas seleccionadas usan texto claro. La tarjeta Place/Cancel se oculta solo en la enseñanza. Se conserva el comportamiento de las acciones y el guardado. La prueba adicional de límites y contraste está en `ui/tests/test_visual_layout.gd`.
+
 ## Verificación
 
 Resultados y cobertura en `docs/AUDITORIA_INTERFAZ_TUTORIAL.md`. Las pruebas usan copias y archivos dedicados. `SaveManager.storage_directory` permite aislar las pruebas de slots; el valor vacío conserva las rutas normales del juego.

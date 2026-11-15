@@ -78,6 +78,7 @@ func _build_frame() -> void:
 
 	_content = VBoxContainer.new()
 	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_content.add_theme_constant_override("separation", 10)
 	_scroll.add_child(_content)
 
@@ -105,15 +106,19 @@ func open_section(section_kind: String, data: Dictionary) -> void:
 	_voice_choice = null
 	_audio_status = null
 	_process_bar = null
-	for child in _content.get_children():
-		child.queue_free()
-	for child in _footer.get_children():
-		child.queue_free()
+	_clear_box(_content)
+	_clear_box(_footer)
 
 	var width := 376.0 if section_kind in ["missions", "upgrades", "science", "construction"] else 336.0
 	var inner_w := width - 36.0
+	var content_w := inner_w - 14.0
+	position.x = 1280.0 - width - 16.0
+	size.x = width
 	get_node("Header").size.x = inner_w
-	_content.custom_minimum_size.x = inner_w - 10.0
+	_scroll.size.x = inner_w
+	_footer.size.x = inner_w
+	_content.custom_minimum_size.x = content_w
+	_content.size.x = content_w
 
 	_header_icon.kind = str(data.get("icon", _default_icon_for(section_kind)))
 	_header_icon.tint = data.get("tint", UI.CYAN)
@@ -154,7 +159,7 @@ func open_section(section_kind: String, data: Dictionary) -> void:
 
 	_layout_panel(width, section_kind)
 	visible = true
-
+	call_deferred("_sync_deferred_layout", section_kind, width)
 
 func update_processing_progress(pct: float) -> void:
 	if kind == "processing" and is_instance_valid(_process_bar):
@@ -165,18 +170,20 @@ func _layout_panel(width: float, section_kind: String) -> void:
 	var has_footer := _footer.get_child_count() > 0
 	var footer_h := 56.0 if has_footer else 16.0
 	var max_h := 550.0
+	var inner_w := width - 36.0
+	_content.custom_minimum_size.x = inner_w - 14.0
+	_content.size.x = inner_w - 14.0
 	var content_h := _content.get_combined_minimum_size().y + 8.0
 	if section_kind in ["missions", "upgrades", "science", "construction", "messages"]:
 		content_h = maxf(content_h, 390.0)
 	var total_h := clampf(60.0 + content_h + footer_h, 190.0, max_h)
 	var scroll_h := total_h - 60.0 - footer_h
-	_scroll.size = Vector2(width - 36.0, scroll_h)
+	_scroll.size = Vector2(inner_w, scroll_h)
 	_footer.visible = has_footer
 	_footer.position = Vector2(18, total_h - 54.0)
-	_footer.size = Vector2(width - 36.0, 40)
+	_footer.size = Vector2(inner_w, 40)
 	position = Vector2(1280.0 - width - 16.0, 70.0)
 	size = Vector2(width, total_h)
-
 
 func _populate_more(data: Dictionary, _w: float) -> void:
 	_add_section_heading(tr("live.more_actions"))
@@ -322,8 +329,10 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		box.add_theme_stylebox_override("panel", UI.style(Color("#17324b") if is_current else Color("#132740"), UI.GOLD if is_current else Color("#3c5670"), 2 if is_current else 1, 12))
 		_content.add_child(box)
 		var inner := VBoxContainer.new()
+		inner.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		inner.add_theme_constant_override("separation", 5)
 		var margin := MarginContainer.new()
+		margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		margin.add_theme_constant_override("margin_left", 12)
 		margin.add_theme_constant_override("margin_right", 12)
 		margin.add_theme_constant_override("margin_top", 10)
@@ -332,12 +341,11 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		box.add_child(margin)
 
 		var top_row := HBoxContainer.new()
+		top_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		top_row.add_theme_constant_override("separation", 8)
 		inner.add_child(top_row)
-		var lbl := Label.new()
+		var lbl := _wrap_label(Label.new())
 		lbl.text = title
-		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.add_theme_font_size_override("font_size", 15 if is_current else 14)
 		lbl.add_theme_color_override("font_color", UI.WHITE)
 		top_row.add_child(lbl)
@@ -349,10 +357,9 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 		badge.add_theme_color_override("font_color", UI.GOLD if is_current else (Color("#7fe7bf") if is_done else Color("#9db4ca")))
 		top_row.add_child(badge)
 
-		var desc := Label.new()
+		var desc := _wrap_label(Label.new())
 		var obj := Catalog.text("misiones." + id + ".objetivo", "\n".join(item.get("objetivo", [])))
 		desc.text = obj
-		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc.add_theme_font_size_override("font_size", 12)
 		desc.add_theme_color_override("font_color", Color("#c7d6e6"))
 		if not is_current:
@@ -380,7 +387,6 @@ func _populate_missions(data: Dictionary, _w: float) -> void:
 			inner.add_child(foot)
 
 	_footer.add_child(_cta_button(tr("live.back_to_map"), false, close_requested.emit))
-
 
 func _populate_upgrades(data: Dictionary, _w: float) -> void:
 	var items: Array = data.get("items", [])
@@ -472,23 +478,20 @@ func _populate_science(data: Dictionary, _w: float) -> void:
 	var card: Dictionary = cards[_selected_science]
 	var art_id := str(card.get("art", "solar"))
 	_add_preview("res://assets/ui/activities/" + art_id + "-v1.png", 126)
-	var heading := Label.new()
+	var heading := _wrap_label(Label.new())
 	heading.text = str(card.get("titulo", ""))
-	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.add_theme_font_size_override("font_size", 16)
 	heading.add_theme_color_override("font_color", UI.GOLD)
 	_content.add_child(heading)
 
 	_add_note(str(card.get("dato", "")))
-	var src := Label.new()
+	var src := _wrap_label(Label.new())
 	src.text = tr("live.source").format({"source": str(card.get("fuente", ""))})
-	src.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	src.add_theme_font_size_override("font_size", 12)
 	src.add_theme_color_override("font_color", UI.CYAN)
 	_content.add_child(src)
 
 	_footer.add_child(_cta_button(tr("live.science_listen"), true, func(): navigate_requested.emit("speak", {"text": str(card.get("titulo", "")) + ". " + str(card.get("dato", ""))})))
-
 
 func _populate_messages(data: Dictionary, _w: float) -> void:
 	var items: Array = data.get("items", [])
@@ -529,16 +532,14 @@ func _populate_timmy(data: Dictionary, _w: float) -> void:
 	text_col.add_theme_constant_override("separation", 6)
 	row.add_child(text_col)
 
-	var q := Label.new()
+	var q := _wrap_label(Label.new())
 	q.text = str(data.get("subtitle", tr("live.next")))
-	q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	q.add_theme_font_size_override("font_size", 15)
 	q.add_theme_color_override("font_color", UI.GOLD)
 	text_col.add_child(q)
 
-	var body := Label.new()
+	var body := _wrap_label(Label.new())
 	body.text = str(data.get("body", ""))
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_theme_font_size_override("font_size", 13)
 	body.add_theme_color_override("font_color", UI.WHITE)
 	text_col.add_child(body)
@@ -549,7 +550,6 @@ func _populate_timmy(data: Dictionary, _w: float) -> void:
 	_footer.add_child(_cta_button(tr("live.timmy_sub"), false, func(): navigate_requested.emit("speak", {"text": speak_text})))
 	var confirm_label := str(data.get("confirm_label", tr("live.understood")))
 	_footer.add_child(_cta_button(confirm_label, true, func(): navigate_requested.emit("confirm_timmy", data)))
-
 
 func _populate_resource(data: Dictionary, _w: float) -> void:
 	var tex_path := str(data.get("texture_path", "res://assets/ui/activities/solar-v1.png"))
@@ -621,9 +621,8 @@ func _populate_audio(data: Dictionary, _w: float) -> void:
 	)
 	_content.add_child(_voice_choice)
 
-	_audio_status = Label.new()
+	_audio_status = _wrap_label(Label.new())
 	_audio_status.text = tr("v2.audio_muted") if muted else (tr("live.voice_missing") if voices.is_empty() else tr("v2.audio_ready"))
-	_audio_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_audio_status.add_theme_font_size_override("font_size", 12)
 	_audio_status.add_theme_color_override("font_color", Color("#c7d6e6"))
 	_content.add_child(_audio_status)
@@ -637,7 +636,6 @@ func _populate_audio(data: Dictionary, _w: float) -> void:
 
 	_footer.add_child(_cta_button(tr("live.audio_test_btn"), false, func(): navigate_requested.emit("test_voice", {})))
 	_footer.add_child(_cta_button(tr("live.audio_back"), false, func(): navigate_requested.emit("open_section", {"id": "settings"})))
-
 
 func _populate_controls(_data: Dictionary, w: float) -> void:
 	var controls = preload("res://ui/controls_view.gd").new()
@@ -667,13 +665,11 @@ func _add_section_heading(text: String) -> void:
 
 
 func _add_note(text: String) -> void:
-	var lbl := Label.new()
+	var lbl := _wrap_label(Label.new())
 	lbl.text = text
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	lbl.add_theme_font_size_override("font_size", 13)
 	lbl.add_theme_color_override("font_color", Color("#d3e1ee"))
 	_content.add_child(lbl)
-
 
 func _add_preview(path: String, height: float) -> void:
 	var pic := TextureRect.new()
@@ -765,11 +761,13 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 	_content.add_child(holder)
 
 	var panel := PanelContainer.new()
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_theme_stylebox_override("panel", UI.style(Color("#17324b") if highlight else Color("#132740"), UI.GOLD if highlight else Color("#405a74"), 2 if highlight else 1, 12))
 	holder.add_child(panel)
 
 	var margin := MarginContainer.new()
+	margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margin.add_theme_constant_override("margin_left", 12)
 	margin.add_theme_constant_override("margin_right", 12)
@@ -778,6 +776,7 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 	panel.add_child(margin)
 
 	var hbox := HBoxContainer.new()
+	hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hbox.add_theme_constant_override("separation", 10)
 	margin.add_child(hbox)
@@ -797,19 +796,17 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 	col.add_theme_constant_override("separation", 2)
 	hbox.add_child(col)
 
-	var t := Label.new()
+	var t := _wrap_label(Label.new())
 	t.text = title
 	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	t.add_theme_font_size_override("font_size", 14)
 	t.add_theme_color_override("font_color", UI.WHITE)
 	col.add_child(t)
 
 	if not subtitle.is_empty():
-		var s := Label.new()
+		var s := _wrap_label(Label.new())
 		s.text = subtitle
 		s.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		s.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		s.add_theme_font_size_override("font_size", 12)
 		s.add_theme_color_override("font_color", Color("#b6c9db"))
 		col.add_child(s)
@@ -833,16 +830,15 @@ func _add_row_card(icon_kind: String, tint: Color, title: String, subtitle: Stri
 		hit.pressed.connect(cb)
 		holder.add_child(hit)
 
-
 func _pill_button(text: String, icon_kind: String, tint: Color, cb: Callable, active := false) -> Button:
 	var btn := Button.new()
 	btn.text = text
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.custom_minimum_size = Vector2(0, 36)
+	btn.custom_minimum_size = Vector2(1, 44)
 	btn.clip_text = true
 	btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	UI.paint(btn, active)
+	UI.paint(btn, false)
 	btn.add_theme_font_size_override("font_size", 13)
 	var style := UI.style(Color("#1c3a56") if active else Color("#132740"), UI.GOLD if active else Color("#405a74"), 2 if active else 1, 10)
 	if not icon_kind.is_empty():
@@ -859,6 +855,7 @@ func _pill_button(text: String, icon_kind: String, tint: Color, cb: Callable, ac
 		dot.size = Vector2(6, 6)
 		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		btn.add_child(dot)
+	_fit_button(btn)
 	return btn
 
 
@@ -866,7 +863,7 @@ func _cta_button(text: String, primary: bool, cb: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = text
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.custom_minimum_size = Vector2(0, 40)
+	btn.custom_minimum_size = Vector2(1, 48)
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	UI.paint(btn, primary)
 	btn.add_theme_font_size_override("font_size", 14)
@@ -875,6 +872,7 @@ func _cta_button(text: String, primary: bool, cb: Callable) -> Button:
 	else:
 		btn.add_theme_stylebox_override("normal", UI.style(Color("#152a42"), Color("#536e87"), 1, 10))
 	btn.pressed.connect(cb)
+	_fit_button(btn)
 	return btn
 
 
@@ -895,3 +893,32 @@ func _default_icon_for(section_kind: String) -> String:
 		"settings:controls": return "target"
 		"settings:exit": return "warning"
 		_: return "base"
+
+func _clear_box(box: Control) -> void:
+	if box == null:
+		return
+	for child in box.get_children():
+		box.remove_child(child)
+		child.queue_free()
+
+func _sync_deferred_layout(expected_kind: String, width: float) -> void:
+	if visible and kind == expected_kind:
+		_layout_panel(width, expected_kind)
+
+func _wrap_label(lbl: Label) -> Label:
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.custom_minimum_size.x = 1.0
+	return lbl
+
+func _fit_button(btn: Button) -> void:
+	# Allow long EN/ES captions to wrap inside the available column width.
+	btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	btn.clip_text = true
+	btn.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	btn.tooltip_text = btn.text
+	for state_name in ["normal","hover","pressed","focus","disabled"]:
+		var box := btn.get_theme_stylebox(state_name).duplicate()
+		box.content_margin_left = 8
+		box.content_margin_right = 8
+		btn.add_theme_stylebox_override(state_name,box)

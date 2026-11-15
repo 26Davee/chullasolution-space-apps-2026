@@ -51,3 +51,9 @@ Texto resumido para niños; las ilustraciones son generadas con IA y no fotograf
 Codex asistió en la copia del contenido de origin/provicional_V1 (1296d76), el tutorial guiado EN/ES sobre el juego real, el aislamiento del progreso de práctica, controles vectoriales, avisos, recuperación visual, correcciones de entrada/foco, pruebas y documentación. Copia autorizada por la integrante; sin merge. Se usó el video Killawasi-jugabilidad-1296d76-30s.mp4 como referencia visual local. Se reutilizaron las imágenes, modelos, JSON y contenido científico del equipo. No se generó arte nuevo ni se consultaron nuevas fuentes NASA. FFmpeg se utilizó solo fuera del repositorio para revisar el video.
 
 Incluye cambios de conexión en core/game_state.gd, core/juego.gd, core/main.gd, progression/run_session.gd, progression/save_manager.gd e interaction/placement_system.gd; además del contenido copiado de la rama del equipo. Su alcance fue autorizado en esta conversación. Validación registrada en docs/AUDITORIA_INTERFAZ_TUTORIAL.md; siete pruebas y revisión visual nativa.
+
+### 2026-11-15 · pulido visual final por capturas de la integrante
+
+Codex asistió en el ajuste de altura del diálogo de Timmy, contención y ajuste de texto de botones, contraste de selección de Upgrades y presentación de avisos traducidos. Se comparó `provicional_V1` en `2771313` y se reutilizaron únicamente sus ajustes visuales del cajón. La tarjeta Place/Cancel se oculta solo en el tutorial y se separan sus avisos breves del diálogo. Se añadió una prueba de límites visuales EN/ES y se revisaron capturas nativas. Esta revisión no modifica balance, misiones, inventarios ni reglas de guardado. No se generaron imágenes ni se consultaron nuevas fuentes NASA.
+
+Validación final de este pulido: ocho pruebas aprobadas y revisión de catorce capturas nativas EN/ES.

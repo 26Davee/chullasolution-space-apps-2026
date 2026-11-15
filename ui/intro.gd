@@ -92,7 +92,13 @@ func _ready() -> void:
     back_button = UI.button(bubble,tr("v2.back"),Rect2(18,114,92,34),_back)
     repeat_button = UI.button(bubble,tr("v2.repeat"),Rect2(120,114,108,34),_repeat)
     primary_button = UI.button(bubble,tr("v2.next"),Rect2(502,112,130,36),_advance,true)
-    for button in [back_button,repeat_button,primary_button]: button.add_theme_font_size_override("font_size",16)
+    for button in [back_button,repeat_button,primary_button]:
+        button.add_theme_font_size_override("font_size",16)
+        for state_name in ["normal","hover","pressed","focus","disabled"]:
+            var box = button.get_theme_stylebox(state_name).duplicate()
+            box.content_margin_left = 6
+            box.content_margin_right = 6
+            button.add_theme_stylebox_override(state_name,box)
     skip_button = UI.button(canvas,tr("lesson.skip"),Rect2(310,18,90,32),_finish)
     skip_button.add_theme_font_size_override("font_size",14)
     await get_tree().process_frame
@@ -331,36 +337,19 @@ func _refresh_guide() -> void:
                 elif kind == "more": target = _find_button(tr("live."+section))
                 else: target = game._hud.dock_buttons.more
     var modal_open := is_instance_valid(game._modal_layer)
-    bubble.position = Vector2(16,420) if modal_open else Vector2(212,464)
-    bubble.size = Vector2(208,206) if modal_open else Vector2(650,158)
-    dialogue_label.size = Vector2(172,110) if modal_open else Vector2(614,64)
-    dialogue_label.add_theme_font_size_override("font_size",15 if modal_open else 19)
-    portrait.position = Vector2(52,234) if modal_open else Vector2(32,434)
-    for button in [back_button,repeat_button,primary_button]:
-        button.position.y = 164 if modal_open else 114
-        button.add_theme_font_size_override("font_size",13 if modal_open else 16)
-        for state_name in ["normal","hover","pressed","focus","disabled"]:
-            var box = button.get_theme_stylebox(state_name).duplicate()
-            box.content_margin_left = 6
-            box.content_margin_right = 6
-            button.add_theme_stylebox_override(state_name,box)
-    back_button.visible = not modal_open
-    back_button.position.x = 14 if modal_open else 18
-    back_button.size.x = 70 if modal_open else 92
-    repeat_button.position.x = 12 if modal_open else 120
-    repeat_button.size.x = 86 if modal_open else 108
-    primary_button.position.x = 104 if modal_open else 502
-    primary_button.size.x = 96 if modal_open else 130
     if modal_open and step == "recovery": text = tr("coach.recovery")
     if modal_open and step == "supplies": text = tr("coach.reward")
+    if modal_open and step == "ending": text = tr("visual.ending_hint")
+    if done and not open and not modal_open and not RESOURCE_IDS.has(step) and step not in ["arrival","base","cycle","ready"]:
+        text = tr("visual.continue_hint")
     if step == "alerts" and done: text = tr("lesson.solved")
     back_button.text = tr("v2.back")
     repeat_button.text = tr("v2.repeat")
     skip_button.text = tr("lesson.skip")
     primary_button.text = tr("tutorial.yes" if step == "ready" else "v2.next")
     dialogue_label.text = text
+    _layout_dialogue(modal_open)
     _progress.text = str(index+1)+" / "+str(STEPS.size())
-    _progress.position.x = 90 if modal_open else 520
     bubble.tooltip_text = tr("lesson.training")+" · "+str(index+1)+"/"+str(STEPS.size())
     primary_button.disabled = not done
     coach.point_at(target,"",false,false)
@@ -458,3 +447,30 @@ func _finish() -> void:
     home_entered.emit()
 func _exit_tree() -> void:
     if is_instance_valid(voice): voice.stop()
+
+func _layout_dialogue(modal_open: bool) -> void:
+    # Measure wrapped text before positioning its footer; translations can use more lines.
+    var font_size := 15 if modal_open else 19
+    var text_width := 172.0 if modal_open else 614.0
+    dialogue_label.add_theme_font_size_override("font_size",font_size)
+    dialogue_label.size.x = text_width
+    var font := dialogue_label.get_theme_font("font")
+    var line_height := font.get_height(font_size) + 3.0
+    var text_height := ceilf(maxf(dialogue_label.get_minimum_size().y,dialogue_label.get_line_count()*line_height)) + 4.0
+    var height := maxf(206.0 if modal_open else 158.0,text_height+104.0)
+    bubble.position = Vector2(16 if modal_open else 212,626.0-height)
+    bubble.size = Vector2(208 if modal_open else 650,height)
+    dialogue_label.size = Vector2(text_width,text_height)
+    portrait.position = Vector2(52 if modal_open else 32,bubble.position.y-186 if modal_open else bubble.position.y-30)
+    var footer_y := height-46.0
+    for button in [back_button,repeat_button,primary_button]:
+        button.position.y = footer_y
+        button.add_theme_font_size_override("font_size",13 if modal_open else 16)
+    back_button.visible = not modal_open
+    back_button.position.x = 14 if modal_open else 18
+    back_button.size.x = 70 if modal_open else 92
+    repeat_button.position.x = 12 if modal_open else 120
+    repeat_button.size.x = 86 if modal_open else 108
+    primary_button.position.x = 104 if modal_open else 502
+    primary_button.size.x = 96 if modal_open else 130
+    _progress.position.x = 90 if modal_open else 520

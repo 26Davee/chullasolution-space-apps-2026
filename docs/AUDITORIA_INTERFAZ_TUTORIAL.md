@@ -36,3 +36,18 @@ Resultado: las siete pruebas finalizan sin fallos de sus verificaciones.
 Godot 4.7.2, ventana 1280 × 720, renderizador Compatibility en Windows. Capturas nativas de base, Construir, controles, mensajes, recuperación y recompensas en EN/ES. Se corrigieron los cruces entre Timmy y el aviso de recuperación y se ajustó la altura del listado de controles. También se revisan las pantallas reales de pérdida y su transición.
 
 Las verificaciones automatizadas cubren los recorridos descritos, no todas las combinaciones posibles de acciones de un jugador. Las cantidades científicas, balance y dificultad se conservan del equipo; no se realizó una validación científica adicional ni una sesión de evaluación con niños.
+
+## Pulido visual final · 2026-11-15
+
+Comparación con `origin/provicional_V1` en `2771313`. Se reutilizaron sus ajustes de tamaño y ajuste de texto de los cajones. Esta revisión modifica únicamente presentación; conserva las mecánicas y el flujo de acciones de la versión anterior de esta rama.
+
+- El diálogo de Timmy mide el párrafo completo y coloca los botones debajo, con separación y sin cubrir la barra inferior.
+- Las tarjetas y botones se ajustan al ancho disponible al cambiar de sección. Los textos largos EN/ES pueden ocupar dos líneas.
+- Las pestañas seleccionadas de Upgrades mantienen letras claras sobre fondo azul y borde amarillo.
+- La tarjeta duplicada Place/Cancel se oculta durante el tutorial; el holograma y los controles del juego se conservan.
+- Los avisos breves del tutorial aparecen separados del diálogo de Timmy.
+- El mensaje de recursos muestra una frase traducida con el nombre del recurso, en lugar de `live.resource`.
+
+La prueba `ui/tests/test_visual_layout.gd` comprueba el espacio de los párrafos, separación de botones, límites de paneles y pies, cambios de ancho entre secciones, contraste de la pestaña seleccionada y ausencia de cruces con los avisos automáticos. Se revisaron catorce capturas nativas EN/ES de los casos comunicados por la integrante.
+
+Resultado final de esta revisión: ocho pruebas aprobadas (las siete anteriores y la nueva prueba visual), junto con catorce capturas nativas en inglés y español.

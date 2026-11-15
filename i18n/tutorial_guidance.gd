@@ -96,7 +96,10 @@ const MESSAGES := {
         "lesson.pick": "Click clear ground inside the dome. R rotates; right click cancels.",
         "tutorial.alert_body": "Water is low. Bring ice home and process it.",
         "tutorial.letter_body": "MISSION CONTROL LETTER · Hello, explorer! Complete missions to earn stars, discovery cards and supply deliveries. You can listen to this letter again here.",
-        "recovery.title": "Recovery · Both modes"
+        "recovery.title": "Recovery · Both modes",
+        "visual.continue_hint": "Done! Press Continue.",
+        "visual.ending_hint": "All missions complete! Review the celebration, then continue.",
+        "visual.resource_notice": "{resource} needs attention. Timmy can help."
     },
     "es": {
         "v2.language_en": "Inglés",
@@ -194,6 +197,9 @@ const MESSAGES := {
         "lesson.pick": "Haz clic en suelo libre dentro del domo. R gira; clic derecho cancela.",
         "tutorial.alert_body": "Queda poca agua. Trae hielo a la base y procésalo.",
         "tutorial.letter_body": "CARTA DEL CENTRO DE CONTROL · ¡Hola, explorador! Completa misiones para ganar estrellas, cartas científicas y suministros. Puedes volver a escuchar esta carta aquí.",
-        "recovery.title": "Recuperación · Ambos modos"
+        "recovery.title": "Recuperación · Ambos modos",
+        "visual.continue_hint": "¡Listo! Pulsa Continuar.",
+        "visual.ending_hint": "¡Misiones completas! Mira la celebración y luego continúa.",
+        "visual.resource_notice": "{resource} necesita atención. Timmy puede ayudarte."
     }
 }

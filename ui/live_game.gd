@@ -1033,6 +1033,7 @@ func message_text(item: Dictionary) -> String:
 		"mission":
 			var name_txt := CatalogScript.text("misiones." + str(data.id) + ".titulo", str(data.id))
 			return tx("mail_mission", {"name": name_txt})
+		"resource": return tr("visual.resource_notice").format({"resource":tr("hud."+str(data.get("resource","agua"))+".nombre")})
 		"welcome": return tx("welcome", {"name": _player_name()})
 		_: return tx(str(item.kind))
 
