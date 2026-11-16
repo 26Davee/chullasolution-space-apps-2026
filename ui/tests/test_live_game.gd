@@ -84,8 +84,26 @@ func run() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(sm.save_path))
 	check(parsed is Dictionary and parsed.expedicion.current.world.placed.size() == 1,"On-disk JSON contains world state")
 	var portable: Dictionary = parsed.expedicion.current
+	var water_before_invalid_restore: float = gs.agua
+	var malformed_snapshot: Dictionary = portable.duplicate(true)
+	malformed_snapshot["world"]["placed"] = "invalid"
+	check(not game.session.restore(malformed_snapshot),"Malformed snapshot is rejected before restore")
+	check(is_equal_approx(gs.agua,water_before_invalid_restore) and game.estructuras_colocadas.get_child_count() == 1,"Rejected restore leaves resources and placed models unchanged")
 	game.session.restore(portable)
 	check(game.estructuras_colocadas.get_child_count() == 1,"Disk round trip restores models")
+	var invalid_current: Dictionary = portable.duplicate(true)
+	invalid_current["world"]["placed"] = "invalid"
+	check(sm.guardar_expedicion({"current":invalid_current,"checkpoint":portable},gs.preferencias),"Incompatible current snapshot prepared for recovery test")
+	gs.fijar_recurso("agua",1)
+	game.session.begin()
+	check(game.session.restored and is_equal_approx(gs.agua,float(portable.state.agua)),"Invalid current save falls back to the latest valid checkpoint")
+	check(not game.session.messages.is_empty() and str(game.session.messages[0].id).begins_with("save_recovered:"),"Checkpoint recovery is explained in the message center")
+	check(game.session.save_run(),"Valid run is persisted before backup recovery test")
+	check(sm.guardar_expedicion({"current":invalid_current,"checkpoint":invalid_current},gs.preferencias),"Incompatible main save and checkpoint prepared")
+	gs.fijar_recurso("agua",1)
+	game.session.begin()
+	check(game.session.restored and is_equal_approx(gs.agua,float(portable.state.agua)),"When main save and checkpoint are invalid, the valid slot backup is restored")
+	check(not game.session.messages.is_empty() and str(game.session.messages[0].id).begins_with("save_recovered:"),"Backup recovery is explained in the message center")
 	# Both loss modes use exactly the same components.
 	gs.modo_juego = "ingeniero"
 	game.session.recover()

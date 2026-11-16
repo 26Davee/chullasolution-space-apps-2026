@@ -87,6 +87,15 @@ func cargar_progreso() -> Dictionary:
 	estrellas_cambiadas.emit(obtener_estrellas_disponibles(), obtener_estrellas_totales())
 	return _datos.duplicate(true)
 
+func leer_respaldo() -> Dictionary:
+	var backup_path := ProjectSettings.globalize_path(save_path) + ".bak"
+	if not FileAccess.file_exists(backup_path): return {}
+	var archivo := FileAccess.open(backup_path, FileAccess.READ)
+	if archivo == null: return {}
+	var parsed: Variant = JSON.parse_string(archivo.get_as_text())
+	archivo.close()
+	return parsed.duplicate(true) if parsed is Dictionary else {}
+
 
 ## Escribe el estado actual del progreso en disco en formato JSON.
 func guardar_progreso() -> bool:
