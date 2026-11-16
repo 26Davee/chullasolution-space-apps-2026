@@ -52,7 +52,9 @@ func run() -> void:
     root.size = Vector2i(1280,720)
     await frames()
     root.get_node("GameState").preferencias["voice_enabled"] = false
+    var original_locale := TranslationServer.get_locale()
     for locale in ["en","es"]:
+        TranslationServer.set_locale(locale)
         var lesson = load("res://ui/intro.tscn").instantiate()
         lesson.language = locale
         root.add_child(lesson)
@@ -80,6 +82,9 @@ func run() -> void:
             lesson.game._open_section_drawer(section)
             await frames()
             check_drawer(lesson.game._drawer,locale)
+            if section == "missions":
+                var expected_title := "Your missions" if locale == "en" else "Tus misiones"
+                check(lesson.game._drawer._title_label.text == expected_title,"Mission drawer uses the requested title: "+locale)
         # Finishing processing rebuilds the footer while it is hidden. This used
         # to retain a 300 px (EN) / 400 px (ES) HBox minimum even after relayout.
         for i in range(3):
@@ -88,6 +93,18 @@ func run() -> void:
             lesson.game._drawer.open_section("processing",{"running":false,"ice":0})
             await frames()
             check_drawer(lesson.game._drawer,locale)
+        var caption_host := Control.new()
+        caption_host.size = Vector2(1280,720)
+        root.add_child(caption_host)
+        var takeoff_body: Label = lesson.game._build_victory_caption(caption_host,"ingeniero")
+        await frames()
+        var caption: Control = caption_host.get_child(0)
+        var skip: Control = caption.find_children("*","Button",true,false)[0]
+        check(takeoff_body.get_minimum_size().y <= takeoff_body.size.y + 1,"Takeoff message fits without clipping: "+locale)
+        check(not takeoff_body.get_global_rect().intersects(skip.get_global_rect()),"Takeoff message and skip action do not overlap: "+locale)
+        check(caption.get_global_rect().end.y <= 700,"Takeoff caption stays clear of the bottom edge: "+locale)
+        caption_host.queue_free()
+        await frames()
         lesson.game._close_drawer()
         for id in ["supplies","recovery","ending"]:
             lesson.index = lesson.STEPS.find(id)
@@ -109,4 +126,5 @@ func run() -> void:
         lesson.queue_free()
         await frames()
     print("VISUAL FAILURES: ",failures)
+    TranslationServer.set_locale(original_locale)
     quit(0 if failures.is_empty() else 1)

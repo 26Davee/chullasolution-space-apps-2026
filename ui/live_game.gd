@@ -463,7 +463,7 @@ func _build_drawer_data(section: String, extra: Dictionary) -> Dictionary:
 		"missions":
 			var prog := _build_progression_dict()
 			return {
-				"title": tx("missions"),
+				"title": tx("missions_title"),
 				"icon": "missions",
 				"tint": UI.CYAN,
 				"items": _catalog.missions(false),
@@ -1153,12 +1153,7 @@ func _start_victory_cinematic() -> void:
 	_victory_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	interfaz.add_child(_victory_overlay)
 
-	var pill := UI.panel(_victory_overlay, Rect2(260, 616, 760, 74), Color("#071b32eb"), 18)
-	pill.mouse_filter = Control.MOUSE_FILTER_STOP
-	UI.label(pill, tx("takeoff_title", {"rank": rank.to_upper()}), Rect2(20, 10, 500, 26), 17, UI.GOLD, true)
-	UI.label(pill, tx("takeoff_body", {"rank": rank}), Rect2(20, 38, 500, 26), 14, UI.WHITE)
-	var skip_btn := UI.button(pill, tx("takeoff_skip"), Rect2(540, 15, 200, 44), _finish_victory_cinematic, true)
-	skip_btn.add_theme_font_size_override("font_size", 15)
+	_build_victory_caption(_victory_overlay, rank)
 	_speak(tx("takeoff_title", {"rank": rank}) + " " + tx("victory_text", {"n": session.mm.obtener_todas_las_misiones().size(), "rank": rank}))
 
 	capsula.position = Vector3.ZERO
@@ -1239,6 +1234,16 @@ func _start_victory_cinematic() -> void:
 		if token == _victory_token:
 			_finish_victory_cinematic()
 	)
+
+
+func _build_victory_caption(parent: Control, rank: String) -> Label:
+	var pill := UI.panel(parent, Rect2(260, 594, 760, 96), Color("#071b32eb"), 18)
+	pill.mouse_filter = Control.MOUSE_FILTER_STOP
+	UI.label(pill, tx("takeoff_title", {"rank": rank.to_upper()}), Rect2(20, 10, 500, 26), 17, UI.GOLD, true)
+	var body := UI.label(pill, tx("takeoff_body", {"rank": rank}), Rect2(20, 40, 500, 44), 14, UI.WHITE)
+	var skip_btn := UI.button(pill, tx("takeoff_skip"), Rect2(540, 15, 200, 44), _finish_victory_cinematic, true)
+	skip_btn.add_theme_font_size_override("font_size", 15)
+	return body
 
 
 func _move_victory_robot(target_pos: Vector3) -> void:
