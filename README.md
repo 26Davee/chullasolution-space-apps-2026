@@ -16,7 +16,7 @@
 
 | Version | How |
 |---|---|
-| **Browser** | Download `Killawasi_web.zip` from [Releases](../../releases/latest) or play it on our project page. Works in Chrome, Edge and Firefox. |
+| **Browser** | [Play Killawasi now](https://26davee.itch.io/killawasi), or download `Killawasi_web.zip` from [Releases](../../releases/latest). Works in Chrome, Edge and Firefox. |
 | **Windows (offline)** | Download `Killawasi_windows.zip` from [Releases](../../releases/latest), unzip and run `Killawasi.exe`. No internet needed. |
 | **From source** | Install [Godot 4.7.2](https://godotengine.org/download), open `project.godot` and press F5. |
 
@@ -79,16 +79,16 @@ There are 8 automated test scripts (`tests/` and `ui/tests/`). Before submitting
 
 | Member | Role |
 |---|---|
-| Ángel David Espinoza Ureta | Integration and coordination |
-| Anahi | Science, simulation and NASA data |
-| Carlos Valladares | 3D world and art |
-| Nicolas Ladino | Interaction and gameplay |
-| Gael | Missions, progression and upgrade tree |
-| Andrea | Interface, tutorial and text |
+| Angel David Espinoza Ureta | Integration and coordination |
+| Anahi Elizabeth Tixe Buñay | Science, simulation and NASA data |
+| Carlos Andres Valladares Rivas | 3D world and art |
+| Nicolás Ladino | Interaction and gameplay |
+| Gael Jair Rivera Aguilar | Missions, progression and upgrade tree |
+| Andrea Gabriela Astudillo Dávalos | Interface, tutorial and text |
 
 ## Use of AI
 
-We used AI tools (OpenAI Codex, Google Antigravity/Gemini, Anthropic Claude and ChatGPT image generation) as assistants for code, text and images. The idea, design and decisions are the team's. Every AI-generated image in the game is marked "AI-generated". Full disclosure: [`docs/AI_USE.md`](docs/AI_USE.md).
+ChullaSolution created and built Killawasi. AI tools assisted with selected code and integration tasks, debugging and review, some text work, and a limited set of marked illustrations and trailer narration; they did not create the game as a whole. Team members directed, reviewed and tested the published work. AI tools are disclosed separately from the human team. Full details: [`docs/AI_USE.md`](docs/AI_USE.md).
 
 ## Licenses
 
@@ -99,5 +99,7 @@ Game code and original content: [MIT License](LICENSE). Third-party fonts and ot
 ## En español
 
 **Killawasi** («Casa de la Luna» en kichwa) es un juego educativo en 3D para niñas y niños de 7 a 12 años. Construyes una base lunar con Timmy, una vicuña astronauta, administras energía, agua, oxígeno y escudo, recoges hielo, sobrevives a tormentas solares y completas 16 misiones con cartas científicas basadas en datos de NASA. Tiene dos modos: **Cadete** (7–9 años) e **Ingeniero** (10–12 años), y se juega en español o inglés.
+
+**Jugar en el navegador:** [Abrir Killawasi en itch.io](https://26davee.itch.io/killawasi).
 
 Proyecto estudiantil del equipo ChullaSolution (ESPOCH, Riobamba) para el NASA Space Apps Challenge 2026. No está avalado por NASA.

@@ -1,40 +1,37 @@
 # Use of AI
 
-NASA Space Apps asks every team to disclose how it used artificial intelligence. This is our full disclosure.
+## Team authorship
 
-**In short:** the idea, the game design, the target audience, the choice of NASA data and every decision about what goes into the game are the team's. We used AI tools as assistants to write and fix code, to draft and review text, and to generate images. Every AI-generated image shown in the game carries a visible **"AI-generated"** mark. Each team member reviewed and tested what the tools produced.
+Killawasi is a student project created by the six members of ChullaSolution. The team chose the challenge and audience, designed the gameplay and mission structure, selected the NASA science references, created the characters and visual direction, and developed the project collaboratively. AI tools did not create the game as a whole or make the team's final design decisions.
 
-## AI tools we used
+The team used AI as a development aid for some code and integration work, debugging and review, editing or translating selected text, and generating several marked illustrations. Team members directed the work, reviewed and revised the results, and tested the version they published. The per-person logs link to the relevant files and describe the checks performed.
 
-| Tool | Used for | Where it shows up |
+## Tools and assistance
+
+| Tool | Assistance provided | Team review and project areas |
 |---|---|---|
-| **OpenAI Codex** | Code for the 3D models, landing cinematic, lunar terrain and shaders. Code for the interface, tutorial, HUD, translations and UI tests. Integration of the final build. | `assets/3d/`, `world/`, `ui/`, `i18n/`, `ui/tests/`. Logs: `docs/team/registro/puesto-3.md`, `puesto-6.md` |
-| **ChatGPT / Codex image generation** | The 7 activity illustrations, Timmy's portrait, the lander and the Moon base image | `assets/ui/` (prompts in `assets/ui/activities/generation.json`) |
-| **Google Antigravity (Gemini)** | Writing and proofreading the 16 missions and the science cards for children; balancing upgrade costs; code for missions, upgrades and saving | `data/missions/`, `progression/`. Log: `docs/team/registro/puesto-5.md` |
-| **Anthropic Claude (Claude Code)** | Repository setup and planning documents; style guides for the 3D art (`.claude/skills/`); final quality assurance: automated playtests of the full campaign, bug fixes, science fact-checking against NASA sources, web export, fallback fonts and image marks. Commits made with Claude carry a `Co-Authored-By: Claude` line. | `docs/`, `.claude/skills/`, commit `34027c0` |
-| **ChatGPT and Claude, before the event** | Planning notes, team presentation and concept images. Concept images were used only as visual reference; they are not in the game. | `assets/3d/revision/` (marked "IA") |
+| **OpenAI Codex** | Helped with selected implementation and integration tasks, debugging, interface refinements, documentation, and automated playtest support. | Team members decided what to keep and reviewed the changes. See `docs/team/registro/puesto-3.md` and `puesto-6.md`. |
+| **Google Antigravity (Gemini)** | Helped review and refine child-friendly mission and science text, consider upgrade balance, and assist with selected progression code. | The mission author checked the factual framing, wording, balance, and automated results. See `docs/team/registro/puesto-5.md`. |
+| **Anthropic Claude** | Assisted with some planning and documentation, visual-guideline material, quality checks, and scripts used during trailer production. | Claude is an AI tool, not a ChullaSolution teammate or project owner. The team reviewed the resulting materials. |
+| **ChatGPT image generation** | Generated seven activity illustrations and the portrait, lander, and Moon-base images listed below. | Team members chose where to use the images and marked them visibly as AI-generated. |
 
 ## Images
 
-Every image generated with AI that appears in the game has a visible "AI-generated" mark:
+The AI-generated images included in the game are marked **"AI-generated"**:
 
-- `assets/ui/activities/`: solar panel, ice processor, oxygen generator, garden, ice map, repair scene, playfield.
-- `assets/ui/timmy.png`, `assets/ui/lander.png`, `assets/ui/moon_base.png`.
+- `assets/ui/activities/`: seven activity illustrations for the solar panel, ice processor, oxygen generator, garden, ice map, repair scene, and playfield.
+- `assets/ui/timmy.png`, `assets/ui/lander.png`, and `assets/ui/moon_base.png`.
 
-The 3D models (astronaut, vicuña, modules, terrain) are not AI images: they are built from code inside Godot. That code was written with AI assistance, as listed above. We did not use any image-to-3D service.
+The team created the original 3D models and scenes inside Godot. AI-assisted code work is documented in the individual logs; no image-to-3D service was used. Earlier concept images in `assets/3d/revision/` served as references and are not game assets.
 
-## Voices and audio
+## Audio and trailer
 
-- **Timmy's voice in the game** is the text-to-speech engine of the player's own operating system (for example Microsoft Zira or Sabina on Windows). The game ships no recorded or AI-generated audio.
-- **Trailer narration:** Microsoft Edge neural text-to-speech (voices `en-US-EmmaNeural` and `es-MX-DaliaNeural`).
-- **Trailer music:** original music synthesized by a Python script written with Claude. We did not use any music-generation model or any existing piece of music.
-- **Trailer video:** recorded from the game itself and edited with scripts written with Claude.
+- In-game character speech uses the player's operating-system text-to-speech voices. The game does not include recorded or AI-generated voice files.
+- Trailer narration uses Microsoft Edge neural text-to-speech (`en-US-EmmaNeural` and `es-MX-DaliaNeural`).
+- The trailer music was synthesized with a Python script developed with Claude assistance; no music-generation model or pre-existing song was used. The trailer footage was captured from the game and edited with helper scripts.
 
-## What the team did
+## Human review
 
-- Chose the problem and the audience: children aged 7–12, with two difficulty modes.
-- Designed the game: the Moon base, the three resources, ice trips, solar storms, the 16 missions and Timmy the astronaut vicuña, inspired by the Andean vicuña.
-- Chose the NASA data and checked each science card against its source (`docs/DATA_PROVENANCE.md`).
-- Reviewed, played and corrected everything the tools produced.
+Team members selected and shaped the game, chose what NASA science to teach, reviewed AI-assisted material, corrected issues, and tested the playable build. This document records AI as a set of tools used during that team process, separate from the six human team members listed in the [README](../README.md).
 
-Detailed per-person logs written during the hackathon are in [`docs/team/registro/`](team/registro/).
+Detailed per-person logs of AI use, third-party material, and NASA data are in [`docs/team/registro/`](team/registro/).

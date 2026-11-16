@@ -70,12 +70,12 @@ Puestos confirmados el sábado 14 de noviembre. Falta el usuario de GitHub de ca
 
 | Puesto | Persona | Usuario de GitHub |
 |---|---|---|
-| 1 | Ángel David Espinoza Ureta | `26Davee` |
-| 2 | Anahi | (pendiente) |
-| 3 | Carlos Valladares | (pendiente) |
-| 4 | Nicolas Ladino | (pendiente) |
-| 5 | Gael | (pendiente) |
-| 6 | Andrea | (pendiente) |
+| 1 | Angel David Espinoza Ureta | `26Davee` |
+| 2 | Anahi Elizabeth Tixe Buñay | (pendiente) |
+| 3 | Carlos Andres Valladares Rivas | (pendiente) |
+| 4 | Nicolás Ladino | (pendiente) |
+| 5 | Gael Jair Rivera Aguilar | (pendiente) |
+| 6 | Andrea Gabriela Astudillo Dávalos | (pendiente) |
 
 ## Lo que nunca va en el repositorio
 
