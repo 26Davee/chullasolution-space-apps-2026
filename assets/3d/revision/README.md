@@ -1,5 +1,8 @@
 # Revisión de modelos de Killawasi
 
+> **Note:** these sheets were used to review scale and style during development. Some include AI-generated concept art used only as visual reference; those images are marked "IA" and are not part of the game. See `docs/AI_USE.md`.
+
+
 ## Versión 2 de las piezas
 
 Las escenas de `assets/3d/` se rehicieron con formas redondeadas y la paleta de la guía visual. Abre `res://world/killawasi_revision.tscn` y pulsa **F6**.

@@ -1,24 +1,18 @@
-# `ui/` · Puesto 6 · Interfaz, tutorial y textos
+# ui/
 
-**Dueño:** puesto 6. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 1.
+Interface, tutorial and in-game panels (Godot `Control` nodes built in code).
 
-## Qué es
-La interfaz: panel de barras, alertas, tutorial, modos Cadete e Ingeniero.
+Main entry points:
 
-## Qué va aquí
-- `hud.tscn`: la interfaz, que el puesto 1 conecta.
-- Pantallas del tutorial y del reporte.
+| File | Purpose |
+|---|---|
+| `live_game.gd` | In-game controller: HUD, drawers, missions, rewards, saving. |
+| `game_hud.gd`, `live_hud.gd` | Five resource bars, clock, storm banner, dock buttons. |
+| `game_drawer.gd` | Side drawers: build, ice trip, repair, missions, upgrades, science, settings. |
+| `intro.gd` | First-run tutorial with Timmy. |
+| `ice_expedition.gd` | Ice trip state machine (three ice zones that refill every sunrise). |
+| `save_slots_panel.gd`, `new_slot_setup.gd` | Three save slots and profile setup (age group, nickname). |
+| `mission_clock.gd` | Readable clock: 4 min of sunlight + 4 min of night = one 29.53-Earth-day lunar cycle. |
+| `timmy_voice.gd` | Reads guidance aloud with the operating system's text-to-speech. |
 
-## Qué NO va aquí
-- Texto fijo dentro del código: usa claves de `i18n/`.
-
-## Con quién te coordinas
-Todos: te mandan textos y números para mostrar.
-
-## Tu primera tarea
-Sáb 10:15 contrato de textos (todo como claves de traducción); 10:45 panel de las tres barras y las alertas.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+UI tests are in `ui/tests/`.

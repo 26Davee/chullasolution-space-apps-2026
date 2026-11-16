@@ -1,25 +1,8 @@
-# `assets/3d/` · Puesto 3 · Mundo 3D y arte
+# assets/3d/
 
-**Dueño:** puesto 3. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 4.
+Original low-poly models built in Godot (procedural meshes and scenes): astronaut, vicuña guide, lander, dome, solar panel, ice processor, oxygen generator, water tank, garden, battery, ice craters, Sun, Earth and stars. Shaders for the sky, dome shield, Sun and Earth.
 
-## Qué es
-Modelos, texturas y arte del mundo.
+- `herramientas/`: scripts that generate the models.
+- `revision/`: review sheets used to check scale and style (they include AI concept art used only as visual reference, marked "IA").
 
-## Qué va aquí
-- Archivos propios o con licencia abierta.
-- Cada archivo de terceros anotado en `docs/registro/puesto-3.md`.
-
-## Qué NO va aquí
-- Arte copiado de otros juegos o sin licencia clara.
-- Imágenes generadas con IA sin marca de agua y sin anotar.
-
-## Con quién te coordinas
-Puesto 4 y puesto 6.
-
-## Tu primera tarea
-Sáb 10:45 prueba rápida del estilo visual; 11:45 terreno, domo y luz con piezas simples de Godot.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+How these models were made, including AI assistance, is documented in `docs/AI_USE.md`.

@@ -3,7 +3,7 @@
 > **Proyecto:** *Killawasi* (*Casa de la Luna* en kichwa)<br>
 > **Equipo:** ChullaSolution (ESPOCH, Riobamba, Ecuador)<br>
 > **Reto:** NASA Space Apps Challenge 2026 — *Build a Junior Astronaut Mission Trainer* (enseñar a niños de **7 a 12 años** hechos reales sobre cómo sobreviven los astronautas)<br>
-> **Base documental y técnica verificada en el repositorio:** `README.md`, `docs/DISENO_JUEGO.md`, `docs/DATA_PROVENANCE.md` y la implementación actual en Godot (`core/`, `ui/`, `interaction/`, `progression/`, `data/`).
+> **Base documental y técnica verificada en el repositorio:** `README.md`, `docs/team/DISENO_JUEGO.md`, `docs/DATA_PROVENANCE.md` y la implementación actual en Godot (`core/`, `ui/`, `interaction/`, `progression/`, `data/`).
 
 ---
 
@@ -130,6 +130,6 @@ La aplicación implementa un **simulador 3D educativo bilingüe (inglés y espa�
 | Superar barreras técnicas y lectoras al iniciar | Entrada clara, en su idioma y sin perder progreso propio | Pantalla inicial de **3 slots**, selector **EN/ES**, configuración de edad/nombre y tutorial en primera vez (`main.gd`, `save_slots_panel.gd`, `new_slot_setup.gd`) |
 | Diferenciar madurez cognitiva (`7–9` vs `10–12`) | Reto ajustado sin aburrir ni frustrar | Dos modos con parámetros y recuperación diferenciada: **Cadete** (checkpoint) vs **Ingeniero** (reinicio) |
 | Comprender sistemas físicos interdependientes | Ver en tiempo real la relación energía–hielo–agua–oxígeno–escudo | 5 barras acopladas, ciclo solar día/noche, extracción de hielo fuera del domo y procesamiento obligatorio en base (`juego.gd`, `ice_expedition.gd`) |
-| Conocer peligros reales no intuitivos (radiación) | Identificar tormentas solares como eventos medibles, no fantasía | Alertas previas con cuenta regresiva, escudo reparable en la cápsula y aclaración científica de la nube simbólica (`juego.gd`, `DISENO_JUEGO.md`) |
+| Conocer peligros reales no intuitivos (radiación) | Identificar tormentas solares como eventos medibles, no fantasía | Alertas previas con cuenta regresiva, escudo reparable en la cápsula y aclaración científica de la nube simbólica (`juego.gd`, `docs/team/DISENO_JUEGO.md`) |
 | Fomentar cultura de evidencia científica | Conectar el juego con ciencia verificable | 16 misiones, 12 mejoras y tarjetas con datos y fuentes NASA citadas (`science_collection.gd`, `DATA_PROVENANCE.md`) |
 | Mantener motivación por progreso tangible | Recompensa visual comprensible al planificar e investigar | Expansión del domo `+(tamaño actual) * 1.25` y caída de cápsulas `SupplyDrop` recolectables con `+1` edificio desbloqueado (`supply_drop.gd`, `live_game.gd`) |

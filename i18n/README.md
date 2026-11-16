@@ -1,23 +1,10 @@
-# `i18n/` · Puesto 6 · Interfaz, tutorial y textos
+# i18n/
 
-**Dueño:** puesto 6. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 1.
+All player-facing text in English (`en`) and Spanish (`es`). Both languages have the same keys.
 
-## Qué es
-Textos en inglés y en español, como claves de traducción.
-
-## Qué va aquí
-- Un solo archivo de traducciones por idioma.
-
-## Qué NO va aquí
-- Frases pegadas dentro de otros archivos.
-
-## Con quién te coordinas
-Todos: piden sus claves en el grupo.
-
-## Tu primera tarea
-Sáb 10:15 contrato de textos (todo como claves de traducción); 10:45 panel de las tres barras y las alertas.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+| File | Content |
+|---|---|
+| `en.gd`, `es.gd` | Menus, profile, missions and tutorial. |
+| `live.gd` | In-game HUD, drawers, rewards and science album. |
+| `tutorial_guidance.gd` | Timmy's step-by-step guidance. |
+| `interaction.gd` | Guide tour and station hints. |

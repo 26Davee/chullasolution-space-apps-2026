@@ -140,7 +140,7 @@ Con los datos reales de **LRO CRaTER-D1D2** (`RadLab API`):
 
 ---
 
-## 7. Constantes de Diseño pendientes de confirmar antes de tocar código
+## 7. Constantes de diseño (valores de juego)
 
 1. **Tamaño inicial del banco de batería de la Base:** elegir si arrancamos en **`2,000 kWh`** (realista para noche lunar, recarga al robot gasta `0.30%`) o un banco inicial más chico como **`500 kWh`** (recarga al robot gasta **`1.20%`**, haciendo la gestión energética más tensa al inicio hasta construir más baterías/paneles).
 2. **Factor de balance educativo:** decidir si dejamos estas tasas literales (`-0.35%/s` Base de noche, `-0.21%/s` $\text{O}_2$) o aplicamos un factor suave (p. ej. `0.75×`) para la dificultad **Cadete** vs **Ingeniero**.

@@ -1,88 +1,103 @@
-# ChullaSolution · NASA Space Apps Challenge 2026 (Riobamba)
+# KILLAWASI · Junior Astronaut Mission Trainer
 
-**Challenge:** *Build a Junior Astronaut Mission Trainer* — a game that teaches children aged 7–12 something true about how astronauts survive.
+**Build a Moon base, keep your crew alive, and learn how real astronauts survive.**
 
-**Team:** ChullaSolution, six students of ESPOCH (Riobamba, Ecuador). Student project made for the local Riobamba event of NASA Space Apps Challenge 2026. It is not endorsed by NASA and does not use NASA logos.
+*Killawasi* means "Moon House" in Kichwa. It is a 3D educational game for children aged 7 to 12, made by team **ChullaSolution** (ESPOCH, Riobamba, Ecuador) for the **NASA Space Apps Challenge 2026**, challenge *Build a Junior Astronaut Mission Trainer*.
 
-**Status:** the game is built during the hackathon (Saturday 14 – Sunday 15 November 2026). Game code, art and data are created by the team inside this repository from the opening of the event, Saturday 14 November at 09:00 (Ecuador time). Everything we use that is not ours (engine, fonts, sounds, NASA data) is listed with its license or source in `docs/`. Everything made with AI help is listed in `docs/AI_USE.md`.
+[![Watch the 30-second trailer](https://img.youtube.com/vi/QMfOx2_RUuQ/hqdefault.jpg)](https://youtu.be/QMfOx2_RUuQ)
 
-**Game:** *Killawasi* (Kichwa for "Moon House"): a low-poly lunar outpost game guided by an astronaut vicuña.
+▶ **Trailer:** [English](https://youtu.be/QMfOx2_RUuQ) · [Español](https://youtu.be/mKBG4V6mWq4)
 
-**Play it:** link added by the integration role when the first web build opens.
+> Student project. It is not endorsed by NASA and uses no NASA logos or insignia.
+
+---
+
+## Play
+
+| Version | How |
+|---|---|
+| **Browser** | Download `Killawasi_web.zip` from [Releases](../../releases/latest) or play it on our project page. Works in Chrome, Edge and Firefox. |
+| **Windows (offline)** | Download `Killawasi_windows.zip` from [Releases](../../releases/latest), unzip and run `Killawasi.exe`. No internet needed. |
+| **From source** | Install [Godot 4.7.2](https://godotengine.org/download), open `project.godot` and press F5. |
+
+The game is in **English and Spanish** (EN/ES button on the main menu).
+
+## What the player does
+
+You land on the Moon with **Timmy**, an astronaut vicuña inspired by the Andean vicuña, and build a small outpost that must keep its crew alive.
+
+- **Choose a mode.** *Cadet* (ages 7–9) has guided missions and checkpoints. *Engineer* (ages 10–12) has higher costs and restarts the whole expedition if the base fails.
+- **Watch five bars:** base energy, water, oxygen, dome shield and robot battery.
+- **Use sunlight.** Solar panels only work in daylight. One lunar day lasts about 29.5 Earth days, compressed in the game to 4 minutes of sunlight and 4 minutes of night.
+- **Collect ice.** Ice is the only resource you gather. Send the robot to a crater, bring ice back, turn it into water, then use water and energy to make oxygen.
+- **Survive solar storms.** A countdown warns you before radiation arrives; repair the dome shield in time. The storm cloud is a symbol: real solar particle events are invisible.
+- **Complete 16 missions.** Each one ends with a science card that explains the real fact behind it, with its NASA source. Stars unlock upgrades.
+
+There is no game-over screen for young players: if something goes wrong, the mission report explains what happened and how to do better.
+
+## Real science inside
+
+| In the game | Real basis |
+|---|---|
+| Day/night cycle | Lunar synodic day of 29.53 Earth days |
+| Solar panel output | Solar irradiance of ~1,361 W/m² (NASA TSIS-1) |
+| Ice in shadowed craters | LCROSS (2009): water ice mixed into the soil of permanently shadowed craters |
+| Coldest places | LRO Diviner: about −247 °C inside polar craters that never see sunlight |
+| Solar storms | Solar particle events measured by LRO CRaTER; alerts from NASA's DONKI space-weather database |
+| Water and oxygen recycling | ISS Environmental Control and Life Support System (ECLSS) |
+| Shielding with lunar soil | NASA studies of regolith radiation shielding |
+
+All sources, units and transformations are in [`docs/DATA_PROVENANCE.md`](docs/DATA_PROVENANCE.md) and [`docs/DATOS_NASA.md`](docs/DATOS_NASA.md). Simulation rates that are not NASA data are labelled as game units.
+
+## Project structure
+
+```
+core/          game bootstrap, shared state (GameState), simulation
+scenes/        main.tscn and the playable base
+ui/            interface, tutorial, HUD, drawers, save slots (+ ui/tests)
+progression/   16 missions, upgrades, saving
+data/missions/ mission, upgrade and supply data (EN + ES)
+interaction/   moving the robot, placing modules, routes
+world/         lunar terrain, sky, landing cinematic
+camera/        fixed-angle camera
+assets/        3D models, shaders, AI-marked images, fonts
+i18n/          English and Spanish text
+docs/          science data, target audience, AI use, licenses
+docs/team/     hackathon working documents and per-person logs
+```
+
+## Tests
+
+```
+godot --headless --path . --script tests/test_flujo.gd
+godot --headless --path . --script ui/tests/test_live_game.gd
+```
+
+There are 8 automated test scripts (`tests/` and `ui/tests/`). Before submitting, we also ran automated playthroughs of the full 16-mission campaign in both modes and both languages.
+
+## Team ChullaSolution
+
+| Member | Role |
+|---|---|
+| Ángel David Espinoza Ureta | Integration and coordination |
+| Anahi | Science, simulation and NASA data |
+| Carlos Valladares | 3D world and art |
+| Nicolas Ladino | Interaction and gameplay |
+| Gael | Missions, progression and upgrade tree |
+| Andrea | Interface, tutorial and text |
+
+## Use of AI
+
+We used AI tools (OpenAI Codex, Google Antigravity/Gemini, Anthropic Claude and ChatGPT image generation) as assistants for code, text and images. The idea, design and decisions are the team's. Every AI-generated image in the game is marked "AI-generated". Full disclosure: [`docs/AI_USE.md`](docs/AI_USE.md).
+
+## Licenses
+
+Game code and original content: [MIT License](LICENSE). Third-party fonts and other material: [`docs/ASSETS_LICENSES.md`](docs/ASSETS_LICENSES.md).
 
 ---
 
 ## En español
 
-Repositorio del equipo **ChullaSolution**. Aquí vive todo el trabajo del hackatón: un solo proyecto de Godot, seis personas, cada una dueña de sus carpetas.
+**Killawasi** («Casa de la Luna» en kichwa) es un juego educativo en 3D para niñas y niños de 7 a 12 años. Construyes una base lunar con Timmy, una vicuña astronauta, administras energía, agua, oxígeno y escudo, recoges hielo, sobrevives a tormentas solares y completas 16 misiones con cartas científicas basadas en datos de NASA. Tiene dos modos: **Cadete** (7–9 años) e **Ingeniero** (10–12 años), y se juega en español o inglés.
 
-### Empieza por aquí (3 pasos)
-
-1. **Busca tu número de puesto** en la tabla de abajo. Tus carpetas son las que tienen tu número.
-2. **Abre el `README.md` de tus carpetas.** Dice qué va ahí, qué no y cuál es tu primera tarea.
-3. **Antes de empezar cada bloque, baja lo último** (guía abajo) y trabaja siempre en tu rama.
-
-| Si quieres saber… | Lee |
-|---|---|
-| **Cómo es el juego** (diseño de Killawasi) | [`docs/DISENO_JUEGO.md`](docs/DISENO_JUEGO.md) |
-| **Qué carpeta es tuya y cuáles no debes tocar** | [`docs/QUIEN_TOCA_QUE.md`](docs/QUIEN_TOCA_QUE.md) |
-| **«Quiero hacer X, ¿dónde va?»** | La tabla «Quiero… → va en…» de [`docs/QUIEN_TOCA_QUE.md`](docs/QUIEN_TOCA_QUE.md) |
-| **Cómo subir y bajar cambios** (paso a paso) | [`docs/GUIA_GIT.md`](docs/GUIA_GIT.md) |
-| **Reglas de trabajo** (ramas, Pull Request, revisión) | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| **Qué datos se pasan entre puestos** | [`docs/CONTRATOS.md`](docs/CONTRATOS.md) |
-
-### El mapa del proyecto
-
-`[P2]` significa «carpeta del puesto 2».
-
-```
-chullasolution-space-apps-2026/
-├── README.md             estás aquí
-├── CONTRIBUTING.md       las reglas de trabajo, en una página
-├── project.godot         [P1]  el proyecto de Godot: este es el archivo que se abre
-│
-├── core/                 [P1]  arranque del juego y unión de todo
-├── scenes/               [P1]  escena principal (main.tscn)
-├── export/               [P1]  exportar y publicar la versión web
-│
-├── simulation/           [P2]  energía, soporte vital y escudo
-├── data/
-│   ├── nasa/             [P2]  datos de NASA ya reducidos
-│   └── missions/         [P5]  datos de misiones y mejoras
-│
-├── world/                [P3]  la Luna, el domo, los módulos
-├── camera/               [P4]  la cámara
-├── interaction/          [P4]  clics y acciones
-├── progression/          [P5]  misiones, reporte y árbol de mejoras
-│
-├── ui/                   [P6]  interfaz y tutorial
-├── i18n/                 [P6]  textos en inglés y español
-├── submission/           [P6]  póster y textos del envío
-│
-├── assets/
-│   ├── 3d/               [P3]  modelos y texturas
-│   ├── audio/            [P4]  sonidos y música
-│   └── ui/               [P6]  iconos y tipografías
-│
-└── docs/                 [P1]  guías, mapa y contratos
-    └── registro/                cada quien su archivo: puesto-N.md
-```
-
-### Los seis puestos
-
-| Puesto | Persona | Rol | Carpetas |
-|---|---|---|---|
-| 1 | Ángel David Espinoza Ureta | Integración y coordinación | `core/` · `scenes/` · `export/` · `docs/` · archivos de la raíz |
-| 2 | Anahi | Ciencia, simulación y datos | `simulation/` · `data/nasa/` |
-| 3 | Carlos Valladares | Mundo 3D y arte | `world/` · `assets/3d/` |
-| 4 | Nicolas Ladino | Interacción y jugabilidad | `camera/` · `interaction/` · `assets/audio/` |
-| 5 | Gael | Misiones, progresión y árbol | `progression/` · `data/missions/` |
-| 6 | Andrea | Interfaz, tutorial y textos | `ui/` · `i18n/` · `assets/ui/` · `submission/` |
-
-Cada persona además lleva su propio registro en `docs/registro/puesto-N.md` (uso de IA, material de terceros, datos usados). Así nadie edita el mismo archivo a la vez.
-
-### Integridad
-
-- No usamos el logo de NASA ni decimos que NASA avale el proyecto.
-- Los números del juego son **unidades de juego**, no datos de NASA, salvo los que figuren en `docs/DATA_PROVENANCE.md` con su fuente.
-- Todo código, texto o imagen hecho con IA se anota en el registro de quien lo hizo.
+Proyecto estudiantil del equipo ChullaSolution (ESPOCH, Riobamba) para el NASA Space Apps Challenge 2026. No está avalado por NASA.

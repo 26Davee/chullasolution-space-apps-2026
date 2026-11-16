@@ -1,23 +1,10 @@
-# `assets/ui/` · Puesto 6 · Interfaz, tutorial y textos
+# assets/ui/
 
-**Dueño:** puesto 6. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 1.
+2D images shown in the interface. All of them were generated with AI and carry a visible "AI-generated" mark (see `docs/AI_USE.md`).
 
-## Qué es
-Iconos y tipografías de la interfaz.
-
-## Qué va aquí
-- Tipografías con licencia abierta, anotadas en `docs/registro/puesto-6.md`.
-
-## Qué NO va aquí
-- Iconos sacados de otros juegos.
-
-## Con quién te coordinas
-Puesto 3.
-
-## Tu primera tarea
-Sáb 10:15 contrato de textos (todo como claves de traducción); 10:45 panel de las tres barras y las alertas.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+| File | Use |
+|---|---|
+| `timmy.png` | Portrait of Timmy, the astronaut vicuña guide. |
+| `lander.png` | Lander in the intro. |
+| `moon_base.png` | Moon base concept (not shown in the current build). |
+| `activities/*.png` | Seven illustrations for modules, ice map and repairs. Prompts are in `activities/generation.json`. |

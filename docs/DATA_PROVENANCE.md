@@ -1,6 +1,8 @@
 # Procedencia de los datos
 
-Cada número de NASA que aparezca en el juego necesita: enlace oficial, fecha de descarga, unidades, qué se le hizo y qué supuestos se hicieron. Cada persona anota lo suyo en `docs/registro/puesto-N.md` (sección 3). El puesto 2 revisa y el puesto 1 junta todo aquí antes del envío.
+*English summary: every NASA number used by the game, with its official source, download date, units and the transformation applied. Simulation rates that are not from NASA are labelled as game units.*
+
+Cada número de NASA que usa el juego aparece aquí con su enlace oficial, fecha de descarga, unidades, transformación y supuestos.
 
 ## Datos de NASA usados
 

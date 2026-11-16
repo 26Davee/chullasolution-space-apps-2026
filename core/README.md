@@ -1,31 +1,9 @@
-# `core/` · Puesto 1 · Integración y coordinación
+# core/
 
-**Dueño:** puesto 1. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 6.
+Game bootstrap and shared state.
 
-## Qué es
-Arranque del juego y el script que conecta las partes.
-
-## Qué va aquí
-- `main.gd`: crea el juego, conecta las escenas de cada puesto y reparte el reloj del juego.
-- Nada de lógica de otro puesto.
-
-## Qué NO va aquí
-- Reglas de la simulación (van en `simulation/`).
-- Dibujo de interfaz (va en `ui/`).
-
-## Con quién te coordinas
-Todos: cada puesto te dice qué escena conectar.
-
-## Tu primera tarea
-Sáb 09:15 la estructura y el proyecto de Godot ya están subidos (comprueba que F5 muestra la Luna de prueba); 10:15 diriges la firma de contratos; 11:30 publicas el esqueleto y pruebas el enlace en una ventana privada.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
-
-## Estado actual (puesto 1)
-
-- `game_state.gd` — autoload `GameState`: las 21 variables y las 12 señales del diccionario, más `iniciar_partida(modo)`, `fijar_recurso`, `cambiar_recurso`, `pagar`, `agregar_estrellas` y atajos `solicitar_construir / solicitar_viaje_hielo / solicitar_reparar_escudo`. Si existe `simulation/simulacion.gd` y `data/balance/<modo>.json`, la enchufa sola y reenvía sus señales.
-- `main.gd` — flujo de pantallas: título → modo → juego. Las pantallas de título y modo son provisionales (las reemplaza el puesto 6).
-- `juego.gd` — escena de juego provisional con luz, suelo, cámara a 45°, astronauta y un panel de estado.
+| File | Purpose |
+|---|---|
+| `main.gd` | Entry point: save slots, profile setup, intro, and switching between menu and game. |
+| `game_state.gd` | Autoload `GameState`: resources (energy, water, oxygen, shield, robot battery), day/night clock based on the 29.53-day lunar cycle, language, fallback fonts. |
+| `juego.gd` | Base game scene logic: simulation tick, storms, building, ice processing, robot charging. |

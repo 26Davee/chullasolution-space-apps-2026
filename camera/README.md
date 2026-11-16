@@ -1,23 +1,3 @@
-# `camera/` · Puesto 4 · Interacción y jugabilidad
+# camera/
 
-**Dueño:** puesto 4. Solo el dueño cambia estos archivos; los demás piden lo que necesiten en el grupo.
-**Pareja de revisión:** puesto 3.
-
-## Qué es
-La cámara: girar, acercar y mover.
-
-## Qué va aquí
-- Script de la cámara y sus ajustes.
-
-## Qué NO va aquí
-- Lógica del mundo ni de la interfaz.
-
-## Con quién te coordinas
-Puesto 3.
-
-## Tu primera tarea
-Sáb 10:45 cámara que gira, acerca y se mueve; 12:00 seleccionar y colocar módulos, con cubos de colores si aún no están los modelos.
-
-## Antes de pedir un Pull Request
-- El juego abre con F5.
-- Anotaste en tu registro lo que usaste de IA, de terceros o de NASA.
+`camara_orbital.gd`: tilted, fixed-angle camera that can be dragged and zoomed (it does not rotate), so young players never lose sight of the base.
