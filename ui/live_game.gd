@@ -76,6 +76,8 @@ func _post_ready_init() -> void:
 	session.reward_ready.connect(func(_reward): _maybe_show_reward())
 	session.checkpoint_saved.connect(func(ok): _show_toast(tx("checkpoint" if ok else "save_error")))
 	session.campaign_finished.connect(func(): _maybe_show_reward())
+	# El tanque debe estar en el catálogo antes de restaurar, o Continuar lo pierde.
+	placement_system.piece_catalog[&"tanque_agua"] = load("res://assets/3d/tanque_agua.tscn")
 	session.begin()
 	_session_ready = true
 	_bridge._zero_handled = false
@@ -1029,13 +1031,16 @@ func _on_advertencia_nube(seconds: float) -> void:
 
 func _on_ciclo_solar_cambiado(day: bool) -> void:
 	super._on_ciclo_solar_cambiado(day)
+	if day and is_instance_valid(ice) and ice.has_method("replenish"):
+		ice.replenish()
 	if session != null:
 		session.add_message("cycle:" + str(roundi(_gs().tiempo_juego)), "day" if day else "night", {})
 		_queue_alert(tx("day" if day else "night"), 4.0)
 
 
 func _show_toast(message: String, seconds: float = 2.6) -> void:
-	var clean := message.replace("⚡", " energy").replace("🔋", " battery").replace("★", " stars").replace("✓", "").replace("⚠", "")
+	var es := TranslationServer.get_locale().begins_with("es")
+	var clean := message.replace("⚡", " energía" if es else " energy").replace("🔋", " batería" if es else " battery").replace("★", " estrellas" if es else " stars").replace("✓", "").replace("⚠", "")
 	for item in _toast_queue:
 		if str(item.text) == clean:
 			return

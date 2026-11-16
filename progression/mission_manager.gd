@@ -34,6 +34,9 @@ var _tiempo_riego_jardin_s: float = 0.0
 var _energia_min_noche: float = 100.0
 var _viajes_hielo_m11: int = 0
 var _nubes_superadas_total: int = 0
+# M16 cuenta desde que se activa, no desde el inicio de la partida.
+var _m16_inicio_t: float = -1.0
+var _m16_nubes_inicio: int = 0
 
 
 func _ready() -> void:
@@ -159,6 +162,7 @@ func activar_mision(id_mision: String) -> bool:
 
 	_mision_activa_id = id_mision
 	_triggers_cumplidos_actual.clear()
+	_m16_inicio_t = -1.0
 	_reiniciar_contadores_mision()
 
 	var datos := obtener_mision_activa()
@@ -329,7 +333,7 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 			if bool(estado.get("alerta_nube", false)):
 				_marcar_trigger_si_aplica("alerta_cuenta_atras_20s")
 		"mision_09":
-			if escudo >= 100.0 and _triggers_cumplidos_actual.has("accion_reparar_ejecutada"):
+			if escudo >= 99.5 and _triggers_cumplidos_actual.has("accion_reparar_ejecutada"):
 				_marcar_trigger_si_aplica("escudo_restaurado_100")
 		"mision_10":
 			if en_viaje and bool(estado.get("alerta_nube", false)):
@@ -362,9 +366,12 @@ func _evaluar_triggers_por_estado(id_mision: String, estado: Dictionary, delta_s
 					if _tiempo_riego_jardin_s >= 120.0:
 						_marcar_trigger_si_aplica("riego_continuo_2_minutos")
 		"mision_16":
-			if tiempo_juego >= 480.0:
+			if _m16_inicio_t < 0.0:
+				_m16_inicio_t = tiempo_juego
+				_m16_nubes_inicio = _nubes_superadas_total
+			if tiempo_juego - _m16_inicio_t >= 480.0:
 				_marcar_trigger_si_aplica("ocho_minutos_superados")
-			if _nubes_superadas_total >= 2:
+			if _nubes_superadas_total - _m16_nubes_inicio >= 2:
 				_marcar_trigger_si_aplica("dos_nubes_sobrevividas")
 			if energia > 30.0 and agua > 30.0 and oxigeno > 60.0 and escudo > 40.0:
 				_marcar_trigger_si_aplica("todos_recursos_estables")
@@ -509,7 +516,7 @@ func _asegurar_save_manager() -> void:
 
 
 func capturar_estado() -> Dictionary:
-	return {"active": _mision_activa_id, "mode": _modo_juego, "triggers": _triggers_cumplidos_actual.duplicate(true), "events": _eventos_registrados.duplicate(true), "night": _tiempo_en_noche_s, "garden": _tiempo_riego_jardin_s, "min_energy": _energia_min_noche, "trips": _viajes_hielo_m11, "storms": _nubes_superadas_total}
+	return {"active": _mision_activa_id, "mode": _modo_juego, "triggers": _triggers_cumplidos_actual.duplicate(true), "events": _eventos_registrados.duplicate(true), "night": _tiempo_en_noche_s, "garden": _tiempo_riego_jardin_s, "min_energy": _energia_min_noche, "trips": _viajes_hielo_m11, "storms": _nubes_superadas_total, "m16_t": _m16_inicio_t, "m16_storms": _m16_nubes_inicio}
 
 
 func restaurar_estado(state: Dictionary) -> void:
@@ -522,5 +529,7 @@ func restaurar_estado(state: Dictionary) -> void:
 	_energia_min_noche = float(state.get("min_energy", 100))
 	_viajes_hielo_m11 = int(state.get("trips", 0))
 	_nubes_superadas_total = int(state.get("storms", 0))
+	_m16_inicio_t = float(state.get("m16_t", -1.0))
+	_m16_nubes_inicio = int(state.get("m16_storms", 0))
 	_ultimo_fallo_timestamp = -999.0
 	mision_activa_cambiada.emit(obtener_mision_activa())

@@ -5,6 +5,8 @@ Todo lo que usamos y no hicimos nosotros: autor, enlace y licencia. Cada persona
 | Qué es | Autor | Enlace | Licencia | Dónde se usa |
 |---|---|---|---|---|
 | Godot Engine | Godot Engine contributors | https://godotengine.org | MIT | Motor del juego |
+| DejaVu Sans (fuente) | Bitstream, Inc. y DejaVu fonts team | https://dejavu-fonts.github.io | Bitstream Vera License + dominio público | Respaldo de símbolos (★ ✓ ⚠ ⚡ →) |
+| Noto Emoji (fuente) | Google Inc. | https://github.com/googlefonts/noto-emoji | SIL Open Font License 1.1 | Respaldo de emojis (🔋 🌱 🛡 ⛏) |
 | | | | | |
 
 ## Reglas

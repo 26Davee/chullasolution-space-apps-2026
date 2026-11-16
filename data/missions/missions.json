@@ -82,8 +82,8 @@
       "carta_nasa": {
         "titulo": "The Secret of Lunar Ice",
         "titulo_es": "El Secreto del Hielo Lunar",
-        "dato": "In 2009, NASA intentionally crashed a rocket into a dark lunar crater (LCROSS mission). From the dust plume kicked up, scientists discovered abundant ice hidden in areas sunlight never reaches.",
-        "dato_es": "En 2009, NASA lanzó un cohete a propósito contra un cráter oscuro de la Luna (misión LCROSS). Al levantarse una gran nube de polvo, los científicos descubrieron que hay muchísimo hielo escondido en las zonas donde nunca llega el Sol.",
+        "dato": "In 2009, NASA intentionally crashed a rocket into a dark lunar crater (LCROSS mission). From the dust plume kicked up, scientists found water ice mixed into the soil of craters where sunlight never reaches.",
+        "dato_es": "En 2009, NASA lanzó un cohete a propósito contra un cráter oscuro de la Luna (misión LCROSS). En la nube de polvo que se levantó, los científicos encontraron hielo de agua mezclado con el suelo, en cráteres donde nunca llega el Sol.",
         "fuente": "NASA LCROSS Mission / Lunar Science",
         "fuente_es": "Misión NASA LCROSS / Ciencia Lunar"
       }
@@ -217,9 +217,9 @@
       "carta_nasa": {
         "titulo": "Solar Charging Docks for Lunar Robots",
         "titulo_es": "Estaciones de recarga para robots lunares",
-        "dato": "Lunar rovers like NASA's CADRE and VIPER burn power driving over dusty slopes. Between crater runs, they park at solar charging stations so their batteries stay healthy for the next mission.",
-        "dato_es": "Los robots lunares como CADRE y VIPER de NASA gastan mucha batería rodando por cráteres empinados. Entre viajes, regresan a estaciones solares para recargar pilas antes de su siguiente tarea.",
-        "fuente": "NASA JPL / Lunar Robotics Power Systems",
+        "dato": "Lunar rovers like NASA's CADRE carry their own solar panels. When their batteries run low, they stop and recharge in sunlight before exploring again.",
+        "dato_es": "Robots lunares como CADRE de NASA llevan sus propios paneles solares. Cuando se les baja la batería, se detienen a recargar con la luz del Sol antes de seguir explorando.",
+        "fuente": "NASA JPL / CADRE",
         "fuente_es": "NASA JPL / Sistemas de Energía en Robótica Lunar"
       }
     },
@@ -262,8 +262,8 @@
       "carta_nasa": {
         "titulo": "One Lunar Day Lasts Almost a Month",
         "titulo_es": "Un día lunar dura casi un mes",
-        "dato": "The Moon spins very slowly. A single full day-night cycle there lasts about 28 Earth days: 14 straight days of blazing sunlight followed by 14 full days of freezing darkness!",
-        "dato_es": "La Luna gira muy lento. Por eso un día completo allí dura cerca de 28 días de la Tierra: ¡14 días seguidos de Sol muy caluroso y después 14 días completos de oscuridad helada!",
+        "dato": "The Moon spins very slowly. A single full day-night cycle there lasts about 29.5 Earth days: roughly 15 days of blazing sunlight followed by about 15 days of freezing darkness!",
+        "dato_es": "La Luna gira muy lento. Por eso un día completo allí dura unos 29 días y medio de la Tierra: ¡casi 15 días seguidos de Sol muy caluroso y después casi 15 días de oscuridad helada!",
         "fuente": "NASA Lunar Science Guide",
         "fuente_es": "Guía de Ciencia Lunar de NASA"
       }
@@ -286,12 +286,12 @@
         "amanecer_alcanzado"
       ],
       "objetivo": [
-        "Endure the 3-minute lunar night without sunlight",
+        "Endure the 4-minute lunar night without sunlight",
         "Keep energy above 15 points until sunrise returns",
         "Keep dome air above 50 oxygen points"
       ],
       "objetivo_es": [
-        "Aguantar los 3 minutos completos de la noche lunar sin luz del Sol",
+        "Aguantar los 4 minutos completos de la noche lunar sin luz del Sol",
         "Mantener la energía por encima de 15 puntos hasta que vuelva a amanecer",
         "Cuidar que el aire dentro del domo no baje de 50 puntos de oxígeno"
       ],
@@ -307,8 +307,8 @@
       "carta_nasa": {
         "titulo": "Colder Than Any Freezer on Earth",
         "titulo_es": "Más frío que el congelador más grande",
-        "dato": "Without air to trap daytime heat, lunar night temperatures near the poles plunge below -240 °C—far colder than anywhere in Antarctica! Batteries keep astronauts from freezing.",
-        "dato_es": "Como en la Luna no hay aire que guarde el calor del día, de noche la temperatura cae por debajo de los -240 °C en los polos. ¡Es mucho más frío que cualquier rincón de la Antártida! Las baterías sirven para no congelarse.",
+        "dato": "Without air to trap daytime heat, in polar craters where sunlight never reaches, temperatures drop to about -247 °C—far colder than anywhere in Antarctica! Batteries keep astronauts from freezing.",
+        "dato_es": "Como en la Luna no hay aire que guarde el calor del día, en los cráteres de los polos donde nunca llega el Sol, la temperatura baja hasta unos -247 °C. ¡Es mucho más frío que cualquier rincón de la Antártida! Las baterías sirven para no congelarse.",
         "fuente": "NASA LRO Diviner Lunar Radiometer",
         "fuente_es": "Experimento Diviner del Orbitador Lunar LRO / NASA"
       }
@@ -397,8 +397,8 @@
       "carta_nasa": {
         "titulo": "Guarding the Roof Against Micrometeoroids",
         "titulo_es": "Cuidando el techo contra micrometeoritos",
-        "dato": "Space is full of sand-sized pebbles called \"micrometeoroids\" flying faster than jets. In NASA's Artemis lunar habitats, astronauts inspect and patch shielding with lunar soil to seal any damage.",
-        "dato_es": "En el espacio vuelan millones de piedritas del tamaño de un grano de arena llamadas «micrometeoritos», que viajan más rápido que un avión. En las bases del programa Artemis, los astronautas revisan y parchan el escudo con suelo lunar para tapar cualquier daño.",
+        "dato": "Space is full of sand-sized pebbles called \"micrometeoroids\" flying faster than jets. Future Artemis bases plan to cover their shelters with lunar soil and repair any damage.",
+        "dato_es": "En el espacio vuelan millones de piedritas del tamaño de un grano de arena llamadas «micrometeoroides», que viajan más rápido que un avión. Las futuras bases de Artemis planean cubrir sus refugios con suelo lunar y reparar cualquier daño.",
         "fuente": "NASA Artemis Lunar Surface Architecture",
         "fuente_es": "Arquitectura de Base Lunar Artemis / NASA"
       }
@@ -442,8 +442,8 @@
       "carta_nasa": {
         "titulo": "Spacewalks (EVA) and Emergency Airlocks",
         "titulo_es": "Paseos espaciales (EVA) y esclusas de emergencia",
-        "dato": "Astronauts call walking outside an EVA. If NASA's DONKI space-weather network spots a sudden solar flare, crews rush into the airlock—a double door that brings them inside without losing base air.",
-        "dato_es": "Los astronautas llaman EVA a caminar fuera de la nave. Si las antenas de NASA (sistema DONKI) detectan una tormenta solar repentina, deben correr a la «esclusa», una puerta doble especial que los mete adentro sin dejar escapar el aire de la base.",
+        "dato": "Astronauts call walking outside an EVA. If NASA's space-weather forecasters (who share alerts through the DONKI database) warn of a solar storm, crews rush into the airlock—a double door that brings them inside without losing base air.",
+        "dato_es": "Los astronautas llaman EVA a caminar fuera de la base. Si los expertos en clima espacial de NASA (que comparten sus avisos en el sistema DONKI) anuncian una tormenta solar, deben correr a la «esclusa», una puerta doble especial que los mete adentro sin dejar escapar el aire de la base.",
         "fuente": "NASA Johnson Space Center / EVA Flight Rules",
         "fuente_es": "Reglas de Vuelo EVA / Centro Espacial Johnson de NASA"
       }

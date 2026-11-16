@@ -308,6 +308,8 @@ func _menu_options() -> void:
 		add_child(_juego)
 		await get_tree().process_frame
 		await get_tree().process_frame
+		# Si mientras tanto se tocó otra partida, _juego ya no existe.
+		if not is_instance_valid(_juego) or not is_instance_valid(_menu_layer): return
 	_show_world(true)
 	_juego.set_paused(true)
 	_menu_layer.hide()

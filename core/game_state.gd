@@ -121,9 +121,24 @@ var _tech_tree: Node = null
 # ─────────────────────────── Ciclo de vida ───────────────────────────
 
 func _ready() -> void:
+	_agregar_fuentes_de_respaldo()
 	_registrar_idiomas()
 	TranslationServer.set_locale(idioma)
 	_inicializar_progresion()
+
+
+## La fuente por defecto de Godot no trae símbolos como ★ ✓ ⚠ ⚡ → ni emojis.
+## En Windows salen de las fuentes del sistema, pero en la versión web se verían
+## como cuadritos. Estas dos fuentes libres los cubren en todas las plataformas.
+func _agregar_fuentes_de_respaldo() -> void:
+	var base: Font = ThemeDB.fallback_font
+	if base == null: return
+	var respaldo: Array[Font] = []
+	respaldo.assign(base.fallbacks)
+	for ruta in ["res://assets/fonts/DejaVuSans.ttf", "res://assets/fonts/NotoEmoji-Regular.ttf"]:
+		var fuente: Font = load(ruta)
+		if fuente != null and not respaldo.has(fuente): respaldo.append(fuente)
+	base.fallbacks = respaldo
 
 
 func _registrar_idiomas() -> void:

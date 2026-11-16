@@ -220,12 +220,12 @@
               "tiempo_reparacion_s": 2
             },
             "carta_nasa": {
-              "titulo": "Sun-Watching Satellites (DONKI)",
-              "titulo_es": "Satélites Vigías del Sol (DONKI)",
+              "titulo": "Sun-Watching Satellites",
+              "titulo_es": "Satélites vigías del Sol",
               "dato": "NASA keeps satellites watching the Sun 24/7 (like SOHO and SDO). When they spot a solar flare, radio warnings travel at light speed and arrive long before the particle storm.",
               "dato_es": "NASA tiene satélites vigilando el Sol las 24 horas (como SOHO y SDO). Cuando ven una explosión solar, envían un mensaje por radio a la velocidad de la luz que llega mucho antes que la tormenta para avisar a los astronautas.",
-              "fuente": "NASA CCMC / DONKI Space Weather Network",
-              "fuente_es": "NASA CCMC / Red de Clima Espacial DONKI"
+              "fuente": "NASA CCMC / DONKI space weather database",
+              "fuente_es": "NASA CCMC / Base de datos de clima espacial DONKI"
             }
           }
         ]
@@ -279,8 +279,8 @@
             "carta_nasa": {
               "titulo": "Drilling Beneath Frozen Soil",
               "titulo_es": "Excavar bajo el suelo congelado",
-              "dato": "Moon soil is so packed that a shovel only scratches the surface. Apollo 15 and 16 tested the ALSD drill, and NASA's TRIDENT robotic drill cores down to reach hidden ice.",
-              "dato_es": "El suelo de la Luna es tan duro que una pala solo rasca por encima. Apollo 15 y 16 probaron el taladro ALSD, y hoy robots como VIPER usan taladros especiales para llegar al hielo escondido.",
+              "dato": "Moon soil is so packed that a shovel only scratches the surface. Apollo 15, 16 and 17 astronauts used the ALSD drill, and NASA built the TRIDENT robotic drill to dig for hidden ice.",
+              "dato_es": "El suelo de la Luna es tan duro que una pala solo rasca por encima. Los astronautas del Apolo 15, 16 y 17 usaron el taladro ALSD, y NASA construyó el taladro robótico TRIDENT para buscar hielo escondido.",
               "fuente": "NASA Apollo Science Team (ALSD) / TRIDENT",
               "fuente_es": "NASA Equipo Científico Apollo (ALSD) / TRIDENT"
             }

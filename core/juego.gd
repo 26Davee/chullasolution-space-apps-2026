@@ -544,7 +544,9 @@ func _tick_fallback_simulation(delta: float) -> void:
 	var near_dome := _robot_distance_to_dome() <= _dome_recharge_radius()
 
 	# --- 1. Base Total Energy (2,000 kWh = 100%) ---
-	var base_energy_delta := (-0.2339 if gs.es_dia else -0.3483) * diff
+	# De noche la base entra en modo ahorro (-40 %): sin esto, en Ingeniero la noche de M16
+	# (base + jardín + generador) gastaba más que la batería llena. Ajuste de QA, 15-nov.
+	var base_energy_delta := (-0.2339 if gs.es_dia else -0.3483 * 0.6) * diff
 	if gs.es_dia and int(gs.paneles_instalados) > 0:
 		var boost := 1.25 if _has_upgrade("celulas_optimizadas") else 1.0
 		# Cada módulo solar de 25 m² (9.87 kW NASA) aporta 14.569 kWh/s = +0.7285 %/s al banco de 2,000 kWh.
@@ -573,7 +575,9 @@ func _tick_fallback_simulation(delta: float) -> void:
 		o2_delta += 1.1382
 	var garden_count := _structure_count(gs, "jardin")
 	if garden_count > 0 and float(gs.agua) > 0.0:
-		base_energy_delta -= 0.1846 * diff * float(garden_count)
+		# Las luces del jardín se apagan de noche para ahorrar batería (ajuste de QA, 15-nov).
+		if gs.es_dia:
+			base_energy_delta -= 0.1846 * diff * float(garden_count)
 		water_delta -= 0.020 * diff * float(garden_count)
 		o2_delta += 0.10 * float(garden_count)
 
@@ -603,7 +607,7 @@ func _tick_fallback_simulation(delta: float) -> void:
 			_last_storm_badge_sec = sec_rem
 			_storm_badge.visible = true
 			var sev_name := str(_storm_profile.get("es" if TranslationServer.get_locale().begins_with("es") else "en", "MODERADA"))
-			_storm_label.text = _msg(
+			if is_instance_valid(_storm_label): _storm_label.text = _msg(
 				"⚠ Tormenta %s (%ds) · Escudo %d%%" % [sev_name, sec_rem, int(round(gs.escudo))],
 				"⚠ %s storm (%ds) · Shield %d%%" % [sev_name, sec_rem, int(round(gs.escudo))]
 			)
@@ -636,7 +640,7 @@ func _tick_fallback_simulation(delta: float) -> void:
 				_last_storm_badge_sec = sec_warn
 				_storm_badge.visible = true
 				var next_sev := str(_next_storm_profile.get("es" if TranslationServer.get_locale().begins_with("es") else "en", "MODERADA"))
-				_storm_label.text = _msg(
+				if is_instance_valid(_storm_label): _storm_label.text = _msg(
 					"⚠ Alerta tormenta %s en %ds" % [next_sev, sec_warn],
 					"⚠ %s storm alert in %ds" % [next_sev, sec_warn]
 				)
@@ -1345,7 +1349,7 @@ func _on_ciclo_solar_cambiado(es_dia: bool) -> void:
 func _on_advertencia_nube(segundos: float) -> void:
 	if is_instance_valid(_storm_badge):
 		_storm_badge.visible = true
-		_storm_label.text = _msg("⚠ Alerta tormenta solar en %ds" % int(segundos), "⚠ Solar storm alert in %ds" % int(segundos))
+		if is_instance_valid(_storm_label): _storm_label.text = _msg("⚠ Alerta tormenta solar en %ds" % int(segundos), "⚠ Solar storm alert in %ds" % int(segundos))
 	if is_instance_valid(robot) and robot.has_method("cambiar_expresion"):
 		robot.call("cambiar_expresion", &"alerta")
 

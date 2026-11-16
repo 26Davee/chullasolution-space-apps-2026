@@ -37,6 +37,16 @@ func zone(id: String) -> Dictionary:
 	var fallback: Dictionary = ZONES[0].duplicate(true)
 	fallback["position"] = Vector3(ZONES[0].position) * factor
 	return fallback
+## Cada amanecer el rover encuentra más hielo en las zonas ya descubiertas.
+## Sin esto, en Ingeniero el hielo se acababa antes de la misión 13.
+func replenish() -> void:
+	var any := false
+	for item in ZONES:
+		var id := str(item.id)
+		if int(stock.get(id, 0)) < int(item.stock):
+			stock[id] = int(item.stock)
+			any = true
+	if any: changed.emit()
 func discover() -> void:
 	for item in ZONES:
 		if not discovered.has(str(item.id)):

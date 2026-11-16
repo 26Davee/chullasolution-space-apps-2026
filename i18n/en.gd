@@ -229,7 +229,7 @@ const MESSAGES = {
     "misiones.mision_06.titulo": "Sunset Is Coming",
     "misiones.mision_06.objetivo": "Build a second solar panel. Store at least 90 energy before sunset.",
     "misiones.mision_07.titulo": "Survive the Night",
-    "misiones.mision_07.objetivo": "Survive the 3-minute night. Keep energy above 15 and oxygen above 50 until dawn.",
+    "misiones.mision_07.objetivo": "Survive the 4-minute night. Keep energy above 15 and oxygen above 50 until dawn.",
     "misiones.mision_08.titulo": "The First Solar Storm",
     "misiones.mision_08.objetivo": "Watch the warning at minute 3. Bring your robot into the dome while its shield absorbs the solar storm.",
     "misiones.mision_09.titulo": "Repair the Dome",
