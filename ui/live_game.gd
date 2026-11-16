@@ -11,6 +11,7 @@ const GameHudScript = preload("res://ui/game_hud.gd")
 const GameDrawerScript = preload("res://ui/game_drawer.gd")
 const WorldCalloutScript = preload("res://ui/world_callout.gd")
 const SupplyDropScript = preload("res://interaction/supply_drop.gd")
+const LunarDustScene = preload("res://assets/3d/lunar_dust.tscn")
 
 const MODULES := ["panel_solar", "procesador_hielo", "generador_oxigeno", "tanque_agua", "jardin"]
 const MODULE_ART := {"panel_solar": "solar", "procesador_hielo": "processor", "generador_oxigeno": "oxygen", "jardin": "garden"}
@@ -42,6 +43,12 @@ var _drawer: Panel
 var _place_callout: Panel
 var _world_callout: Panel
 var ice: Node
+var _victory_cinematic_active := false
+var _victory_cinematic_done := false
+var _victory_token := 0
+var _victory_overlay: Control
+var _victory_dust: CPUParticles3D
+var _victory_tween: Tween
 
 
 func tx(key: String, values: Dictionary = {}) -> String:
@@ -220,6 +227,11 @@ func _process(delta: float) -> void:
 
 	_refresh_storm_banner()
 	_refresh_world_callouts()
+	if _victory_cinematic_active and is_instance_valid(mundo):
+		var plume := mundo.get_node_or_null("Capsula/BrakingPlume") as Node3D
+		if plume != null and plume.visible:
+			plume.scale.x = 1.0 + 0.05 * sin(Time.get_ticks_msec() * 0.045)
+			plume.scale.z = plume.scale.x
 
 
 func set_paused(paused: bool) -> void:
@@ -231,14 +243,20 @@ func set_paused(paused: bool) -> void:
 
 func _apply_pause() -> void:
 	var drawer_paused: bool = is_instance_valid(_drawer) and bool(_drawer.blocks_world())
-	var blocked: bool = home_paused or is_instance_valid(_modal_layer) or drawer_paused or _landing_active or (session != null and session.finished)
+	var blocked: bool = home_paused or is_instance_valid(_modal_layer) or drawer_paused or _landing_active or _victory_cinematic_active or (session != null and session.finished)
 	_gs().en_partida = not blocked
 	_set_gameplay_input_enabled(not blocked)
 	placement_system.set_process_unhandled_input(not blocked)
 	placement_system.set_physics_process(not blocked)
-	robot.process_mode = Node.PROCESS_MODE_DISABLED if blocked else Node.PROCESS_MODE_INHERIT
-	for node in [mundo, vicuna, tormenta, estructuras_colocadas]:
-		node.process_mode = Node.PROCESS_MODE_DISABLED if blocked else Node.PROCESS_MODE_INHERIT
+	if _victory_cinematic_active and not home_paused:
+		robot.process_mode = Node.PROCESS_MODE_INHERIT
+		mundo.process_mode = Node.PROCESS_MODE_INHERIT
+		for node in [vicuna, tormenta, estructuras_colocadas]:
+			node.process_mode = Node.PROCESS_MODE_DISABLED
+	else:
+		robot.process_mode = Node.PROCESS_MODE_DISABLED if blocked else Node.PROCESS_MODE_INHERIT
+		for node in [mundo, vicuna, tormenta, estructuras_colocadas]:
+			node.process_mode = Node.PROCESS_MODE_DISABLED if blocked else Node.PROCESS_MODE_INHERIT
 
 
 func _on_landing_completed() -> void:
@@ -1039,12 +1057,16 @@ func message_text(item: Dictionary) -> String:
 
 
 func _maybe_show_reward() -> void:
-	if not _session_ready or _landing_active or home_paused or is_instance_valid(_modal_layer):
+	if not _session_ready or _landing_active or _victory_cinematic_active or home_paused or is_instance_valid(_modal_layer):
 		return
 	if not session.pending_rewards.is_empty():
 		_open_reward(session.pending_rewards[0])
 	elif session.finished:
-		_open_victory()
+		if _victory_cinematic_done or DisplayServer.get_name() == "headless":
+			_victory_cinematic_done = true
+			_open_victory()
+		else:
+			_start_victory_cinematic()
 
 
 func _open_reward(reward: Dictionary) -> void:
@@ -1091,10 +1113,180 @@ func _open_reward(reward: Dictionary) -> void:
 	_speak(tx("reward_title") + " " + m_title + ". " + science_title)
 
 
+func _victory_rank_name() -> String:
+	return tx("mode_engineer" if str(_gs().modo_juego) == "ingeniero" else "mode_cadet")
+
+
+func _start_victory_cinematic() -> void:
+	if _victory_cinematic_active:
+		return
+	if DisplayServer.get_name() == "headless":
+		_victory_cinematic_done = true
+		_open_victory()
+		return
+	var capsula := mundo.get_node_or_null("Capsula") as Node3D if is_instance_valid(mundo) else null
+	if capsula == null or not is_instance_valid(robot):
+		_victory_cinematic_done = true
+		_open_victory()
+		return
+
+	_victory_cinematic_active = true
+	_victory_token += 1
+	var token := _victory_token
+	_close_drawer()
+	_callout_mode = ""
+	if is_instance_valid(_world_callout):
+		_world_callout.hide()
+	if is_instance_valid(_place_callout):
+		_place_callout.hide()
+	if is_instance_valid(_toast_panel):
+		_toast_panel.hide()
+	if placement_system.is_placing():
+		placement_system.cancel_placement()
+	click_to_move.set("_moviendo", false)
+	_ui_root.visible = false
+	_apply_pause()
+
+	var rank := _victory_rank_name()
+	_victory_overlay = Control.new()
+	_victory_overlay.size = Vector2(1280, 720)
+	_victory_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	interfaz.add_child(_victory_overlay)
+
+	var pill := UI.panel(_victory_overlay, Rect2(260, 616, 760, 74), Color("#071b32eb"), 18)
+	pill.mouse_filter = Control.MOUSE_FILTER_STOP
+	UI.label(pill, tx("takeoff_title", {"rank": rank.to_upper()}), Rect2(20, 10, 500, 26), 17, UI.GOLD, true)
+	UI.label(pill, tx("takeoff_body", {"rank": rank}), Rect2(20, 38, 500, 26), 14, UI.WHITE)
+	var skip_btn := UI.button(pill, tx("takeoff_skip"), Rect2(540, 15, 200, 44), _finish_victory_cinematic, true)
+	skip_btn.add_theme_font_size_override("font_size", 15)
+	_speak(tx("takeoff_title", {"rank": rank}) + " " + tx("victory_text", {"n": session.mm.obtener_todas_las_misiones().size(), "rank": rank}))
+
+	capsula.position = Vector3.ZERO
+	capsula.rotation = Vector3.ZERO
+	var plume := capsula.get_node_or_null("BrakingPlume") as Node3D
+	if plume != null:
+		plume.visible = false
+		plume.scale = Vector3.ONE
+	var acceso := capsula.get_node_or_null("Acceso") as AnimationPlayer
+	if acceso != null and acceso.has_animation("abrir"):
+		acceso.play("abrir")
+		acceso.seek(acceso.get_animation("abrir").length, true)
+
+	robot.visible = true
+	robot.scale = Vector3.ONE
+	var start_pos := robot.global_position
+	start_pos.y = 0.0
+	var ramp_entry := capsula.global_position + Vector3(0.0, 0.0, 3.6)
+	var ladder_top := capsula.global_position + Vector3(0.0, 1.85, 2.05)
+	var hatch_inside := capsula.global_position + Vector3(0.0, 2.05, 1.25)
+
+	if is_instance_valid(camara):
+		camara.make_current()
+		camara.set("objetivo", capsula)
+		camara.set("_yaw_deseado", deg_to_rad(28.0))
+		camara.set("_pitch_deseado", deg_to_rad(18.0))
+		camara.set("_dist_deseada", 14.5)
+
+	var walk_dist := start_pos.distance_to(ramp_entry)
+	var walk_time := clampf(walk_dist / 4.8, 0.9, 2.4)
+	if is_instance_valid(_victory_tween):
+		_victory_tween.kill()
+	_victory_tween = create_tween()
+	_victory_tween.tween_method(func(alpha: float):
+		var next_pos := start_pos.lerp(ramp_entry, alpha)
+		_move_victory_robot(next_pos)
+	, 0.0, 1.0, walk_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_victory_tween.tween_method(func(alpha: float):
+		var next_pos := ramp_entry.lerp(ladder_top, alpha)
+		_move_victory_robot(next_pos)
+	, 0.0, 1.0, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_victory_tween.tween_method(func(alpha: float):
+		var next_pos := ladder_top.lerp(hatch_inside, alpha)
+		_move_victory_robot(next_pos)
+		var shrink := lerpf(1.0, 0.45, alpha)
+		robot.scale = Vector3(shrink, shrink, shrink)
+	, 0.0, 1.0, 0.45)
+	_victory_tween.tween_callback(func():
+		if token != _victory_token or not _victory_cinematic_active:
+			return
+		robot.visible = false
+		if acceso != null and acceso.has_animation("cerrar"):
+			acceso.play("cerrar")
+		if is_instance_valid(camara):
+			camara.set("_yaw_deseado", deg_to_rad(34.0))
+			camara.set("_pitch_deseado", deg_to_rad(22.0))
+			camara.set("_dist_deseada", 23.0)
+	)
+	_victory_tween.tween_interval(1.55)
+	_victory_tween.tween_callback(func():
+		if token != _victory_token or not _victory_cinematic_active:
+			return
+		if plume != null:
+			plume.visible = true
+			plume.scale = Vector3(0.75, 0.2, 0.75)
+		_victory_dust = LunarDustScene.instantiate() as CPUParticles3D
+		if _victory_dust != null:
+			mundo.add_child(_victory_dust)
+			_victory_dust.position = Vector3.ZERO
+			_victory_dust.emitting = true
+	)
+	if plume != null:
+		_victory_tween.tween_property(plume, "scale:y", 1.15, 0.45).set_trans(Tween.TRANS_SINE)
+	else:
+		_victory_tween.tween_interval(0.45)
+	_victory_tween.tween_property(capsula, "position:y", 48.0, 3.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_victory_tween.tween_callback(func():
+		if token == _victory_token:
+			_finish_victory_cinematic()
+	)
+
+
+func _move_victory_robot(target_pos: Vector3) -> void:
+	if not is_instance_valid(robot):
+		return
+	var delta_vec := target_pos - robot.global_position
+	delta_vec.y = 0.0
+	if delta_vec.length_squared() > 0.0001:
+		var yaw := atan2(delta_vec.x, delta_vec.z) + PI
+		robot.rotation.y = lerp_angle(robot.rotation.y, yaw, 0.3)
+	robot.global_position = target_pos
+
+
+func _finish_victory_cinematic() -> void:
+	if not _victory_cinematic_active:
+		return
+	_victory_token += 1
+	_victory_cinematic_active = false
+	_victory_cinematic_done = true
+	if is_instance_valid(_victory_tween):
+		_victory_tween.kill()
+		_victory_tween = null
+	if is_instance_valid(_victory_overlay):
+		_victory_overlay.queue_free()
+		_victory_overlay = null
+	if is_instance_valid(_victory_dust):
+		_victory_dust.emitting = false
+		_victory_dust.queue_free()
+		_victory_dust = null
+	if is_instance_valid(mundo):
+		var plume := mundo.get_node_or_null("Capsula/BrakingPlume") as Node3D
+		if plume != null:
+			plume.visible = false
+			plume.scale = Vector3.ONE
+	_ui_root.visible = true
+	if is_instance_valid(camara):
+		camara.set("objetivo", robot)
+	_activar_camara_juego()
+	_apply_pause()
+	_open_victory()
+
+
 func _open_victory() -> void:
+	var rank := _victory_rank_name()
 	var panel := _open_modal("victory", tx("victory"), Vector2(820, 480))
 	(panel.get_child(1) as Button).hide()
-	UI.label(panel, tx("victory_text", {"n": session.mm.obtener_todas_las_misiones().size()}), Rect2(36, 92, 748, 96), 26, UI.WHITE, true)
+	var victory_msg := tx("victory_text", {"n": session.mm.obtener_todas_las_misiones().size(), "rank": rank})
+	UI.label(panel, victory_msg, Rect2(36, 92, 748, 96), 26, UI.WHITE, true)
 	var summary := "%s: %d     %s: %d\n%s: %d" % [tx("completed"), session.sm.obtener_misiones_completadas().size(), tx("learn"), _science_cards().size(), tx("stars"), session.sm.obtener_estrellas_totales()]
 	UI.label(panel, summary, Rect2(36, 210, 748, 86), 21, UI.CYAN)
 	UI.button(panel, tx("view_card"), Rect2(28, 344, 240, 50), func():
@@ -1104,6 +1296,7 @@ func _open_victory() -> void:
 	UI.button(panel, tx("home"), Rect2(286, 344, 240, 50), _return_home)
 	UI.button(panel, tx("new_game"), Rect2(544, 344, 248, 50), _confirm_new_game, true)
 	_pop_in(panel)
+	_speak(tx("victory") + " " + victory_msg)
 
 
 func _confirm_new_game() -> void:
@@ -1180,6 +1373,12 @@ func _toggle_language() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _victory_cinematic_active:
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode in [KEY_ESCAPE, KEY_SPACE] or event.physical_keycode in [KEY_ESCAPE, KEY_SPACE]:
+				_finish_victory_cinematic()
+				get_viewport().set_input_as_handled()
+		return
 	if _landing_active or (home_paused and not is_instance_valid(_modal_layer) and not (is_instance_valid(_drawer) and _drawer.visible)):
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -1216,6 +1415,32 @@ func capture_world() -> Dictionary:
 
 
 func restore_world(data: Dictionary) -> void:
+	_victory_token += 1
+	_victory_cinematic_active = false
+	_victory_cinematic_done = false
+	if is_instance_valid(_victory_tween):
+		_victory_tween.kill()
+		_victory_tween = null
+	if is_instance_valid(_victory_overlay):
+		_victory_overlay.queue_free()
+		_victory_overlay = null
+	if is_instance_valid(_victory_dust):
+		_victory_dust.emitting = false
+		_victory_dust.queue_free()
+		_victory_dust = null
+	if is_instance_valid(mundo):
+		var capsula := mundo.get_node_or_null("Capsula") as Node3D
+		if capsula != null:
+			capsula.position = Vector3.ZERO
+			capsula.rotation = Vector3.ZERO
+			var plume := capsula.get_node_or_null("BrakingPlume") as Node3D
+			if plume != null:
+				plume.visible = false
+				plume.scale = Vector3.ONE
+			var acceso := capsula.get_node_or_null("Acceso") as AnimationPlayer
+			if acceso != null and acceso.has_animation("abrir"):
+				acceso.play("abrir")
+				acceso.seek(acceso.get_animation("abrir").length, true)
 	if placement_system.is_placing():
 		placement_system.cancel_placement()
 	for child in estructuras_colocadas.get_children():
@@ -1230,8 +1455,12 @@ func restore_world(data: Dictionary) -> void:
 		estructuras_colocadas.add_child(piece)
 		piece.position = array_vector(item.get("position", [0, 0, 0]))
 		piece.rotation = array_vector(item.get("rotation", [0, 0, 0]))
+	robot.visible = true
+	robot.scale = Vector3.ONE
 	robot.position = array_vector(data.get("robot", [-3.6, 0, 9.6]))
 	robot.rotation = array_vector(data.get("rotation", [0, -2.618, 0]))
+	if is_instance_valid(camara):
+		camara.set("objetivo", robot)
 	if robot is CharacterBody3D:
 		robot.velocity = Vector3.ZERO
 	click_to_move.set("_moviendo", bool(data.get("moving", false)))
