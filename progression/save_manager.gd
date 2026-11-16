@@ -17,10 +17,12 @@ const META_PATH := "user://saves_meta.json"
 
 @export_dir var storage_directory := ""
 @export var save_path: String = DEFAULT_SAVE_PATH
+@export var legacy_save_path: String = ""
 
 var active_slot: int = 1
 var tutorial_seen: bool = false
 var idioma_preferido: String = ""
+var legacy_migrated: bool = false
 var _datos: Dictionary = {}
 var ultimo_error := ""
 var respaldo_recuperado := false
@@ -29,8 +31,8 @@ var respaldo_recuperado := false
 func _ready() -> void:
 	if not storage_directory.is_empty(): DirAccess.make_dir_recursive_absolute(storage_directory)
 	if save_path == DEFAULT_SAVE_PATH:
-		_migrar_guardado_legado()
 		_cargar_meta()
+		_migrar_guardado_legado()
 		save_path = _slot_path(active_slot)
 	cargar_progreso()
 
@@ -286,6 +288,12 @@ func borrar_slot(slot_id: int) -> bool:
 		var fpath: String = target + str(suffix)
 		if FileAccess.file_exists(fpath):
 			DirAccess.remove_absolute(fpath)
+	if id == 1:
+		var lpath := _legacy_path()
+		if not lpath.is_empty():
+			legacy_migrated = true
+			_retirar_guardado_legado(lpath)
+			_guardar_meta()
 	if id == active_slot:
 		ultimo_error = ""
 		respaldo_recuperado = false
@@ -381,17 +389,47 @@ static func _datos_ocupados(d: Dictionary) -> bool:
 	return comp is Array and not comp.is_empty()
 
 
+func _legacy_path() -> String:
+	if not legacy_save_path.is_empty():
+		return legacy_save_path
+	return DEFAULT_SAVE_PATH if storage_directory.is_empty() else ""
+
+
+func _retirar_guardado_legado(lpath: String) -> void:
+	if lpath.is_empty() or not FileAccess.file_exists(lpath):
+		return
+	var retired := lpath + ".migrated"
+	if FileAccess.file_exists(retired):
+		DirAccess.remove_absolute(retired)
+	if DirAccess.rename_absolute(lpath, retired) != OK:
+		DirAccess.remove_absolute(lpath)
+
+
 func _migrar_guardado_legado() -> void:
-	if not storage_directory.is_empty(): return
-	if not FileAccess.file_exists(DEFAULT_SAVE_PATH) or FileAccess.file_exists(_slot_path(1)):
+	var lpath := _legacy_path()
+	if lpath.is_empty() or legacy_migrated or not FileAccess.file_exists(lpath):
+		return
+	var already_initialized := FileAccess.file_exists(_metadata_path())
+	if not already_initialized:
+		for i in range(1, MAX_SLOTS + 1):
+			if FileAccess.file_exists(_slot_path(i)):
+				already_initialized = true
+				break
+	if already_initialized:
+		legacy_migrated = true
+		_retirar_guardado_legado(lpath)
+		_guardar_meta()
 		return
 	var json := JSON.new()
-	if json.parse(FileAccess.get_file_as_string(DEFAULT_SAVE_PATH)) != OK or not (json.data is Dictionary):
+	if json.parse(FileAccess.get_file_as_string(lpath)) != OK or not (json.data is Dictionary):
 		return
-	if not _datos_ocupados(json.data):
-		return
-	DirAccess.make_dir_recursive_absolute(SLOTS_DIR)
-	DirAccess.copy_absolute(DEFAULT_SAVE_PATH, _slot_path(1))
+	if _datos_ocupados(json.data):
+		var slot1 := _slot_path(1)
+		DirAccess.make_dir_recursive_absolute(slot1.get_base_dir())
+		DirAccess.copy_absolute(lpath, slot1)
+	legacy_migrated = true
+	_retirar_guardado_legado(lpath)
+	_guardar_meta()
 
 
 func _cargar_meta() -> void:
@@ -403,13 +441,22 @@ func _cargar_meta() -> void:
 		tutorial_seen = bool(json.data.get("tutorial_seen", false))
 		var lang := str(json.data.get("language", ""))
 		idioma_preferido = lang if lang in ["en", "es"] else ""
+		legacy_migrated = bool(json.data.get("legacy_migrated", false))
 
 
 func _guardar_meta() -> void:
+	var dir_path := _metadata_path().get_base_dir()
+	if not dir_path.is_empty():
+		DirAccess.make_dir_recursive_absolute(dir_path)
 	var f := FileAccess.open(_metadata_path(), FileAccess.WRITE)
 	if f == null:
 		return
-	f.store_string(JSON.stringify({"active_slot": active_slot, "tutorial_seen": tutorial_seen, "language": idioma_preferido}, "\t"))
+	f.store_string(JSON.stringify({
+		"active_slot": active_slot,
+		"tutorial_seen": tutorial_seen,
+		"language": idioma_preferido,
+		"legacy_migrated": legacy_migrated,
+	}, "\t"))
 	f.close()
 
 

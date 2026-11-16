@@ -195,6 +195,34 @@ func run() -> void:
 	check(not slot_sm.leer_slot_resumen(2).occupied and slot_sm.leer_slot_resumen(1).occupied, "Deleting slot 2 clears only slot 2")
 	slot_sm.borrar_slot(1)
 	slot_sm.queue_free()
+	# Deleting slot 1 must retire legacy save_data.json so restarting never revives it
+	var leg_dir := "user://killawasi_legacy_migration_test"
+	DirAccess.make_dir_recursive_absolute(leg_dir)
+	var leg_file := leg_dir.path_join("legacy_save.json")
+	for f_name in ["meta.json", "slot_1.json", "slot_1.json.bak", "legacy_save.json", "legacy_save.json.migrated"]:
+		var fp := leg_dir.path_join(f_name)
+		if FileAccess.file_exists(fp):
+			DirAccess.remove_absolute(fp)
+	var lf := FileAccess.open(leg_file, FileAccess.WRITE)
+	lf.store_string(JSON.stringify({"estrellas_totales": 10, "perfil": {"nickname": "LegacyPilot", "mode": "cadete", "tutorial_completed": true}}))
+	lf.close()
+	var leg_sm1 = preload("res://progression/save_manager.gd").new()
+	leg_sm1.storage_directory = leg_dir
+	leg_sm1.legacy_save_path = leg_file
+	root.add_child(leg_sm1)
+	await frames()
+	check(leg_sm1.leer_slot_resumen(1).occupied, "First launch migrates legacy save into slot 1")
+	leg_sm1.borrar_slot(1)
+	check(not leg_sm1.leer_slot_resumen(1).occupied, "Deleting slot 1 clears slot 1 immediately")
+	leg_sm1.queue_free()
+	await frames()
+	var leg_sm2 = preload("res://progression/save_manager.gd").new()
+	leg_sm2.storage_directory = leg_dir
+	leg_sm2.legacy_save_path = leg_file
+	root.add_child(leg_sm2)
+	await frames()
+	check(not leg_sm2.leer_slot_resumen(1).occupied, "Restarting after deleting slot 1 never revives legacy save")
+	leg_sm2.queue_free()
 	# Linearity & upgrade alignment + HUD bounds verification
 	var lg: Node = main._juego
 	var lg_mm: Node = gs.obtener_mission_manager()
